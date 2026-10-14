@@ -1,0 +1,7 @@
+# compiled experiment
+/pronouns
+# session data (never commit participant data)
+/data/
+# design slides
+Design.key
+.DS_Store

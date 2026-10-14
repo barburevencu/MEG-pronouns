@@ -1,0 +1,17 @@
+people,gender,num_letters,verbs,num_letters,places,gender,"adjectives (masculine, for people)",adjectives for places,num_letters_adj
+banquier,m,8,attendait,9,le stade,m,têtu,vide,4
+policier,m,8,buvait,6,le parc,m,déçu,aéré,4
+plombier,m,8,courait,7,le bureau,m,fâché,bondé,5
+chasseur,m,8,criait,6,le jardin,m,jaloux,désert,6
+jardinier,m,9,dormait,7,le marché,m,bavard,rénové,6
+chauffeur,m,9,écrivait,8,le cinéma,m,content,chauffé,7
+mécanicien,m,10,hésitait,8,le métro,m,fatigué,aménagé,7
+conducteur,m,10,lisait,6,le parking,m,inquiet,délabré,7
+fermière,f,8,parlait,7,la cave,f,enrhumé,repeint,7
+danseuse,f,8,pensait,7,la mer,f,méfiant,agrandi,7
+vendeuse,f,8,pleurait,8,la cuisine,f,peureux,carrelé,7
+serveuse,f,8,rêvait,6,la forêt,f,gourmand,spacieux,8
+chanteuse,f,9,riait,5,la montagne,f,distrait,encombré,8
+caissière,f,9,toussait,8,la gare,f,souriant,nettoyé,8
+directrice,f,10,tremblait,9,la piscine,f,courageux,climatisé,9
+boulangère,f,10,marchait,8,la classe,f,paresseux,fréquenté,9

@@ -1,0 +1,188 @@
+code,event,on_screen,onset_ms,duration_ms,role,sentence,position,cell,congruent,canonical_order,pronoun_gender,agent_gender
+16,word: det_subj,'le' then fixation at +200 ms,2500,200 + 300 fixation,det_subj,1,4,0,0,0,m,m
+17,word: det_subj,'le' then fixation at +200 ms,2500,200 + 300 fixation,det_subj,1,4,1,1,0,m,m
+18,word: det_subj,'Le' then fixation at +200 ms,1000,200 + 300 fixation,det_subj,1,1,2,0,1,m,m
+19,word: det_subj,'Le' then fixation at +200 ms,1000,200 + 300 fixation,det_subj,1,1,3,1,1,m,m
+20,word: det_subj,'le' then fixation at +200 ms,2500,200 + 300 fixation,det_subj,1,4,4,0,0,f,m
+21,word: det_subj,'le' then fixation at +200 ms,2500,200 + 300 fixation,det_subj,1,4,5,1,0,f,m
+22,word: det_subj,'Le' then fixation at +200 ms,1000,200 + 300 fixation,det_subj,1,1,6,0,1,f,m
+23,word: det_subj,'Le' then fixation at +200 ms,1000,200 + 300 fixation,det_subj,1,1,7,1,1,f,m
+24,word: det_subj,'le' then fixation at +200 ms,2500,200 + 300 fixation,det_subj,1,4,8,0,0,m,f
+25,word: det_subj,'le' then fixation at +200 ms,2500,200 + 300 fixation,det_subj,1,4,9,1,0,m,f
+26,word: det_subj,'Le' then fixation at +200 ms,1000,200 + 300 fixation,det_subj,1,1,10,0,1,m,f
+27,word: det_subj,'Le' then fixation at +200 ms,1000,200 + 300 fixation,det_subj,1,1,11,1,1,m,f
+28,word: det_subj,'le' then fixation at +200 ms,2500,200 + 300 fixation,det_subj,1,4,12,0,0,f,f
+29,word: det_subj,'le' then fixation at +200 ms,2500,200 + 300 fixation,det_subj,1,4,13,1,0,f,f
+30,word: det_subj,'Le' then fixation at +200 ms,1000,200 + 300 fixation,det_subj,1,1,14,0,1,f,f
+31,word: det_subj,'Le' then fixation at +200 ms,1000,200 + 300 fixation,det_subj,1,1,15,1,1,f,f
+32,word: noun_subj,'mécanicien' then fixation at +200 ms,3000,200 + 300 fixation,noun_subj,1,5,0,0,0,m,m
+33,word: noun_subj,'mécanicien' then fixation at +200 ms,3000,200 + 300 fixation,noun_subj,1,5,1,1,0,m,m
+34,word: noun_subj,'mécanicien' then fixation at +200 ms,1500,200 + 300 fixation,noun_subj,1,2,2,0,1,m,m
+35,word: noun_subj,'mécanicien' then fixation at +200 ms,1500,200 + 300 fixation,noun_subj,1,2,3,1,1,m,m
+36,word: noun_subj,'mécanicien' then fixation at +200 ms,3000,200 + 300 fixation,noun_subj,1,5,4,0,0,f,m
+37,word: noun_subj,'mécanicien' then fixation at +200 ms,3000,200 + 300 fixation,noun_subj,1,5,5,1,0,f,m
+38,word: noun_subj,'mécanicien' then fixation at +200 ms,1500,200 + 300 fixation,noun_subj,1,2,6,0,1,f,m
+39,word: noun_subj,'mécanicien' then fixation at +200 ms,1500,200 + 300 fixation,noun_subj,1,2,7,1,1,f,m
+40,word: noun_subj,'mécanicien' then fixation at +200 ms,3000,200 + 300 fixation,noun_subj,1,5,8,0,0,m,f
+41,word: noun_subj,'mécanicien' then fixation at +200 ms,3000,200 + 300 fixation,noun_subj,1,5,9,1,0,m,f
+42,word: noun_subj,'mécanicien' then fixation at +200 ms,1500,200 + 300 fixation,noun_subj,1,2,10,0,1,m,f
+43,word: noun_subj,'mécanicien' then fixation at +200 ms,1500,200 + 300 fixation,noun_subj,1,2,11,1,1,m,f
+44,word: noun_subj,'mécanicien' then fixation at +200 ms,3000,200 + 300 fixation,noun_subj,1,5,12,0,0,f,f
+45,word: noun_subj,'mécanicien' then fixation at +200 ms,3000,200 + 300 fixation,noun_subj,1,5,13,1,0,f,f
+46,word: noun_subj,'mécanicien' then fixation at +200 ms,1500,200 + 300 fixation,noun_subj,1,2,14,0,1,f,f
+47,word: noun_subj,'mécanicien' then fixation at +200 ms,1500,200 + 300 fixation,noun_subj,1,2,15,1,1,f,f
+48,word: verb,'rêvait' then fixation at +200 ms,3500,200 + 300 fixation,verb,1,6,0,0,0,m,m
+49,word: verb,'rêvait' then fixation at +200 ms,3500,200 + 300 fixation,verb,1,6,1,1,0,m,m
+50,word: verb,'rêvait' then fixation at +200 ms,2000,200 + 300 fixation,verb,1,3,2,0,1,m,m
+51,word: verb,'rêvait' then fixation at +200 ms,2000,200 + 300 fixation,verb,1,3,3,1,1,m,m
+52,word: verb,'rêvait' then fixation at +200 ms,3500,200 + 300 fixation,verb,1,6,4,0,0,f,m
+53,word: verb,'rêvait' then fixation at +200 ms,3500,200 + 300 fixation,verb,1,6,5,1,0,f,m
+54,word: verb,'rêvait' then fixation at +200 ms,2000,200 + 300 fixation,verb,1,3,6,0,1,f,m
+55,word: verb,'rêvait' then fixation at +200 ms,2000,200 + 300 fixation,verb,1,3,7,1,1,f,m
+56,word: verb,'rêvait' then fixation at +200 ms,3500,200 + 300 fixation,verb,1,6,8,0,0,m,f
+57,word: verb,'rêvait' then fixation at +200 ms,3500,200 + 300 fixation,verb,1,6,9,1,0,m,f
+58,word: verb,'rêvait' then fixation at +200 ms,2000,200 + 300 fixation,verb,1,3,10,0,1,m,f
+59,word: verb,'rêvait' then fixation at +200 ms,2000,200 + 300 fixation,verb,1,3,11,1,1,m,f
+60,word: verb,'rêvait' then fixation at +200 ms,3500,200 + 300 fixation,verb,1,6,12,0,0,f,f
+61,word: verb,'rêvait' then fixation at +200 ms,3500,200 + 300 fixation,verb,1,6,13,1,0,f,f
+62,word: verb,'rêvait' then fixation at +200 ms,2000,200 + 300 fixation,verb,1,3,14,0,1,f,f
+63,word: verb,'rêvait' then fixation at +200 ms,2000,200 + 300 fixation,verb,1,3,15,1,1,f,f
+64,word: dans,'Dans' then fixation at +200 ms,1000,200 + 300 fixation,dans,1,1,0,0,0,m,m
+65,word: dans,'Dans' then fixation at +200 ms,1000,200 + 300 fixation,dans,1,1,1,1,0,m,m
+66,word: dans,'dans' then fixation at +200 ms,2500,200 + 300 fixation,dans,1,4,2,0,1,m,m
+67,word: dans,'dans' then fixation at +200 ms,2500,200 + 300 fixation,dans,1,4,3,1,1,m,m
+68,word: dans,'Dans' then fixation at +200 ms,1000,200 + 300 fixation,dans,1,1,4,0,0,f,m
+69,word: dans,'Dans' then fixation at +200 ms,1000,200 + 300 fixation,dans,1,1,5,1,0,f,m
+70,word: dans,'dans' then fixation at +200 ms,2500,200 + 300 fixation,dans,1,4,6,0,1,f,m
+71,word: dans,'dans' then fixation at +200 ms,2500,200 + 300 fixation,dans,1,4,7,1,1,f,m
+72,word: dans,'Dans' then fixation at +200 ms,1000,200 + 300 fixation,dans,1,1,8,0,0,m,f
+73,word: dans,'Dans' then fixation at +200 ms,1000,200 + 300 fixation,dans,1,1,9,1,0,m,f
+74,word: dans,'dans' then fixation at +200 ms,2500,200 + 300 fixation,dans,1,4,10,0,1,m,f
+75,word: dans,'dans' then fixation at +200 ms,2500,200 + 300 fixation,dans,1,4,11,1,1,m,f
+76,word: dans,'Dans' then fixation at +200 ms,1000,200 + 300 fixation,dans,1,1,12,0,0,f,f
+77,word: dans,'Dans' then fixation at +200 ms,1000,200 + 300 fixation,dans,1,1,13,1,0,f,f
+78,word: dans,'dans' then fixation at +200 ms,2500,200 + 300 fixation,dans,1,4,14,0,1,f,f
+79,word: dans,'dans' then fixation at +200 ms,2500,200 + 300 fixation,dans,1,4,15,1,1,f,f
+80,word: det_place,'la' then fixation at +200 ms,1500,200 + 300 fixation,det_place,1,2,0,0,0,m,m
+81,word: det_place,'la' then fixation at +200 ms,1500,200 + 300 fixation,det_place,1,2,1,1,0,m,m
+82,word: det_place,'la' then fixation at +200 ms,3000,200 + 300 fixation,det_place,1,5,2,0,1,m,m
+83,word: det_place,'la' then fixation at +200 ms,3000,200 + 300 fixation,det_place,1,5,3,1,1,m,m
+84,word: det_place,'la' then fixation at +200 ms,1500,200 + 300 fixation,det_place,1,2,4,0,0,f,m
+85,word: det_place,'la' then fixation at +200 ms,1500,200 + 300 fixation,det_place,1,2,5,1,0,f,m
+86,word: det_place,'la' then fixation at +200 ms,3000,200 + 300 fixation,det_place,1,5,6,0,1,f,m
+87,word: det_place,'la' then fixation at +200 ms,3000,200 + 300 fixation,det_place,1,5,7,1,1,f,m
+88,word: det_place,'la' then fixation at +200 ms,1500,200 + 300 fixation,det_place,1,2,8,0,0,m,f
+89,word: det_place,'la' then fixation at +200 ms,1500,200 + 300 fixation,det_place,1,2,9,1,0,m,f
+90,word: det_place,'la' then fixation at +200 ms,3000,200 + 300 fixation,det_place,1,5,10,0,1,m,f
+91,word: det_place,'la' then fixation at +200 ms,3000,200 + 300 fixation,det_place,1,5,11,1,1,m,f
+92,word: det_place,'la' then fixation at +200 ms,1500,200 + 300 fixation,det_place,1,2,12,0,0,f,f
+93,word: det_place,'la' then fixation at +200 ms,1500,200 + 300 fixation,det_place,1,2,13,1,0,f,f
+94,word: det_place,'la' then fixation at +200 ms,3000,200 + 300 fixation,det_place,1,5,14,0,1,f,f
+95,word: det_place,'la' then fixation at +200 ms,3000,200 + 300 fixation,det_place,1,5,15,1,1,f,f
+96,word: noun_place,'classe' then fixation at +200 ms,2000,200 + 300 fixation,noun_place,1,3,0,0,0,m,m
+97,word: noun_place,'classe' then fixation at +200 ms,2000,200 + 300 fixation,noun_place,1,3,1,1,0,m,m
+98,word: noun_place,'classe' then fixation at +200 ms,3500,200 + 300 fixation,noun_place,1,6,2,0,1,m,m
+99,word: noun_place,'classe' then fixation at +200 ms,3500,200 + 300 fixation,noun_place,1,6,3,1,1,m,m
+100,word: noun_place,'classe' then fixation at +200 ms,2000,200 + 300 fixation,noun_place,1,3,4,0,0,f,m
+101,word: noun_place,'classe' then fixation at +200 ms,2000,200 + 300 fixation,noun_place,1,3,5,1,0,f,m
+102,word: noun_place,'classe' then fixation at +200 ms,3500,200 + 300 fixation,noun_place,1,6,6,0,1,f,m
+103,word: noun_place,'classe' then fixation at +200 ms,3500,200 + 300 fixation,noun_place,1,6,7,1,1,f,m
+104,word: noun_place,'classe' then fixation at +200 ms,2000,200 + 300 fixation,noun_place,1,3,8,0,0,m,f
+105,word: noun_place,'classe' then fixation at +200 ms,2000,200 + 300 fixation,noun_place,1,3,9,1,0,m,f
+106,word: noun_place,'classe' then fixation at +200 ms,3500,200 + 300 fixation,noun_place,1,6,10,0,1,m,f
+107,word: noun_place,'classe' then fixation at +200 ms,3500,200 + 300 fixation,noun_place,1,6,11,1,1,m,f
+108,word: noun_place,'classe' then fixation at +200 ms,2000,200 + 300 fixation,noun_place,1,3,12,0,0,f,f
+109,word: noun_place,'classe' then fixation at +200 ms,2000,200 + 300 fixation,noun_place,1,3,13,1,0,f,f
+110,word: noun_place,'classe' then fixation at +200 ms,3500,200 + 300 fixation,noun_place,1,6,14,0,1,f,f
+111,word: noun_place,'classe' then fixation at +200 ms,3500,200 + 300 fixation,noun_place,1,6,15,1,1,f,f
+112,word: pronoun,'Il/Elle' then fixation at +200 ms,5000,200 + 300 fixation,pronoun,2,1,0,0,0,m,m
+113,word: pronoun,'Il/Elle' then fixation at +200 ms,5000,200 + 300 fixation,pronoun,2,1,1,1,0,m,m
+114,word: pronoun,'Il/Elle' then fixation at +200 ms,5000,200 + 300 fixation,pronoun,2,1,2,0,1,m,m
+115,word: pronoun,'Il/Elle' then fixation at +200 ms,5000,200 + 300 fixation,pronoun,2,1,3,1,1,m,m
+116,word: pronoun,'Il/Elle' then fixation at +200 ms,5000,200 + 300 fixation,pronoun,2,1,4,0,0,f,m
+117,word: pronoun,'Il/Elle' then fixation at +200 ms,5000,200 + 300 fixation,pronoun,2,1,5,1,0,f,m
+118,word: pronoun,'Il/Elle' then fixation at +200 ms,5000,200 + 300 fixation,pronoun,2,1,6,0,1,f,m
+119,word: pronoun,'Il/Elle' then fixation at +200 ms,5000,200 + 300 fixation,pronoun,2,1,7,1,1,f,m
+120,word: pronoun,'Il/Elle' then fixation at +200 ms,5000,200 + 300 fixation,pronoun,2,1,8,0,0,m,f
+121,word: pronoun,'Il/Elle' then fixation at +200 ms,5000,200 + 300 fixation,pronoun,2,1,9,1,0,m,f
+122,word: pronoun,'Il/Elle' then fixation at +200 ms,5000,200 + 300 fixation,pronoun,2,1,10,0,1,m,f
+123,word: pronoun,'Il/Elle' then fixation at +200 ms,5000,200 + 300 fixation,pronoun,2,1,11,1,1,m,f
+124,word: pronoun,'Il/Elle' then fixation at +200 ms,5000,200 + 300 fixation,pronoun,2,1,12,0,0,f,f
+125,word: pronoun,'Il/Elle' then fixation at +200 ms,5000,200 + 300 fixation,pronoun,2,1,13,1,0,f,f
+126,word: pronoun,'Il/Elle' then fixation at +200 ms,5000,200 + 300 fixation,pronoun,2,1,14,0,1,f,f
+127,word: pronoun,'Il/Elle' then fixation at +200 ms,5000,200 + 300 fixation,pronoun,2,1,15,1,1,f,f
+128,word: etait,'était' then fixation at +200 ms,5500,200 + 300 fixation,etait,2,2,0,0,0,m,m
+129,word: etait,'était' then fixation at +200 ms,5500,200 + 300 fixation,etait,2,2,1,1,0,m,m
+130,word: etait,'était' then fixation at +200 ms,5500,200 + 300 fixation,etait,2,2,2,0,1,m,m
+131,word: etait,'était' then fixation at +200 ms,5500,200 + 300 fixation,etait,2,2,3,1,1,m,m
+132,word: etait,'était' then fixation at +200 ms,5500,200 + 300 fixation,etait,2,2,4,0,0,f,m
+133,word: etait,'était' then fixation at +200 ms,5500,200 + 300 fixation,etait,2,2,5,1,0,f,m
+134,word: etait,'était' then fixation at +200 ms,5500,200 + 300 fixation,etait,2,2,6,0,1,f,m
+135,word: etait,'était' then fixation at +200 ms,5500,200 + 300 fixation,etait,2,2,7,1,1,f,m
+136,word: etait,'était' then fixation at +200 ms,5500,200 + 300 fixation,etait,2,2,8,0,0,m,f
+137,word: etait,'était' then fixation at +200 ms,5500,200 + 300 fixation,etait,2,2,9,1,0,m,f
+138,word: etait,'était' then fixation at +200 ms,5500,200 + 300 fixation,etait,2,2,10,0,1,m,f
+139,word: etait,'était' then fixation at +200 ms,5500,200 + 300 fixation,etait,2,2,11,1,1,m,f
+140,word: etait,'était' then fixation at +200 ms,5500,200 + 300 fixation,etait,2,2,12,0,0,f,f
+141,word: etait,'était' then fixation at +200 ms,5500,200 + 300 fixation,etait,2,2,13,1,0,f,f
+142,word: etait,'était' then fixation at +200 ms,5500,200 + 300 fixation,etait,2,2,14,0,1,f,f
+143,word: etait,'était' then fixation at +200 ms,5500,200 + 300 fixation,etait,2,2,15,1,1,f,f
+144,word: adjective,'<adjective>' then fixation at +200 ms,6000,200 + 300 fixation,adjective,2,3,0,0,0,m,m
+145,word: adjective,'<adjective>' then fixation at +200 ms,6000,200 + 300 fixation,adjective,2,3,1,1,0,m,m
+146,word: adjective,'<adjective>' then fixation at +200 ms,6000,200 + 300 fixation,adjective,2,3,2,0,1,m,m
+147,word: adjective,'<adjective>' then fixation at +200 ms,6000,200 + 300 fixation,adjective,2,3,3,1,1,m,m
+148,word: adjective,'<adjective>' then fixation at +200 ms,6000,200 + 300 fixation,adjective,2,3,4,0,0,f,m
+149,word: adjective,'<adjective>' then fixation at +200 ms,6000,200 + 300 fixation,adjective,2,3,5,1,0,f,m
+150,word: adjective,'<adjective>' then fixation at +200 ms,6000,200 + 300 fixation,adjective,2,3,6,0,1,f,m
+151,word: adjective,'<adjective>' then fixation at +200 ms,6000,200 + 300 fixation,adjective,2,3,7,1,1,f,m
+152,word: adjective,'<adjective>' then fixation at +200 ms,6000,200 + 300 fixation,adjective,2,3,8,0,0,m,f
+153,word: adjective,'<adjective>' then fixation at +200 ms,6000,200 + 300 fixation,adjective,2,3,9,1,0,m,f
+154,word: adjective,'<adjective>' then fixation at +200 ms,6000,200 + 300 fixation,adjective,2,3,10,0,1,m,f
+155,word: adjective,'<adjective>' then fixation at +200 ms,6000,200 + 300 fixation,adjective,2,3,11,1,1,m,f
+156,word: adjective,'<adjective>' then fixation at +200 ms,6000,200 + 300 fixation,adjective,2,3,12,0,0,f,f
+157,word: adjective,'<adjective>' then fixation at +200 ms,6000,200 + 300 fixation,adjective,2,3,13,1,0,f,f
+158,word: adjective,'<adjective>' then fixation at +200 ms,6000,200 + 300 fixation,adjective,2,3,14,0,1,f,f
+159,word: adjective,'<adjective>' then fixation at +200 ms,6000,200 + 300 fixation,adjective,2,3,15,1,1,f,f
+161,trial_start (trial_number=1),fixation dot (light grey),0,1000,,,,,,,,
+162,trial_start (trial_number=2),fixation dot (light grey),0,1000,,,,,,,,
+163,trial_start (trial_number=3),fixation dot (light grey),0,1000,,,,,,,,
+164,trial_start (trial_number=4),fixation dot (light grey),0,1000,,,,,,,,
+165,trial_start (trial_number=5),fixation dot (light grey),0,1000,,,,,,,,
+166,trial_start (trial_number=6),fixation dot (light grey),0,1000,,,,,,,,
+167,trial_start (trial_number=7),fixation dot (light grey),0,1000,,,,,,,,
+168,trial_start (trial_number=8),fixation dot (light grey),0,1000,,,,,,,,
+169,trial_start (trial_number=9),fixation dot (light grey),0,1000,,,,,,,,
+170,trial_start (trial_number=10),fixation dot (light grey),0,1000,,,,,,,,
+171,trial_start (trial_number=11),fixation dot (light grey),0,1000,,,,,,,,
+172,trial_start (trial_number=12),fixation dot (light grey),0,1000,,,,,,,,
+173,trial_start (trial_number=13),fixation dot (light grey),0,1000,,,,,,,,
+174,trial_start (trial_number=14),fixation dot (light grey),0,1000,,,,,,,,
+175,trial_start (trial_number=15),fixation dot (light grey),0,1000,,,,,,,,
+176,trial_start (trial_number=16),fixation dot (light grey),0,1000,,,,,,,,
+177,trial_start (trial_number=17),fixation dot (light grey),0,1000,,,,,,,,
+178,trial_start (trial_number=18),fixation dot (light grey),0,1000,,,,,,,,
+179,trial_start (trial_number=19),fixation dot (light grey),0,1000,,,,,,,,
+180,trial_start (trial_number=20),fixation dot (light grey),0,1000,,,,,,,,
+181,trial_start (trial_number=21),fixation dot (light grey),0,1000,,,,,,,,
+182,trial_start (trial_number=22),fixation dot (light grey),0,1000,,,,,,,,
+183,trial_start (trial_number=23),fixation dot (light grey),0,1000,,,,,,,,
+184,trial_start (trial_number=24),fixation dot (light grey),0,1000,,,,,,,,
+185,trial_start (trial_number=25),fixation dot (light grey),0,1000,,,,,,,,
+186,trial_start (trial_number=26),fixation dot (light grey),0,1000,,,,,,,,
+187,trial_start (trial_number=27),fixation dot (light grey),0,1000,,,,,,,,
+188,trial_start (trial_number=28),fixation dot (light grey),0,1000,,,,,,,,
+189,trial_start (trial_number=29),fixation dot (light grey),0,1000,,,,,,,,
+190,trial_start (trial_number=30),fixation dot (light grey),0,1000,,,,,,,,
+191,trial_start (trial_number=31),fixation dot (light grey),0,1000,,,,,,,,
+192,trial_start (trial_number=32),fixation dot (light grey),0,1000,,,,,,,,
+201,pause/instruction screen before block 1,instructions; the operator's SPACE starts the block,,until SPACE,,,,,,,,
+202,pause/instruction screen before block 2,pause text; the operator's SPACE starts the block,,until SPACE,,,,,,,,
+203,pause/instruction screen before block 3,pause text; the operator's SPACE starts the block,,until SPACE,,,,,,,,
+204,pause/instruction screen before block 4,pause text; the operator's SPACE starts the block,,until SPACE,,,,,,,,
+205,pause/instruction screen before block 5,pause text; the operator's SPACE starts the block,,until SPACE,,,,,,,,
+211,feedback: correct,fixation dot turns green,6200 + RT,500,,,,,,,,
+212,feedback: incorrect,fixation dot turns red,6200 + RT,500,,,,,,,,
+213,feedback: timeout (no response),fixation dot turns dark grey,9200,500,,,,,,,,
+255,end of experiment,end screen,,5000,,,,,,,,
+,inter_sentence_break,fixation dot (light grey),4000,1000 (after the last word's 300 ms fixation),,,,,,,,
+,response_window_opens,fixation dot (light grey),6200,"until response, max 3000",,,,,,,,
