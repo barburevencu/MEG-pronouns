@@ -69,7 +69,7 @@ EN = {
 EN_PRON = {"m": "He", "f": "She"}
 
 # stimuli.csv has duplicate header names, so read by position.
-with open(HERE.parent / "stimuli.csv", encoding="utf-8") as f:
+with open("stimuli.csv", encoding="utf-8") as f:
     rows = list(csv.reader(f))[1:]
 people = {"m": [r[0] for r in rows if r[1] == "m"], "f": [r[0] for r in rows if r[1] == "f"]}
 places = {"m": [r[5] for r in rows if r[6] == "m"], "f": [r[5] for r in rows if r[6] == "f"]}
