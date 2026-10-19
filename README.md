@@ -70,6 +70,10 @@ was presented so far is saved.
 - The user needs to be in the `lp` group, `ppdev` loaded, and the `lp`
   printer module unloaded (`sudo rmmod lp`), otherwise opening the port can
   hang. See goxpyriment's `triggers/notes/parallel.md`.
+- With `-meg` in fullscreen, every stimulus is drawn 330 px left of the
+  screen center (`megShiftX` in `main.go`), to match the projector; the
+  photodiode square stays in the top-left corner. Windowed (`-w`) or without
+  `-meg`, nothing is shifted.
 - ProPixx at 120 Hz: run `ProPixxsetup.sh` (Pushmi) first.
 - Read the codes from STI001–STI008, or STI101 with `mask=255`: the buttons
   are recorded on their own STI lines.

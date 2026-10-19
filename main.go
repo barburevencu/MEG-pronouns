@@ -89,9 +89,10 @@ var (
 )
 
 const (
-	defaultFontSize = 48 // point size of the RSVP words
-	fixSize         = 16 // fixation cross, width and height in pixels
-	fixThickness    = 2  // fixation cross, line thickness in pixels
+	megShiftX       = 330 // in -meg fullscreen, everything is drawn this many pixels left of the screen center (MEG projector)
+	defaultFontSize = 48  // point size of the RSVP words
+	fixSize         = 16  // fixation cross, width and height in pixels
+	fixThickness    = 2   // fixation cross, line thickness in pixels
 )
 
 // ---------------------------------------------------------------------------
@@ -552,6 +553,33 @@ func main() {
 	exp.AddExperimentInfo(fmt.Sprintf("congruent_key: %s; start block: %d", congruentKey, *startBlock))
 	log.Print("responses: " + resp.desc())
 
+	// The MEG projector's image is off center: in -meg fullscreen, move the
+	// point every stimulus is positioned from. The photodiode square stays in
+	// the screen's top-left corner.
+	var shift float32
+	if *meg && exp.Fullscreen {
+		shift = megShiftX
+		w, h := exp.DrawArea()
+		center := control.Origin()
+		center.X, center.Y = w/2-shift, h/2
+		exp.Screen.CanvasOffset = &center
+	}
+	exp.AddExperimentInfo(fmt.Sprintf("stimuli shifted left by %.0f px", shift))
+	log.Printf("stimuli shifted left by %.0f px", shift)
+
+	// textBox is FittedTextBox, narrowed when the stimuli are shifted so that
+	// the text stays on screen.
+	textBox := func(text string) *stimuli.TextBox {
+		box := exp.FittedTextBox(text)
+		if shift > 0 {
+			w, _ := exp.DrawArea()
+			if limit := int32(0.92*w - 2*shift); box.BoxWidth > limit {
+				box.BoxWidth = limit
+			}
+		}
+		return box
+	}
+
 	// Stimuli, all built and uploaded before the run.
 	font, err := control.FontFromMemory(assets_embed.InconsolataFont, float32(*fontSize))
 	if *fontPath != "" {
@@ -663,7 +691,7 @@ func main() {
 				if t.block == *startBlock {
 					text = instructionText(congruentKey)
 				}
-				box := exp.FittedTextBox(text)
+				box := textBox(text)
 				onset, err := showMarked(box, codeBlockStart+t.block)
 				box.Unload()
 				if err != nil {
@@ -771,7 +799,7 @@ func main() {
 			}
 		}
 
-		box := exp.FittedTextBox(endText)
+		box := textBox(endText)
 		onset, err := showMarked(box, codeEnd)
 		if err != nil {
 			return err
