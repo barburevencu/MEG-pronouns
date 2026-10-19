@@ -1,0 +1,271 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pronouns demo</title>
+<style>
+  :root {
+    --bg: #000; --text: #fff; --fix: rgb(192,192,192);
+    --correct: rgb(153,229,153); --incorrect: rgb(240,128,128); --timeout: rgb(96,96,96);
+    --muted: #8a8a8a; --line: #333;
+  }
+  html, body { margin: 0; height: 100%; background: var(--bg); color: var(--text); }
+  body { font: 18px/1.5 -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; }
+  .screen { position: fixed; inset: 0; display: none; align-items: center; justify-content: center; }
+  .screen.on { display: flex; }
+  .text { max-width: 760px; padding: 24px 16px; text-align: center; }
+  .text p { margin: 0 0 1em; }
+  .en { color: var(--muted); font-size: 15px; margin-top: 2em; }
+  kbd { border: 1px solid var(--muted); border-radius: 4px; padding: 0 6px; font-family: inherit; }
+  #stage { cursor: none; }
+  #cross { position: absolute; left: 50%; top: 50%; width: 16px; height: 16px; margin: -8px 0 0 -8px;
+           --c: var(--fix);
+           background: linear-gradient(var(--c), var(--c)) center / 2px 100% no-repeat,
+                       linear-gradient(var(--c), var(--c)) center / 100% 2px no-repeat; }
+  #word { position: absolute; left: 0; right: 0; top: 50%; transform: translateY(-50%); text-align: center;
+          font: 48pt Inconsolata, Menlo, Consolas, "DejaVu Sans Mono", monospace; white-space: nowrap; }
+  #end { overflow-y: auto; align-items: flex-start; }
+  table { border-collapse: collapse; margin: 1.5em auto 0; font-size: 15px; text-align: left; }
+  th, td { padding: 6px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { color: var(--muted); font-weight: normal; }
+  td .tr { color: var(--muted); }
+  .ok { color: var(--correct); } .bad { color: var(--incorrect); } .none { color: var(--timeout); }
+  button { font: inherit; margin-top: 1.5em; padding: 8px 18px; background: #222; color: var(--text);
+           border: 1px solid var(--muted); border-radius: 6px; cursor: pointer; }
+</style>
+</head>
+<body>
+
+<div id="intro" class="screen on"><div class="text">
+  <p><b>Bienvenue !</b></p>
+  <p>Vous allez lire des paires de phrases, présentées mot par mot au centre de l'écran.</p>
+  <p>Après la seconde phrase, indiquez si elle s'enchaîne naturellement avec la première :</p>
+  <p>flèche <kbd>←</kbd> : oui, la suite est naturelle<br>
+     flèche <kbd>→</kbd> : non, la suite est étrange</p>
+  <p>Répondez dès que le dernier mot a disparu. La croix de fixation devient verte si votre réponse
+     est correcte, rouge si elle est incorrecte, et gris foncé si vous n'avez pas répondu à temps.</p>
+  <p>Gardez les yeux sur la croix et évitez de cligner des yeux pendant la lecture.</p>
+  <p>Appuyez sur <kbd>espace</kbd> pour commencer.</p>
+  <p class="en">Demo of a French MEG experiment on pronoun resolution: 10 trials, about 2 minutes.
+    Words appear one at a time (200 ms on, 300 ms off). After the second sentence, press ← if it
+    follows naturally from the first, → if it is odd. Press SPACE to start, ESC to stop.</p>
+</div></div>
+
+<div id="stage" class="screen"><div id="cross"></div><div id="word"></div></div>
+
+<div id="end" class="screen"><div class="text">
+  <p><b>Fin de la démo — merci !</b></p>
+  <p id="score"></p>
+  <table>
+    <thead><tr><th>#</th><th>Phrases</th><th>Attendu</th><th>Réponse</th><th>TR</th></tr></thead>
+    <tbody id="rows"></tbody>
+  </table>
+  <button id="again">Recommencer</button>
+</div></div>
+
+<script>
+// Same design and timing as main.go: fixation 1000 ms, sentence 1 word by word (200 ms on,
+// 300 ms off), 1000 ms break, sentence 2, then up to 3000 ms to answer from the adjective's
+// offset, and 500 ms of feedback on the fixation cross, which is hidden while a word is on screen. Trials are from subject 1 of
+// counterbalancing.csv (congruent = left arrow).
+const TRIALS = [
+{
+"sentence1": "La boulangère rêvait dans le salon.",
+"sentence2": "Il était bavard.",
+"congruent": "0",
+"canonical_order": "1",
+"pronoun_referent": "place",
+"correct_key": "right",
+"translation": "The baker was dreaming in the living room. It was talkative."
+},
+{
+"sentence1": "Dans la piscine le banquier criait.",
+"sentence2": "Il était paresseux.",
+"congruent": "1",
+"canonical_order": "0",
+"pronoun_referent": "agent",
+"correct_key": "left",
+"translation": "In the swimming pool the banker was shouting. He was lazy."
+},
+{
+"sentence1": "La chanteuse rêvait dans le théâtre.",
+"sentence2": "Elle était repeinte.",
+"congruent": "0",
+"canonical_order": "1",
+"pronoun_referent": "agent",
+"correct_key": "right",
+"translation": "The singer was dreaming in the theatre. She was repainted."
+},
+{
+"sentence1": "Dans la poste le banquier rêvait.",
+"sentence2": "Elle était climatisée.",
+"congruent": "1",
+"canonical_order": "0",
+"pronoun_referent": "place",
+"correct_key": "left",
+"translation": "In the post office the banker was dreaming. It was air-conditioned."
+},
+{
+"sentence1": "La chanteuse attendait dans le magasin.",
+"sentence2": "Il était repeint.",
+"congruent": "1",
+"canonical_order": "1",
+"pronoun_referent": "place",
+"correct_key": "left",
+"translation": "The singer was waiting in the shop. It was repainted."
+},
+{
+"sentence1": "Dans le théâtre la serveuse parlait.",
+"sentence2": "Elle était spacieuse.",
+"congruent": "0",
+"canonical_order": "0",
+"pronoun_referent": "agent",
+"correct_key": "right",
+"translation": "In the theatre the waitress was talking. She was spacious."
+},
+{
+"sentence1": "Le banquier pensait dans la chambre.",
+"sentence2": "Il était humide.",
+"congruent": "0",
+"canonical_order": "1",
+"pronoun_referent": "agent",
+"correct_key": "right",
+"translation": "The banker was thinking in the bedroom. He was damp."
+},
+{
+"sentence1": "Dans le bureau la directrice marchait.",
+"sentence2": "Il était vaste.",
+"congruent": "1",
+"canonical_order": "0",
+"pronoun_referent": "place",
+"correct_key": "left",
+"translation": "In the office the director was walking. It was vast."
+},
+{
+"sentence1": "Dans le musée la serveuse pensait.",
+"sentence2": "Il était paresseux.",
+"congruent": "0",
+"canonical_order": "0",
+"pronoun_referent": "place",
+"correct_key": "right",
+"translation": "In the museum the waitress was thinking. It was lazy."
+},
+{
+"sentence1": "Le chauffeur rêvait dans la poste.",
+"sentence2": "Elle était agrandie.",
+"congruent": "1",
+"canonical_order": "1",
+"pronoun_referent": "place",
+"correct_key": "left",
+"translation": "The chauffeur was dreaming in the post office. It was enlarged."
+}
+];
+
+const FIX = 1000, ON = 200, OFF = 300, RESPONSE = 3000, FEEDBACK = 500;
+const KEYS = { ArrowLeft: "left", ArrowRight: "right" };
+const COLORS = { fix: "var(--fix)", correct: "var(--correct)", incorrect: "var(--incorrect)", timeout: "var(--timeout)" };
+
+const $ = id => document.getElementById(id);
+const cross = $("cross"), wordEl = $("word");
+
+function show(id) {
+  for (const s of document.querySelectorAll(".screen")) s.classList.toggle("on", s.id === id);
+}
+
+// The words of a trial with their onsets, in ms from the trial's start.
+function schedule(t) {
+  const words = [];
+  const add = (sentence, start) => sentence.replace(/\.$/, "").split(/\s+/)
+    .forEach((w, i) => words.push({ text: w, onset: start + i * (ON + OFF) }));
+  add(t.sentence1, FIX);
+  add(t.sentence2, FIX + 6 * (ON + OFF) + FIX);
+  return words;
+}
+
+// Runs one trial; resolves with the answer ("left", "right" or "") and its RT.
+function runTrial(t) {
+  return new Promise(resolve => {
+    const words = schedule(t);
+    const respOpen = words[words.length - 1].onset + ON;
+    let start = null, shown = null, answer = null;
+
+    const onKey = e => {
+      if (!(e.key in KEYS) || start === null) return;
+      // Presses before the last word has gone off are ignored, as in the MEG version.
+      if (e.timeStamp - start >= respOpen && answer === null) answer = { key: KEYS[e.key], t: e.timeStamp };
+    };
+    window.addEventListener("keydown", onKey);
+
+    const frame = now => {
+      if (start === null) start = now;
+      const el = now - start;
+      if (aborted) {
+        window.removeEventListener("keydown", onKey);
+        wordEl.textContent = "";
+        resolve(null);
+        return;
+      }
+      if (el >= respOpen && (answer !== null || el >= respOpen + RESPONSE)) {
+        window.removeEventListener("keydown", onKey);
+        wordEl.textContent = "";
+        resolve(answer ? { key: answer.key, rt: answer.t - start - respOpen } : { key: "", rt: null });
+        return;
+      }
+      const w = words.find(w => el >= w.onset && el < w.onset + ON);
+      const text = w ? w.text : "";
+      if (text !== shown) {
+        wordEl.textContent = text;
+        cross.style.visibility = text ? "hidden" : "visible";
+        shown = text;
+      }
+      requestAnimationFrame(frame);
+    };
+    cross.style.setProperty("--c", COLORS.fix);
+    requestAnimationFrame(frame);
+  });
+}
+
+const wait = ms => new Promise(r => setTimeout(r, ms));
+let aborted = false;
+window.addEventListener("keydown", e => { if (e.key === "Escape") aborted = true; });
+
+async function run() {
+  aborted = false;
+  show("stage");
+  const results = [];
+  for (const t of TRIALS) {
+    const r = await runTrial(t);
+    if (r === null) break;
+    const outcome = r.key === "" ? "timeout" : r.key === t.correct_key ? "correct" : "incorrect";
+    results.push({ t, ...r, outcome });
+    cross.style.setProperty("--c", COLORS[outcome]);
+    await wait(FEEDBACK);
+  }
+  if (document.fullscreenElement) document.exitFullscreen().catch(() => {});
+  finish(results);
+}
+
+function finish(results) {
+  const n = results.filter(r => r.outcome === "correct").length;
+  $("score").textContent = `${n} réponse${n > 1 ? "s" : ""} correcte${n > 1 ? "s" : ""} sur ${results.length}.`;
+  const label = { left: "← naturel", right: "→ étrange", "": "—" };
+  $("rows").innerHTML = results.map((r, i) => `<tr>
+    <td>${i + 1}</td>
+    <td>${r.t.sentence1} ${r.t.sentence2}<br><span class="tr">${r.t.translation}</span></td>
+    <td>${label[r.t.correct_key]}</td>
+    <td class="${{ correct: "ok", incorrect: "bad", timeout: "none" }[r.outcome]}">${label[r.key]}</td>
+    <td>${r.rt === null ? "—" : Math.round(r.rt) + " ms"}</td></tr>`).join("");
+  show("end");
+}
+
+window.addEventListener("keydown", e => {
+  if (e.code !== "Space" || !$("intro").classList.contains("on")) return;
+  e.preventDefault();
+  document.documentElement.requestFullscreen?.().catch(() => {});
+  run();
+});
+$("again").addEventListener("click", () => show("intro"));
+</script>
+</body>
+</html>

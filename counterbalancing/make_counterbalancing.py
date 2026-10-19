@@ -25,20 +25,20 @@ FEM = {
     "bavard": "bavarde", "content": "contente", "fatigué": "fatiguée",
     "inquiet": "inquiète", "enrhumé": "enrhumée", "méfiant": "méfiante",
     "peureux": "peureuse", "gourmand": "gourmande", "distrait": "distraite",
-    "souriant": "souriante", "courageux": "courageuse", "paresseux": "paresseuse",
+    "nerveux": "nerveuse", "courageux": "courageuse", "paresseux": "paresseuse",
     # places
-    "vide": "vide", "aéré": "aérée", "bondé": "bondée", "désert": "déserte",
-    "rénové": "rénovée", "chauffé": "chauffée", "aménagé": "aménagée",
-    "délabré": "délabrée", "repeint": "repeinte", "agrandi": "agrandie",
-    "carrelé": "carrelée", "spacieux": "spacieuse", "encombré": "encombrée",
-    "nettoyé": "nettoyée", "climatisé": "climatisée", "fréquenté": "fréquentée",
+    "vide": "vide", "aéré": "aérée", "vaste": "vaste", "rénové": "rénovée",
+    "humide": "humide", "aménagé": "aménagée", "délabré": "délabrée",
+    "repeint": "repeinte", "agrandi": "agrandie", "ventilé": "ventilée",
+    "saccagé": "saccagée", "spacieux": "spacieuse", "restauré": "restaurée",
+    "nettoyé": "nettoyée", "climatisé": "climatisée", "insalubre": "insalubre",
 }
 
 # English translations (adjectives keyed by masculine form).
 EN = {
     "banquier": "banker", "policier": "police officer", "plombier": "plumber",
     "chasseur": "hunter", "jardinier": "gardener", "chauffeur": "chauffeur",
-    "mécanicien": "mechanic", "conducteur": "driver", "fermière": "farmer",
+    "mécanicien": "mechanic", "pharmacien": "pharmacist", "fermière": "farmer",
     "danseuse": "dancer", "vendeuse": "saleswoman", "serveuse": "waitress",
     "chanteuse": "singer", "caissière": "cashier", "directrice": "director",
     "boulangère": "baker",
@@ -48,28 +48,28 @@ EN = {
     "pensait": "was thinking", "pleurait": "was crying", "rêvait": "was dreaming",
     "riait": "was laughing", "toussait": "was coughing", "tremblait": "was trembling",
     "marchait": "was walking",
-    "le stade": "the stadium", "le parc": "the park", "le bureau": "the office",
-    "le jardin": "the garden", "le marché": "the market", "le cinéma": "the cinema",
-    "le métro": "the metro", "le parking": "the car park", "la cave": "the cellar",
-    "la mer": "the sea", "la cuisine": "the kitchen", "la forêt": "the forest",
-    "la montagne": "the mountain", "la gare": "the station",
-    "la piscine": "the swimming pool", "la classe": "the classroom",
+    "bureau": "the office", "cinéma": "the cinema", "musée": "the museum",
+    "garage": "the garage", "magasin": "the shop", "salon": "the living room",
+    "gymnase": "the gym", "théâtre": "the theatre", "salle": "the hall",
+    "poste": "the post office", "classe": "the classroom", "mairie": "the town hall",
+    "prison": "the prison", "cuisine": "the kitchen", "piscine": "the swimming pool",
+    "chambre": "the bedroom",
     "têtu": "stubborn", "déçu": "disappointed", "fâché": "angry", "jaloux": "jealous",
     "bavard": "talkative", "content": "happy", "fatigué": "tired", "inquiet": "worried",
     "enrhumé": "sniffly", "méfiant": "suspicious", "peureux": "fearful",
-    "gourmand": "greedy", "distrait": "absent-minded", "souriant": "smiling",
+    "gourmand": "greedy", "distrait": "absent-minded", "nerveux": "nervous",
     "courageux": "brave", "paresseux": "lazy",
-    "vide": "empty", "aéré": "airy", "bondé": "crowded", "désert": "deserted",
-    "rénové": "renovated", "chauffé": "heated", "aménagé": "fitted out",
-    "délabré": "dilapidated", "repeint": "repainted", "agrandi": "enlarged",
-    "carrelé": "tiled", "spacieux": "spacious", "encombré": "cluttered",
-    "nettoyé": "cleaned", "climatisé": "air-conditioned", "fréquenté": "busy",
+    "vide": "empty", "aéré": "airy", "vaste": "vast", "rénové": "renovated",
+    "humide": "damp", "aménagé": "fitted out", "délabré": "dilapidated",
+    "repeint": "repainted", "agrandi": "enlarged", "ventilé": "ventilated",
+    "saccagé": "ransacked", "spacieux": "spacious", "restauré": "restored",
+    "nettoyé": "cleaned", "climatisé": "air-conditioned", "insalubre": "unsanitary",
 }
 # English pronoun follows the French pronoun's referent (place -> "It").
 EN_PRON = {"m": "He", "f": "She"}
 
 # stimuli.csv has duplicate header names, so read by position.
-with open("stimuli.csv", encoding="utf-8") as f:
+with open(HERE / "stimuli.csv", encoding="utf-8") as f:
     rows = list(csv.reader(f))[1:]
 people = {"m": [r[0] for r in rows if r[1] == "m"], "f": [r[0] for r in rows if r[1] == "f"]}
 places = {"m": [r[5] for r in rows if r[6] == "m"], "f": [r[5] for r in rows if r[6] == "f"]}
@@ -77,6 +77,13 @@ verbs = [r[3] for r in rows]
 adj_people = [r[7] for r in rows]
 adj_places = [r[8] for r in rows]
 
+missing = sorted({w for w in [r[0] for r in rows] + verbs + [r[5] for r in rows]
+                  + adj_people + adj_places if w not in EN}
+                 | {a for a in adj_people + adj_places if a not in FEM})
+if missing:
+    sys.exit(f"stimuli.csv has words missing from FEM or EN: {', '.join(missing)}")
+
+# stimuli.csv lists bare place nouns; none starts with a vowel or h, so no l'.
 ART = {"m": "le", "f": "la"}
 PRON = {"m": "Il", "f": "Elle"}
 
@@ -118,10 +125,11 @@ def make_subject(subject_id):
             adj = adj_m if pron_g == "m" else FEM[adj_m]
 
             np_subj = f"{ART[agent_g]} {subj}"
+            np_place = f"{ART[place_g]} {place}"
             if canonical:
-                s1 = f"{np_subj} {verb} dans {place}."
+                s1 = f"{np_subj} {verb} dans {np_place}."
             else:
-                s1 = f"dans {place} {np_subj} {verb}."
+                s1 = f"dans {np_place} {np_subj} {verb}."
             s1 = s1[0].upper() + s1[1:]
             s2 = f"{PRON[pron_g]} était {adj}."
 

@@ -49,7 +49,7 @@ def add(code, event, on_screen, onset, duration, **cond):
 
 
 for t in range(1, 33):
-    add(160 + t, f"trial_start (trial_number={t})", "fixation dot (light grey)", 0, FIX)
+    add(160 + t, f"trial_start (trial_number={t})", "fixation cross (light grey)", 0, FIX)
 
 for role, (name, sentence, pos_can, pos_non) in ROLES.items():
     for cell in range(16):
@@ -57,21 +57,21 @@ for role, (name, sentence, pos_can, pos_non) in ROLES.items():
         pron_f, agent_f = cell >> 2 & 1, cell >> 3 & 1
         pos = pos_can if canonical else pos_non
         add(16 * role + cell, f"word: {name}",
-            f"'{EXAMPLE[name][0 if canonical else 1]}' then fixation at +{WORD_ON} ms",
+            f"'{EXAMPLE[name][0 if canonical else 1]}' then fixation cross at +{WORD_ON} ms",
             word_onset(sentence, pos), f"{WORD_ON} + {WORD_SOA - WORD_ON} fixation",
             role=name, sentence=sentence, position=pos, cell=cell,
             congruent=congruent, canonical_order=canonical,
             pronoun_gender="f" if pron_f else "m", agent_gender="f" if agent_f else "m")
 
-add(None, "inter_sentence_break", "fixation dot (light grey)", FIX + 6 * WORD_SOA,
+add(None, "inter_sentence_break", "fixation cross (light grey)", FIX + 6 * WORD_SOA,
     f"{FIX} (after the last word's {WORD_SOA - WORD_ON} ms fixation)")
-add(None, "response_window_opens", "fixation dot (light grey)", RESP_OPEN,
+add(None, "response_window_opens", "fixation cross (light grey)", RESP_OPEN,
     f"until response, max {RESPONSE_WINDOW}")
 # Button presses are recorded by the MEG on their own STI lines; the PC marks
 # only the feedback onset (first frame after the press, or the timeout).
-add(211, "feedback: correct", "fixation dot turns green", f"{RESP_OPEN} + RT", FEEDBACK)
-add(212, "feedback: incorrect", "fixation dot turns red", f"{RESP_OPEN} + RT", FEEDBACK)
-add(213, "feedback: timeout (no response)", "fixation dot turns dark grey",
+add(211, "feedback: correct", "fixation cross turns green", f"{RESP_OPEN} + RT", FEEDBACK)
+add(212, "feedback: incorrect", "fixation cross turns red", f"{RESP_OPEN} + RT", FEEDBACK)
+add(213, "feedback: timeout (no response)", "fixation cross turns dark grey",
     RESP_OPEN + RESPONSE_WINDOW, FEEDBACK)
 for b in range(1, 6):
     add(200 + b, f"pause/instruction screen before block {b}",

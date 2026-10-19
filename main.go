@@ -4,7 +4,8 @@
 // 200 ms on + 300 ms fixation), a 1000 ms break, sentence 2 (3 words, same
 // timing), then a felicity judgment (two red buttons, max 3000 ms) answered
 // once the last word has gone off, and 500 ms of feedback on the fixation
-// dot (green correct, red incorrect, dark grey timeout). 160 trials per subject
+// cross (green correct, red incorrect, dark grey timeout). The cross is hidden
+// while a word is on screen. 160 trials per subject
 // in 5 blocks of 32, with a pause before each block that the operator ends with SPACE. Trials come
 // from counterbalancing/counterbalancing.csv (make_counterbalancing.py), embedded in the binary.
 //
@@ -38,7 +39,6 @@ import (
 	"image/png"
 	"io"
 	"log"
-	"math"
 	"math/rand/v2"
 	"os"
 	"path/filepath"
@@ -90,7 +90,8 @@ var (
 
 const (
 	defaultFontSize = 48 // point size of the RSVP words
-	fixRadius       = 4  // fixation dot, in pixels
+	fixSize         = 16 // fixation cross, width and height in pixels
+	fixThickness    = 2  // fixation cross, line thickness in pixels
 )
 
 // ---------------------------------------------------------------------------
@@ -425,10 +426,10 @@ func instructionText(congruentKey string) string {
 		"Vous allez lire des paires de phrases, présentées mot par mot au centre de l'écran.\n\n" +
 		"Après la seconde phrase, indiquez si elle s'enchaîne naturellement avec la première :\n\n" +
 		mappingText(congruentKey) + "\n\n" +
-		"Répondez dès que le dernier mot a disparu. Le point de fixation devient " +
-		"verte si votre réponse est correcte, rouge si elle est incorrecte, et gris foncé " +
+		"Répondez dès que le dernier mot a disparu. La croix de fixation devient " +
+		"vert si votre réponse est correcte, rouge si elle est incorrecte, et gris foncé " +
 		"si vous n'avez pas répondu à temps.\n\n" +
-		"Gardez les yeux sur le point et évitez de cligner des yeux pendant la lecture."
+		"Gardez les yeux sur la croix et évitez de cligner des yeux pendant la lecture."
 }
 
 func pauseText(done int, congruentKey string) string {
@@ -558,13 +559,13 @@ func main() {
 	if err != nil {
 		exp.Fatal("font: %v", err)
 	}
-	fix := newDot(fixRadius, fixColor)
-	fixCorrect := newDot(fixRadius, correctColor)
-	fixIncorrect := newDot(fixRadius, incorrectColor)
-	fixTimeout := newDot(fixRadius, timeoutColor)
+	fix := newCross(fixSize, fixThickness, fixColor)
+	fixCorrect := newCross(fixSize, fixThickness, correctColor)
+	fixIncorrect := newCross(fixSize, fixThickness, incorrectColor)
+	fixTimeout := newCross(fixSize, fixThickness, timeoutColor)
 	for _, v := range []stimuli.VisualStimulus{fix, fixCorrect, fixIncorrect, fixTimeout} {
 		if err := stimuli.PreloadVisualOnScreen(exp.Screen, v); err != nil {
-			exp.Fatal("preloading the fixation dot: %v", err)
+			exp.Fatal("preloading the fixation cross: %v", err)
 		}
 	}
 	for _, t := range trials {
@@ -689,17 +690,14 @@ func main() {
 					}
 					exp.Marker.Arm(byte(code))
 				}
-				// The dot stays on screen throughout, under the words.
+				// A word replaces the cross while it is on screen.
 				if err := ctx.Screen.Clear(); err != nil {
-					return err
-				}
-				if err := fix.Draw(ctx.Screen); err != nil {
 					return err
 				}
 				if ctx.OnPhase && ctx.Index > 0 {
 					return t.words[ctx.Index-1].stim.Draw(ctx.Screen)
 				}
-				return nil
+				return fix.Draw(ctx.Screen)
 			}
 			gc := debug.SetGCPercent(-1)
 			_, timing, err := stimuli.PresentStreamOfStimuliHooks(exp.Screen, buildStream(t), 0, 0, onFrame, nil)
@@ -788,27 +786,16 @@ func main() {
 	}
 }
 
-// newDot returns a filled circle of the given radius as an antialiased image
-// (the library's Circle is drawn in pixel rows and looks jagged when small).
-func newDot(radius float32, c control.Color) *stimuli.Picture {
-	const ss = 8 // supersampling per axis
-	size := int(math.Ceil(float64(2*radius))) + 2
+// newCross returns a "+" of the given width and line thickness, in pixels,
+// as an image.
+func newCross(size, thickness int, c control.Color) *stimuli.Picture {
 	img := image.NewNRGBA(image.Rect(0, 0, size, size))
-	center := float64(size) / 2
-	r2 := float64(radius) * float64(radius)
+	lo, hi := (size-thickness)/2, (size+thickness)/2
 	for y := 0; y < size; y++ {
 		for x := 0; x < size; x++ {
-			in := 0
-			for sy := 0; sy < ss; sy++ {
-				for sx := 0; sx < ss; sx++ {
-					dx := float64(x) + (float64(sx)+0.5)/ss - center
-					dy := float64(y) + (float64(sy)+0.5)/ss - center
-					if dx*dx+dy*dy <= r2 {
-						in++
-					}
-				}
+			if (x >= lo && x < hi) || (y >= lo && y < hi) {
+				img.SetNRGBA(x, y, color.NRGBA{c.R, c.G, c.B, 255})
 			}
-			img.SetNRGBA(x, y, color.NRGBA{c.R, c.G, c.B, uint8(255 * in / (ss * ss))})
 		}
 	}
 	var buf bytes.Buffer
