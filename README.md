@@ -42,7 +42,7 @@ GONOSUMDB=github.com/chrplr/goxpyriment GOPROXY=direct go mod download
 | Flag | Meaning |
 |---|---|
 | `-s N` | subject (must be in the counterbalancing table) |
-| `-meg` | triggers on `/dev/parport1`, answers with the red buttons of the response pad |
+| `-meg` | triggers on `/dev/parport1`, answers with the green buttons of the response pad |
 | `-block N` | start at block N; the first screen is then the instructions |
 | `-photodiode on/off/auto` | white square top-left at every trigger; `auto` = on with `-meg` |
 | `-photodiode-size N` | its side, in pixels (default 100) |
@@ -60,8 +60,8 @@ was presented so far is saved.
 
 ## MEG rig (Linux)
 
-- Triggers: data lines of `/dev/parport1`. Buttons: status lines, left red on
-  pin 12 of `/dev/parport0`, right red on pin 13 of `/dev/parport1` (as in
+- Triggers: data lines of `/dev/parport1`. Buttons: status lines, left green
+  on pin 10 of `/dev/parport0`, right green on pin 12 of `/dev/parport1` (as in
   Pushmi). The button pins are an inference from Pushmi's expyriment code and
   must be checked on the rig.
 - The user needs to be in the `lp` group, `ppdev` loaded, and the `lp`

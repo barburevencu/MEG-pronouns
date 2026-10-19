@@ -2,7 +2,7 @@
 //
 // Each trial: fixation (1000 ms), sentence 1 word by word (6 words, each
 // 200 ms on + 300 ms fixation), a 1000 ms break, sentence 2 (3 words, same
-// timing), then a felicity judgment (two red buttons, max 3000 ms) answered
+// timing), then a felicity judgment (two green buttons, max 3000 ms) answered
 // once the last word has gone off, and 500 ms of feedback on the fixation
 // cross (green correct, red incorrect, dark grey timeout). The cross is hidden
 // while a word is on screen. 160 trials per subject
@@ -97,19 +97,19 @@ const (
 // ---------------------------------------------------------------------------
 // MEG hardware (NeuroSpin, as in the Pushmi experiment)
 //
-// Triggers go out on the data lines of /dev/parport1. The response pad's red
-// buttons come in on status lines: left red on pin 12 (PaperOut) of
-// /dev/parport0, right red on pin 13 (Select) of /dev/parport1 -- expyriment's
-// read_status values 4 and 2. A button is down when its bit differs from the
+// Triggers go out on the data lines of /dev/parport1. The response pad's green
+// buttons come in on status lines: left green on pin 10 (nAck) of
+// /dev/parport0, right green on pin 12 (PaperOut) of /dev/parport1 --
+// expyriment's read_status values 8 and 4 in Pushmi's constants.py. A button is down when its bit differs from the
 // value read at startup.
 
 const (
-	triggerPort  = "/dev/parport1"
-	leftRedPort  = "/dev/parport0"
-	rightRedPort = "/dev/parport1"
-	leftRedMask  = 0x20 // status register bit 5, pin 12
-	rightRedMask = 0x10 // status register bit 4, pin 13
-	pollInterval = 500 * time.Microsecond
+	triggerPort    = "/dev/parport1"
+	leftGreenPort  = "/dev/parport0"
+	rightGreenPort = "/dev/parport1"
+	leftGreenMask  = 0x40 // status register bit 6, pin 10
+	rightGreenMask = 0x20 // status register bit 5, pin 12
+	pollInterval   = 500 * time.Microsecond
 )
 
 // ---------------------------------------------------------------------------
@@ -363,8 +363,8 @@ func (b *buttonResponder) poll() (string, uint64, error) {
 	}
 	// Report a button on the transition to "down" only, so a button held
 	// from the previous screen is not taken as a new answer.
-	downL := (sl^b.baseL)&leftRedMask != 0
-	downR := (sr^b.baseR)&rightRedMask != 0
+	downL := (sl^b.baseL)&leftGreenMask != 0
+	downR := (sr^b.baseR)&rightGreenMask != 0
 	pressL, pressR := downL && !b.downL, downR && !b.downR
 	b.downL, b.downR = downL, downR
 	switch {
@@ -377,8 +377,8 @@ func (b *buttonResponder) poll() (string, uint64, error) {
 }
 
 func (b *buttonResponder) desc() string {
-	return fmt.Sprintf("MEG red buttons: left %s mask 0x%02x, right %s mask 0x%02x (baselines 0x%02x, 0x%02x)",
-		leftRedPort, leftRedMask, rightRedPort, rightRedMask, b.baseL, b.baseR)
+	return fmt.Sprintf("MEG green buttons: left %s mask 0x%02x, right %s mask 0x%02x (baselines 0x%02x, 0x%02x)",
+		leftGreenPort, leftGreenMask, rightGreenPort, rightGreenMask, b.baseL, b.baseR)
 }
 
 // drain forgets presses made before now (keyboard queue, buttons held down).
@@ -417,8 +417,8 @@ func waitResponse(r responder, deadlineNS uint64) (string, uint64, error) {
 func mappingText(congruentKey string) string {
 	other := map[string]string{"left": "DROIT", "right": "GAUCHE"}[congruentKey]
 	this := map[string]string{"left": "GAUCHE", "right": "DROIT"}[congruentKey]
-	return "bouton rouge " + this + " : oui, la suite est naturelle\n" +
-		"bouton rouge " + other + " : non, la suite est étrange"
+	return "bouton vert " + this + " : oui, la suite est naturelle\n" +
+		"bouton vert " + other + " : non, la suite est étrange"
 }
 
 func instructionText(congruentKey string) string {
@@ -443,7 +443,7 @@ const endText = "L'expérience est terminée.\n\nMerci pour votre participation 
 // ---------------------------------------------------------------------------
 
 func main() {
-	meg := flag.Bool("meg", false, "MEG mode: triggers on "+triggerPort+", answers with the red buttons of the response pad (otherwise: keyboard arrows, no triggers)")
+	meg := flag.Bool("meg", false, "MEG mode: triggers on "+triggerPort+", answers with the green buttons of the response pad (otherwise: keyboard arrows, no triggers)")
 	photodiode := flag.String("photodiode", "auto", "photodiode square in the top-left corner: on, off, or auto (on with -meg)")
 	photodiodeSize := flag.Float64("photodiode-size", control.DefaultPhotodiodeSize, "side of the photodiode square, in pixels")
 	ttlMs := flag.Float64("ttl-ms", 0, "how long each trigger code stays on the lines, in ms (0 = 3 frames, 25 ms at 120 Hz)")
@@ -505,8 +505,8 @@ func main() {
 		}
 		ttlOut = trig
 		left := trig
-		if leftRedPort != triggerPort {
-			left = triggers.NewParallelPort(leftRedPort)
+		if leftGreenPort != triggerPort {
+			left = triggers.NewParallelPort(leftGreenPort)
 			if err := left.Open(); err != nil {
 				exp.Fatal("left button port: %v", err)
 			}
