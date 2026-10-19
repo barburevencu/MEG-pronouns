@@ -62,9 +62,11 @@ was presented so far is saved.
 ## MEG rig (Linux)
 
 - Triggers: data lines of `/dev/parport1`. Buttons: status lines, left green
-  on pin 10 of `/dev/parport0`, right green on pin 12 of `/dev/parport1` (as in
-  Pushmi). The button pins are an inference from Pushmi's expyriment code and
-  must be checked on the rig.
+  on pin 15 of `/dev/parport0`, right green on pin 12 of `/dev/parport1`,
+  measured with `tools/buttontest` (Pushmi's table swaps left green and right
+  blue). Rest of the pad: left yellow pin 13 and right blue pin 10 of
+  `/dev/parport0`, right yellow pin 10 of `/dev/parport1`, left blue pin 10 of
+  `/dev/parport2`.
 - The user needs to be in the `lp` group, `ppdev` loaded, and the `lp`
   printer module unloaded (`sudo rmmod lp`), otherwise opening the port can
   hang. See goxpyriment's `triggers/notes/parallel.md`.

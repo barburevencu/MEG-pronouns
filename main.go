@@ -98,16 +98,17 @@ const (
 // MEG hardware (NeuroSpin, as in the Pushmi experiment)
 //
 // Triggers go out on the data lines of /dev/parport1. The response pad's green
-// buttons come in on status lines: left green on pin 10 (nAck) of
-// /dev/parport0, right green on pin 12 (PaperOut) of /dev/parport1 --
-// expyriment's read_status values 8 and 4 in Pushmi's constants.py. A button is down when its bit differs from the
-// value read at startup.
+// buttons come in on status lines: left green on pin 15 (nError) of
+// /dev/parport0, right green on pin 12 (PaperOut) of /dev/parport1, as
+// measured on the rig with tools/buttontest (Pushmi's constants.py swaps left
+// green with right blue, which is pin 10 of /dev/parport0). A button is down
+// when its bit differs from the value read at startup.
 
 const (
 	triggerPort    = "/dev/parport1"
 	leftGreenPort  = "/dev/parport0"
 	rightGreenPort = "/dev/parport1"
-	leftGreenMask  = 0x40 // status register bit 6, pin 10
+	leftGreenMask  = 0x08 // status register bit 3, pin 15
 	rightGreenMask = 0x20 // status register bit 5, pin 12
 	pollInterval   = 500 * time.Microsecond
 )
