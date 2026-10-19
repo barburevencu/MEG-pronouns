@@ -1,0 +1,51 @@
+# Builds the Linux programs for the MEG computer on every push to main and
+# publishes them as the release "rig", so the rig only has to download:
+#
+#   curl -L -o pronouns-linux https://github.com/barburevencu/MEG-pronouns/releases/download/rig/pronouns-linux
+name: rig build
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: rig
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      CGO_ENABLED: "0"
+      GOOS: linux
+      GOARCH: amd64
+      GONOSUMDB: github.com/chrplr/goxpyriment
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+
+      - name: Test
+        run: go test ./...
+
+      - name: Build
+        run: |
+          go build -o pronouns-linux .
+          go build -o buttontest-linux ./tools/buttontest
+
+      - name: Publish release "rig"
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          short=$(git rev-parse --short=7 HEAD)
+          gh release delete rig --yes --cleanup-tag || true
+          gh release create rig pronouns-linux buttontest-linux \
+            --target "$GITHUB_SHA" \
+            --title "Rig build ($short)" \
+            --notes "Linux programs for the MEG computer, built from $short. The program prints \"pronouns $short\" at startup."

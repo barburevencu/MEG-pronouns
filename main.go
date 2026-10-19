@@ -473,6 +473,7 @@ func main() {
 	if err := moveDataFiles(exp.Data, dir); err != nil {
 		exp.Fatal("data folder: %v", err)
 	}
+	log.Printf("pronouns %s", buildVersion())
 	log.Printf("data will be saved to %s", exp.Data.FullPath)
 
 	if *startBlock < 1 || *startBlock > nBlocks {
@@ -546,6 +547,7 @@ func main() {
 			}
 		}
 	}
+	exp.AddExperimentInfo("program: pronouns " + buildVersion())
 	exp.AddExperimentInfo("counterbalancing: " + cbSource)
 	exp.AddExperimentInfo("responses: " + resp.desc())
 	exp.AddExperimentInfo(fmt.Sprintf("triggers: %v; photodiode: %v (%.0f px, top-left); ttl duration: %v",
@@ -832,6 +834,34 @@ func newCross(size, thickness int, c control.Color) *stimuli.Picture {
 		panic(err) // encoding an in-memory image cannot fail
 	}
 	return stimuli.NewPictureFromMemory(buf.Bytes(), 0, 0)
+}
+
+// buildVersion returns the git commit the program was built from (stamped by
+// go build), with "+changes" if the working tree had uncommitted edits.
+func buildVersion() string {
+	info, ok := debug.ReadBuildInfo()
+	if !ok {
+		return "(unknown build)"
+	}
+	rev, dirty := "", false
+	for _, s := range info.Settings {
+		switch s.Key {
+		case "vcs.revision":
+			rev = s.Value
+		case "vcs.modified":
+			dirty = s.Value == "true"
+		}
+	}
+	if rev == "" {
+		return "(no commit: built with go run or outside git)"
+	}
+	if len(rev) > 7 {
+		rev = rev[:7]
+	}
+	if dirty {
+		rev += "+changes"
+	}
+	return rev
 }
 
 // projectDir is the Pronouns folder: the folder holding the executable, or

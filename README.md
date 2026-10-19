@@ -31,6 +31,22 @@ marker is not in a release yet). On a machine without a Go module cache, if
 GONOSUMDB=github.com/chrplr/goxpyriment GOPROXY=direct go mod download
 ```
 
+## On the MEG computer: download, don't build
+
+Do not run `go build` on the MEG computer: compiling needs 1-2 GB of memory
+and froze it once. Every push to `main` makes GitHub build the Linux programs
+(`.github/workflows/rig.yml`, 1-2 minutes) and publish them as the release
+`rig`. In the project folder on the MEG computer:
+
+```bash
+curl -L -o pronouns-linux https://github.com/barburevencu/MEG-pronouns/releases/download/rig/pronouns-linux && chmod +x pronouns-linux
+./pronouns-linux -s 1 -meg
+```
+
+The program prints the commit it was built from (`pronouns d14ff6a`) at
+startup and in the `-info.txt` file; compare it with the latest commit on
+GitHub. `buttontest-linux` is in the same release.
+
 ## Run
 
 ```bash
