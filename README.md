@@ -11,6 +11,7 @@ written with [goxpyriment](https://github.com/chrplr/goxpyriment).
 | `main.go` | the experiment; `counterbalancing/counterbalancing.csv` is embedded in the binary |
 | `main_test.go` | checks that every subject loads and every word code matches `triggers/triggers.csv` |
 | `demo/pronouns_demo.html` | standalone browser demo (10 trials of subject 1, ← / →) to share; trials are embedded, so refresh it after changing the stimuli |
+| `tools/buttontest` | prints which parallel-port pin each response-pad button moves (run on the MEG computer: `go build -o buttontest ./tools/buttontest && ./buttontest`) |
 | `data/` | session data (created by the experiment) |
 
 The Python scripts can be run from any folder. After changing
