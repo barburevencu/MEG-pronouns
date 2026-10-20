@@ -36,24 +36,25 @@ FEM = {
 
 # English translations (adjectives keyed by masculine form).
 EN = {
-    "banquier": "banker", "policier": "police officer", "plombier": "plumber",
-    "chasseur": "hunter", "jardinier": "gardener", "chauffeur": "chauffeur",
-    "mécanicien": "mechanic", "pharmacien": "pharmacist", "fermière": "farmer",
-    "danseuse": "dancer", "vendeuse": "saleswoman", "serveuse": "waitress",
-    "chanteuse": "singer", "caissière": "cashier", "directrice": "director",
-    "boulangère": "baker",
+    "marin": "sailor", "facteur": "mail carrier", "bûcheron": "lumberjack",
+    "plongeur": "diver", "bijoutier": "jeweller", "chauffeur": "chauffeur",
+    "menuisier": "carpenter", "mécanicien": "mechanic", "nonne": "nun",
+    "bergère": "shepherdess", "danseuse": "dancer", "serveuse": "waitress",
+    "caissière": "cashier", "chanteuse": "singer", "coiffeuse": "hairdresser",
+    "couturière": "seamstress",
     "attendait": "was waiting", "buvait": "was drinking", "courait": "was running",
     "criait": "was shouting", "dormait": "was sleeping", "écrivait": "was writing",
     "hésitait": "was hesitating", "lisait": "was reading", "parlait": "was talking",
     "pensait": "was thinking", "pleurait": "was crying", "rêvait": "was dreaming",
     "riait": "was laughing", "toussait": "was coughing", "tremblait": "was trembling",
     "marchait": "was walking",
-    "bureau": "the office", "cinéma": "the cinema", "musée": "the museum",
-    "garage": "the garage", "magasin": "the shop", "salon": "the living room",
-    "gymnase": "the gym", "théâtre": "the theatre", "salle": "the hall",
-    "poste": "the post office", "classe": "the classroom", "mairie": "the town hall",
-    "prison": "the prison", "cuisine": "the kitchen", "piscine": "the swimming pool",
-    "chambre": "the bedroom",
+    "musée": "the museum", "dortoir": "the dormitory", "tribunal": "the courtroom",
+    "pressing": "the dry cleaner's", "parlement": "the parliament",
+    "vestiaire": "the locker room", "chapiteau": "the circus tent",
+    "réfectoire": "the dining hall", "serre": "the greenhouse",
+    "piscine": "the swimming pool", "garderie": "the daycare", "clinique": "the clinic",
+    "brasserie": "the brasserie", "librairie": "the bookshop",
+    "boucherie": "the butcher's shop", "cathédrale": "the cathedral",
     "têtu": "stubborn", "déçu": "disappointed", "fâché": "angry", "jaloux": "jealous",
     "bavard": "talkative", "content": "happy", "fatigué": "tired", "inquiet": "worried",
     "enrhumé": "sniffly", "méfiant": "suspicious", "peureux": "fearful",
@@ -72,12 +73,12 @@ EN_PRON = {"m": "He", "f": "She"}
 with open(HERE / "stimuli.csv", encoding="utf-8") as f:
     rows = list(csv.reader(f))[1:]
 people = {"m": [r[0] for r in rows if r[1] == "m"], "f": [r[0] for r in rows if r[1] == "f"]}
-places = {"m": [r[5] for r in rows if r[6] == "m"], "f": [r[5] for r in rows if r[6] == "f"]}
-verbs = [r[3] for r in rows]
-adj_people = [r[7] for r in rows]
-adj_places = [r[8] for r in rows]
+places = {"m": [r[7] for r in rows if r[8] == "m"], "f": [r[7] for r in rows if r[8] == "f"]}
+verbs = [r[5] for r in rows]
+adj_people = [r[12] for r in rows]
+adj_places = [r[13] for r in rows]
 
-missing = sorted({w for w in [r[0] for r in rows] + verbs + [r[5] for r in rows]
+missing = sorted({w for w in [r[0] for r in rows] + verbs + [r[7] for r in rows]
                   + adj_people + adj_places if w not in EN}
                  | {a for a in adj_people + adj_places if a not in FEM})
 if missing:

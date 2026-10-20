@@ -1,17 +1,17 @@
-people,gender,num_letters,verbs,num_letters,places,gender,"adjectives (masculine, for people)",adjectives for places,num_letters_adj
-banquier,m,8,attendait,9,bureau,m,têtu,vide,4
-policier,m,8,buvait,6,cinéma,m,déçu,aéré,4
-plombier,m,8,courait,7,musée,m,fâché,vaste,5
-chasseur,m,8,criait,6,garage,m,jaloux,rénové,6
-jardinier,m,9,dormait,7,magasin,m,bavard,humide,6
-chauffeur,m,9,écrivait,8,salon,m,content,aménagé,7
-mécanicien,m,10,hésitait,8,gymnase,m,fatigué,délabré,7
-pharmacien,m,10,lisait,6,théâtre,m,inquiet,repeint,7
-fermière,f,8,parlait,7,salle,f,enrhumé,agrandi,7
-danseuse,f,8,pensait,7,poste,f,méfiant,ventilé,7
-vendeuse,f,8,pleurait,8,classe,f,peureux,saccagé,7
-serveuse,f,8,rêvait,6,mairie,f,gourmand,spacieux,8
-chanteuse,f,9,riait,5,prison,f,distrait,restauré,8
-caissière,f,9,toussait,8,cuisine,f,nerveux,nettoyé,7
-directrice,f,10,tremblait,9,piscine,f,courageux,climatisé,9
-boulangère,f,10,marchait,8,chambre,f,paresseux,insalubre,9
+people,gender,num_letters_people,freq_films_people,freq_books_people,verbs,num_letters,places,gender,num_letters_places,freq_films_places,freq_books_places,"adjectives (masculine, for people)",adjectives for places,num_letters_adj
+marin,m,5,8.48,15.34,attendait,9,musée,m,5,18.59,21.55,têtu,vide,4
+facteur,m,7,9.67,12.36,buvait,6,dortoir,m,7,4.83,9.32,déçu,aéré,4
+bûcheron,m,8,2.13,4.12,courait,7,tribunal,m,8,35.35,15,fâché,vaste,5
+plongeur,m,8,2.06,1.69,criait,6,pressing,m,8,2.52,0.74,jaloux,rénové,6
+bijoutier,m,9,1.54,1.62,dormait,7,parlement,m,9,4.71,5.54,bavard,humide,6
+chauffeur,m,9,37.35,44.19,écrivait,8,vestiaire,m,9,4.04,9.86,content,aménagé,7
+menuisier,m,9,2.88,4.05,hésitait,8,chapiteau,m,9,1.83,1.96,fatigué,délabré,7
+mécanicien,m,10,5.38,5.34,lisait,6,réfectoire,m,10,1.11,9.59,inquiet,repeint,7
+nonne,f,5,5.46,1.69,parlait,7,serre,f,5,3.79,4.53,enrhumé,agrandi,7
+bergère,f,7,1.27,6.76,pensait,7,piscine,f,7,22.19,15.74,méfiant,ventilé,7
+danseuse,f,8,10.05,8.58,pleurait,8,garderie,f,8,1.67,0.47,peureux,saccagé,7
+serveuse,f,8,9.96,6.62,rêvait,6,clinique,f,8,17.72,10.81,gourmand,spacieux,8
+caissière,f,9,2.03,4.19,riait,5,brasserie,f,9,1.31,7.97,distrait,restauré,8
+chanteuse,f,9,7.81,4.39,toussait,8,librairie,f,9,5.02,8.24,nerveux,nettoyé,7
+coiffeuse,f,9,2.27,5.34,tremblait,9,boucherie,f,9,4.02,7.43,courageux,climatisé,9
+couturière,f,10,2.45,5.81,marchait,8,cathédrale,f,10,3.24,17.23,paresseux,insalubre,9

@@ -7,3 +7,5 @@ Design.key
 .DS_Store
 /pronouns-linux
 /buttontest-linux
+# French word frequencies (Lexique 3.83, lexique.org)
+/lexique/
