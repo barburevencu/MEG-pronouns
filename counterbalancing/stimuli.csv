@@ -1,4 +1,4 @@
-people,gender,num_letters_people,freq_films_people,freq_books_people,verbs,num_letters,places,gender,num_letters_places,freq_films_places,freq_books_places,"adjectives (masculine, for people)",adjectives for places,num_letters_adj
+people,gender,num_letters_people,freq_films_people,freq_books_people,verbs,num_letters_verb,places,gender,num_letters_places,freq_films_places,freq_books_places,"adjectives (masculine, for people)",adjectives for places,num_letters_adj
 marin,m,5,8.48,15.34,attendait,9,musée,m,5,18.59,21.55,têtu,vide,4
 facteur,m,7,9.67,12.36,buvait,6,dortoir,m,7,4.83,9.32,déçu,aéré,4
 bûcheron,m,8,2.13,4.12,courait,7,tribunal,m,8,35.35,15,fâché,vaste,5
