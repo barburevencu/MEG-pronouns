@@ -3,14 +3,33 @@
 French pronoun resolution, word-by-word reading (RSVP) with a felicity judgment,
 written with [goxpyriment](https://github.com/chrplr/goxpyriment).
 
+The session opens with a **localizer**: a one-back task on the 32 nouns, words
+and pictures alternating (200 ms on, 800 ms fixation, one per second). The
+participant presses the right green button when the stimulus is the same
+concept as the previous one; the cross turns green on a correct press, red on a
+press on a non-match or on a match left unanswered for 800 ms. A training block
+of 64 trials (every word and picture once, 4 matches, ~1 min), then two blocks
+of 512 (every word and picture 8 times, 32 matches, ~8.5 min each). Match
+positions are random (never two in a row), every concept is matched once per
+block, word→picture in one block and picture→word in the other. For decoding,
+leave out the match trials and the trial after each match. Its words are in the
+main task's font and size; the pictures are as wide as the longest word.
+
 | File | What it is |
 |---|---|
 | `counterbalancing/stimuli.csv` | the word lists |
 | `counterbalancing/make_counterbalancing.py` | writes `counterbalancing/counterbalancing.csv` (all subjects, 160 trials each, 5 blocks of 32) from `counterbalancing/stimuli.csv` |
 | `triggers/make_trigger_table.py` | writes `triggers/triggers.csv`, every trigger code and what is on screen when it fires |
+| `pictures/` | the image prompts (`faces_prompts.md` people, `places_prompts.md` places); the full-size PNGs are not committed |
+| `localizer/make_localizer.py` | writes `localizer/localizer.csv` (all subjects' localizer sequences) and `localizer/images/` (the pictures shrunk to 512 px) from `pictures/` |
 | `main.go` | the experiment; `counterbalancing/counterbalancing.csv` is embedded in the binary |
-| `main_test.go` | checks that every subject loads and every word code matches `triggers/triggers.csv` |
-| `demo/pronouns_demo.html` | standalone browser demo (10 trials of subject 1, ← / →) to share; trials are embedded, so refresh it after changing the stimuli |
+| `localizer.go` | the localizer; `localizer/localizer.csv` and `localizer/images/` are embedded |
+| `instructions.go`, `instructions/screens.json` | the instruction screens (one or two sentences each, some with a picture), embedded; the operator advances each with SPACE |
+| `instructions/make_button_images.py` | draws the response-pad pictures (`pad_*.png`) from `response_pad_reference.png`, green buttons highlighted and labelled |
+| `instructions/make_preview.py` | draws the localizer example pictures and `instructions/preview.html`, every screen as the program shows it (run after editing `screens.json`) |
+| `main_test.go` | checks that every subject loads, every word code matches `triggers/triggers.csv`, and every localizer sequence has the designed structure |
+| `demo/pronouns_demo.html` | standalone browser demo to share: instructions (one short screen at a time, SPACE), 32 localizer trials (→ for a match) and 10 pronoun trials of subject 1 (← / →); trials and pictures are embedded |
+| `demo/make_demo.py` | refreshes the demo's localizer sequence and pictures (run after changing the stimuli or the pictures) |
 | `tools/buttontest` | prints which parallel-port pin each response-pad button moves (run on the MEG computer: `go build -o buttontest ./tools/buttontest && ./buttontest`) |
 | `data/` | session data (created by the experiment) |
 
@@ -52,7 +71,9 @@ GitHub. `buttontest-linux` is in the same release.
 ```bash
 ./pronouns -w -s 1                 # windowed test, answers with ← / →
 ./pronouns -s 1 -meg               # MEG session, subject 1
-./pronouns -s 1 -meg -block 3      # resume at block 3 after a crash
+./pronouns -s 1 -meg -block 3      # resume at block 3 after a crash (no localizer)
+./pronouns -s 1 -meg -localizer 2  # localizer block 2 only, then the main task
+./pronouns -s 1 -meg -localizer none  # main task only
 ./pronouns -w -s 1 -auto -block 5  # unattended timing check, random answers
 ```
 
@@ -60,7 +81,8 @@ GitHub. `buttontest-linux` is in the same release.
 |---|---|
 | `-s N` | subject (must be in the counterbalancing table) |
 | `-meg` | triggers on `/dev/parport1`, answers with the green buttons of the response pad |
-| `-block N` | start at block N; the first screen is then the instructions |
+| `-block N` | start the main task at block N; the first screen is then the instructions; with N > 1 the localizer is skipped unless `-localizer` is given |
+| `-localizer LIST` | localizer blocks to run: `none`, or a comma list of `train`, `1`, `2` (default all) |
 | `-photodiode on/off/auto` | white square top-left at every trigger; `auto` = on with `-meg` |
 | `-photodiode-size N` | its side, in pixels (default 100) |
 | `-ttl-ms N` | trigger pulse width (default 0 = 3 frames, 25 ms at 120 Hz) |
@@ -70,9 +92,10 @@ GitHub. `buttontest-linux` is in the same release.
 | `-auto` | random answers, blocks start without SPACE (timing checks; works with `-meg`) |
 | `-w` | windowed (never for recording) |
 
-The session opens on the instructions; before each later block a pause screen
-(with a reminder of the buttons) is shown. The operator starts every block,
-the first included, with SPACE. ESC aborts at any time; what
+Before each block come instruction screens (all of them before the first
+block of each part, a short pause screen with the response pad otherwise),
+from `instructions/screens.json`. The operator advances every screen with
+SPACE; the last one starts the block. ESC aborts at any time; what
 was presented so far is saved.
 
 ## MEG rig (Linux)
@@ -97,6 +120,18 @@ was presented so far is saved.
   the photons; measure that lag once with the photodiode and subtract it.
 
 ## Data
+
+Localizer rows have `task` = `localizer`, `block_number` 0 (training), 1 or 2,
+the item in `word`, `modality` and `match`; events `loc_stimulus`,
+`loc_response` (RT from the stimulus onset; `loc_response_late` after a missed
+deadline), `loc_feedback_hit`, `loc_feedback_false_alarm`, `loc_feedback_miss`.
+Localizer trigger codes: word of concept k = k (1-32), picture = 32 + k, pause
+screens 206-208, feedback 211-213; they overlap main-task codes, so split the
+recording at the main task's first pause code (201-205).
+
+The data are written to disk at the end of every block (localizer and main
+task), so a crash or a frozen computer loses at most the block in progress;
+on ESC or a program error, everything presented is saved.
 
 `data/Pronouns_sub-NNN_date-….csv` in the project folder (beside the executable; `-o FOLDER` to change), one row per event (`pause`,
 `fixation`, `word`, `response_window`, `response`, `feedback_*`, `end`), with

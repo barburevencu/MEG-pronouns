@@ -9,3 +9,5 @@ Design.key
 /buttontest-linux
 # French word frequencies (Lexique 3.83, lexique.org)
 /lexique/
+# full-size generated pictures (the localizer embeds shrunk copies in localizer/images)
+/pictures/*.png

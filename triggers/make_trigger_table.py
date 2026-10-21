@@ -4,14 +4,22 @@ screen from that moment, and when it happens within a trial.
 Word codes are 16 * role + cell, where cell packs the trial's condition:
     bit 0 congruent, bit 1 canonical order, bit 2 pronoun feminine, bit 3 agent feminine.
 Times are ms from the trial's fixation onset (code 160 + trial_number).
+
+The localizer (task "localizer", before the main task) reuses codes 1-64 for its
+stimuli: word of concept k = k, picture = 32 + k, concepts numbered as in
+stimuli.csv (people 1-16, places 17-32). Its blocks open with codes 206-208, so
+the two tasks are separate segments of the recording.
 """
 import csv
 from pathlib import Path
+
+HERE = Path(__file__).resolve().parent
 
 WORD_ON, WORD_SOA = 200, 500
 FIX = 1000                     # initial fixation and inter-sentence break
 RESPONSE_WINDOW = 3000
 FEEDBACK = 500
+LOC_ON, LOC_SOA, LOC_DEADLINE = 200, 1000, 800
 
 # role: (name, sentence, position if canonical, position if non-canonical)
 ROLES = {
@@ -43,8 +51,8 @@ def word_onset(sentence, position):
 rows = []
 
 
-def add(code, event, on_screen, onset, duration, **cond):
-    rows.append({"code": code, "event": event, "on_screen": on_screen,
+def add(code, event, on_screen, onset, duration, task="main", **cond):
+    rows.append({"task": task, "code": code, "event": event, "on_screen": on_screen,
                  "onset_ms": onset, "duration_ms": duration, **cond})
 
 
@@ -79,13 +87,34 @@ for b in range(1, 6):
         "", "until SPACE")
 add(255, "end of experiment", "end screen", "", 5000)
 
-rows.sort(key=lambda r: (r["code"] is None, r["code"] or 0))
-fields = ["code", "event", "on_screen", "onset_ms", "duration_ms", "role", "sentence",
-          "position", "cell", "congruent", "canonical_order", "pronoun_gender", "agent_gender"]
-with open(Path(__file__).resolve().parent / "triggers.csv", "w", encoding="utf-8", newline="") as f:
+# Localizer: one stimulus every second, times from the stimulus onset.
+with open(HERE.parent / "counterbalancing" / "stimuli.csv", newline="", encoding="utf-8") as f:
+    stim = list(csv.reader(f))
+nouns = [r[stim[0].index(col)] for col in ("people", "places") for r in stim[1:]]
+for k, noun in enumerate(nouns, 1):
+    for code, modality, on_screen in ((k, "word", f"'{noun}' (no fixation cross)"),
+                                      (32 + k, "image", f"picture of '{noun}' with the fixation cross on it")):
+        add(code, f"localizer {modality}: {noun}", on_screen, 0,
+            f"{LOC_ON} + {LOC_SOA - LOC_ON} fixation", task="localizer",
+            modality=modality, concept=k, item=noun)
+for b, what in ((0, "training"), (1, "block 1"), (2, "block 2")):
+    add(206 + b, f"localizer: instruction/pause screen before {what}",
+        "text; the operator's SPACE starts the block", "", "until SPACE", task="localizer")
+add(211, "localizer feedback: hit", "fixation cross turns green (press on a match)", "RT",
+    "until the next stimulus", task="localizer")
+add(212, "localizer feedback: false alarm", "fixation cross turns red (press on a non-match)", "RT",
+    "until the next stimulus", task="localizer")
+add(213, "localizer feedback: miss", "fixation cross turns red (no press on a match)", LOC_DEADLINE,
+    f"{LOC_SOA - LOC_DEADLINE}", task="localizer")
+
+rows.sort(key=lambda r: (r["task"] != "main", r["code"] is None, r["code"] or 0))
+fields = ["task", "code", "event", "on_screen", "onset_ms", "duration_ms", "role", "sentence",
+          "position", "cell", "congruent", "canonical_order", "pronoun_gender", "agent_gender",
+          "modality", "concept", "item"]
+with open(HERE / "triggers.csv", "w", encoding="utf-8", newline="") as f:
     w = csv.DictWriter(f, fieldnames=fields)
     w.writeheader()
     w.writerows(rows)
-codes = [r["code"] for r in rows if r["code"] is not None]
-assert len(codes) == len(set(codes)) and all(1 <= c <= 255 for c in codes)
+codes = [(r["task"], r["code"]) for r in rows if r["code"] is not None]
+assert len(codes) == len(set(codes)) and all(1 <= c <= 255 for _, c in codes)
 print(f"Wrote {len(codes)} codes to triggers.csv")
