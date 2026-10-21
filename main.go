@@ -94,6 +94,7 @@ var (
 	backgroundColor = control.Black
 	textColor       = control.White
 	fixColor        = control.RGB(192, 192, 192) // light grey
+	locFixColor     = control.Black              // the localizer's large cross on the pictures
 	correctColor    = control.RGB(153, 229, 153)
 	incorrectColor  = control.RGB(240, 128, 128)
 	timeoutColor    = control.RGB(96, 96, 96) // dark grey
@@ -629,7 +630,7 @@ func main() {
 	// The localizer's cross on the pictures: locCrossCm on the screen.
 	locCrossPx := int(math.Round(locCrossCm / *screenCm * float64(drawW)))
 	locCrossThick := max(2, locCrossPx/12)
-	locFix := newCross(locCrossPx, locCrossThick, fixColor)
+	locFix := newCross(locCrossPx, locCrossThick, locFixColor)
 	locFixCorrect := newCross(locCrossPx, locCrossThick, correctColor)
 	locFixIncorrect := newCross(locCrossPx, locCrossThick, incorrectColor)
 	for _, v := range []stimuli.VisualStimulus{fix, fixCorrect, fixIncorrect, fixTimeout, dotCorrect, dotIncorrect,
