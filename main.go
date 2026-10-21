@@ -58,6 +58,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/Zyko0/go-sdl3/sdl"
 	"github.com/Zyko0/go-sdl3/ttf"
 	"github.com/chrplr/goxpyriment/apparatus"
 	"github.com/chrplr/goxpyriment/assets_embed"
@@ -400,6 +401,33 @@ func (b *buttonResponder) poll() (string, uint64, error) {
 func (b *buttonResponder) desc() string {
 	return fmt.Sprintf("MEG green buttons: left %s mask 0x%02x, right %s mask 0x%02x (baselines 0x%02x, 0x%02x)",
 		leftGreenPort, leftGreenMask, rightGreenPort, rightGreenMask, b.baseL, b.baseR)
+}
+
+// streamPoll is poll for use inside a stimulus stream's frame callback. The
+// stream empties SDL's event queue after every flip into ctx.Events, so
+// polling the keyboard there would miss most key presses: the keyboard is read
+// from ctx.Events instead, from index *seen on. The response pad (and -auto)
+// are polled as usual.
+func streamPoll(r responder, ctx stimuli.FrameContext, seen *int) (string, uint64, error) {
+	if _, ok := r.(keyboardResponder); !ok {
+		return r.poll()
+	}
+	for *seen < len(ctx.Events) {
+		ev := ctx.Events[*seen]
+		*seen++
+		if ev.Event.Type != sdl.EVENT_KEY_DOWN {
+			continue
+		}
+		if k := ev.Event.KeyboardEvent(); !k.Repeat {
+			switch k.Key {
+			case sdl.K_LEFT:
+				return "left", ev.TimestampNS, nil
+			case sdl.K_RIGHT:
+				return "right", ev.TimestampNS, nil
+			}
+		}
+	}
+	return "", 0, nil
 }
 
 // drain forgets presses made before now (keyboard queue, buttons held down).
@@ -937,6 +965,7 @@ func main() {
 			last := len(t.words) // the adjective's index in the stream
 			var adjNS, pressNS uint64
 			var btn string
+			var seen int // ctx.Events already read (keyboard)
 			onFrame := func(ctx stimuli.FrameContext) error {
 				if ctx.OnPhase && ctx.Frame == 0 {
 					code := trialCode
@@ -947,11 +976,12 @@ func main() {
 				}
 				if ctx.Index == last && ctx.OnPhase && btn == "" {
 					if ctx.Frame == 0 {
+						seen = len(ctx.Events) // keys pressed earlier do not count
 						if err := drain(resp); err != nil {
 							return err
 						}
 					} else {
-						b, ts, err := resp.poll()
+						b, ts, err := streamPoll(resp, ctx, &seen)
 						if err != nil {
 							return err
 						}

@@ -154,6 +154,7 @@ func runLocalizerBlock(exp *control.Experiment, trials []*locTrial, resp respond
 	}
 	half := uint64(exp.Screen.FrameDuration()) / 2
 	cur := -1 // trial whose second is running
+	seen := 0 // ctx.Events already read (keyboard)
 	cross := fix
 
 	el := make([]stimuli.StreamElement, len(trials))
@@ -175,7 +176,7 @@ func runLocalizerBlock(exp *control.Experiment, trials []*locTrial, resp respond
 				pressNS = ctx.NowNS
 			}
 		} else {
-			btn, ts, err := resp.poll()
+			btn, ts, err := streamPoll(resp, ctx, &seen)
 			if err != nil {
 				return err
 			}
