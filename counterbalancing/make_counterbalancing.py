@@ -29,9 +29,9 @@ FEM = {
     # places
     "vide": "vide", "aéré": "aérée", "vaste": "vaste", "rénové": "rénovée",
     "humide": "humide", "aménagé": "aménagée", "délabré": "délabrée",
-    "repeint": "repeinte", "agrandi": "agrandie", "ventilé": "ventilée",
+    "repeint": "repeinte", "luxueux": "luxueuse", "ventilé": "ventilée",
     "saccagé": "saccagée", "spacieux": "spacieuse", "restauré": "restaurée",
-    "nettoyé": "nettoyée", "climatisé": "climatisée", "insalubre": "insalubre",
+    "vétuste": "vétuste", "climatisé": "climatisée", "insalubre": "insalubre",
 }
 
 # English translations (adjectives keyed by masculine form).
@@ -62,23 +62,26 @@ EN = {
     "courageux": "brave", "paresseux": "lazy",
     "vide": "empty", "aéré": "airy", "vaste": "vast", "rénové": "renovated",
     "humide": "damp", "aménagé": "fitted out", "délabré": "dilapidated",
-    "repeint": "repainted", "agrandi": "enlarged", "ventilé": "ventilated",
+    "repeint": "repainted", "luxueux": "luxurious", "ventilé": "ventilated",
     "saccagé": "ransacked", "spacieux": "spacious", "restauré": "restored",
-    "nettoyé": "cleaned", "climatisé": "air-conditioned", "insalubre": "unsanitary",
+    "vétuste": "run-down", "climatisé": "air-conditioned", "insalubre": "unsanitary",
 }
 # English pronoun follows the French pronoun's referent (place -> "It").
 EN_PRON = {"m": "He", "f": "She"}
 
-# stimuli.csv has duplicate header names, so read by position.
+# stimuli.csv has two "gender" columns, each right after its noun column,
+# so look columns up by header name and take gender by position.
 with open(HERE / "stimuli.csv", encoding="utf-8") as f:
-    rows = list(csv.reader(f))[1:]
-people = {"m": [r[0] for r in rows if r[1] == "m"], "f": [r[0] for r in rows if r[1] == "f"]}
-places = {"m": [r[7] for r in rows if r[8] == "m"], "f": [r[7] for r in rows if r[8] == "f"]}
-verbs = [r[5] for r in rows]
-adj_people = [r[12] for r in rows]
-adj_places = [r[13] for r in rows]
+    header, *rows = csv.reader(f)
+col = {name: i for i, name in enumerate(header)}
+P, PL = col["people"], col["places"]
+people = {g: [r[P] for r in rows if r[P + 1] == g] for g in "mf"}
+places = {g: [r[PL] for r in rows if r[PL + 1] == g] for g in "mf"}
+verbs = [r[col["verbs"]] for r in rows]
+adj_people = [r[col["adjectives (masculine, for people)"]] for r in rows]
+adj_places = [r[col["adjectives for places"]] for r in rows]
 
-missing = sorted({w for w in [r[0] for r in rows] + verbs + [r[7] for r in rows]
+missing = sorted({w for w in [r[P] for r in rows] + verbs + [r[PL] for r in rows]
                   + adj_people + adj_places if w not in EN}
                  | {a for a in adj_people + adj_places if a not in FEM})
 if missing:
