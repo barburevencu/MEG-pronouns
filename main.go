@@ -109,6 +109,7 @@ const (
 	fixSize           = 16  // fixation cross, width and height in pixels
 	fixThickness      = 2   // fixation cross, line thickness in pixels
 	dotSize           = 10  // localizer feedback dot on a word, diameter in pixels
+	locCrossCm        = 3   // localizer: the cross on the pictures, width and height in cm on the screen
 )
 
 // ---------------------------------------------------------------------------
@@ -625,7 +626,14 @@ func main() {
 	fixTimeout := newCross(fixSize, fixThickness, timeoutColor)
 	dotCorrect := newDot(dotSize, correctColor)
 	dotIncorrect := newDot(dotSize, incorrectColor)
-	for _, v := range []stimuli.VisualStimulus{fix, fixCorrect, fixIncorrect, fixTimeout, dotCorrect, dotIncorrect} {
+	// The localizer's cross on the pictures: locCrossCm on the screen.
+	locCrossPx := int(math.Round(locCrossCm / *screenCm * float64(drawW)))
+	locCrossThick := max(2, locCrossPx/12)
+	locFix := newCross(locCrossPx, locCrossThick, fixColor)
+	locFixCorrect := newCross(locCrossPx, locCrossThick, correctColor)
+	locFixIncorrect := newCross(locCrossPx, locCrossThick, incorrectColor)
+	for _, v := range []stimuli.VisualStimulus{fix, fixCorrect, fixIncorrect, fixTimeout, dotCorrect, dotIncorrect,
+		locFix, locFixCorrect, locFixIncorrect} {
 		if err := stimuli.PreloadVisualOnScreen(exp.Screen, v); err != nil {
 			exp.Fatal("preloading the fixation cross: %v", err)
 		}
@@ -689,8 +697,8 @@ func main() {
 		}
 		t.stim = locPictures[t.image]
 	}
-	locSizes := fmt.Sprintf("words: %.1f pt, widest word %.0f px = %.1f deg (screen %.0f cm wide, %.0f px, seen from %.0f cm); widest localizer word %q %.0f px; pictures %.0f px",
-		fontSize, targetPx, *wordDeg, *screenCm, drawW, *distanceCm, longest, locWordPx, targetPx)
+	locSizes := fmt.Sprintf("words: %.1f pt, widest word %.0f px = %.1f deg (screen %.0f cm wide, %.0f px, seen from %.0f cm); widest localizer word %q %.0f px; pictures %.0f px, their cross %d px (%d cm)",
+		fontSize, targetPx, *wordDeg, *screenCm, drawW, *distanceCm, longest, locWordPx, targetPx, locCrossPx, locCrossCm)
 	exp.AddExperimentInfo(locSizes)
 	log.Print(locSizes)
 
@@ -872,7 +880,7 @@ func main() {
 				return err
 			}
 
-			timing, outcome, runErr := runLocalizerBlock(exp, block, resp, *auto, locRNG, fix, fixCorrect, fixIncorrect, dotCorrect, dotIncorrect)
+			timing, outcome, runErr := runLocalizerBlock(exp, block, resp, *auto, locRNG, locFix, locFixCorrect, locFixIncorrect, dotCorrect, dotIncorrect)
 			// Log what was presented, also after ESC.
 			for i, tl := range timing {
 				t, o := block[i], outcome[i]

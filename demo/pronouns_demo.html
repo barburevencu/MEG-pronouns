@@ -28,10 +28,10 @@
   #end, #end * { cursor: auto; }
   #end button { cursor: pointer; }
   #picture { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); display: none; }
-  #cross { position: absolute; left: 50%; top: 50%; width: 16px; height: 16px; margin: -8px 0 0 -8px;
-           --c: var(--fix);
-           background: linear-gradient(var(--c), var(--c)) center / 2px 100% no-repeat,
-                       linear-gradient(var(--c), var(--c)) center / 100% 2px no-repeat; }
+  #cross { position: absolute; left: 50%; top: 50%; --s: 16px; --t: 2px; --c: var(--fix);
+           width: var(--s); height: var(--s); margin: calc(var(--s) / -2) 0 0 calc(var(--s) / -2);
+           background: linear-gradient(var(--c), var(--c)) center / var(--t) 100% no-repeat,
+                       linear-gradient(var(--c), var(--c)) center / 100% var(--t) no-repeat; }
   #dot { position: absolute; left: 50%; top: 50%; width: 10px; height: 10px; margin: -5px 0 0 -5px;
          border-radius: 50%; display: none; z-index: 1; }
   #word { position: absolute; left: 0; right: 0; top: 50%; transform: translateY(-50%); text-align: center;
@@ -255,8 +255,13 @@ function pictureWidth() {
 // cross on a picture, a small dot at the centre of a word.
 function runLocalizer() {
   return new Promise(resolve => {
-    const size = pictureWidth() + "px";
-    picture.style.width = picture.style.height = size;
+    const width = pictureWidth();
+    picture.style.width = picture.style.height = width + "px";
+    // The cross on the pictures: 3 cm, as in the program, where the pictures
+    // are 10 degrees wide at 104 cm (18.2 cm).
+    const crossPx = Math.round(width * 3 / 18.2);
+    cross.style.setProperty("--s", crossPx + "px");
+    cross.style.setProperty("--t", Math.max(2, Math.floor(crossPx / 12)) + "px");
     const out = LOC_TRIALS.map(() => ({ press: null, outcome: null }));
     let start = null, cur = -1;
     const feedback = color => {
@@ -282,6 +287,7 @@ function runLocalizer() {
         window.removeEventListener("keydown", onKey);
         wordEl.textContent = ""; picture.style.display = "none"; dot.style.display = "none";
         cross.style.visibility = "visible";
+        cross.style.removeProperty("--s"); cross.style.removeProperty("--t");
         resolve(aborted ? null : out);
         return;
       }
