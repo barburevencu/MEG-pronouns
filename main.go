@@ -111,7 +111,8 @@ const (
 	fixSize           = 16  // fixation cross, width and height in pixels
 	fixThickness      = 2   // fixation cross, line thickness in pixels
 	dotSize           = 10  // localizer feedback dot on a word, diameter in pixels
-	locCrossCm        = 3   // localizer: the cross on the pictures, width and height in cm on the screen
+	locCrossCm        = 2.4 // localizer: the cross on the pictures, width and height in cm on the screen
+	locCrossThinness  = 20  // ... and its line thickness: its width divided by this
 )
 
 // ---------------------------------------------------------------------------
@@ -657,7 +658,7 @@ func main() {
 	dotIncorrect := newDot(dotSize, incorrectColor)
 	// The localizer's cross on the pictures: locCrossCm on the screen.
 	locCrossPx := int(math.Round(locCrossCm / *screenCm * float64(drawW)))
-	locCrossThick := max(2, locCrossPx/12)
+	locCrossThick := max(2, locCrossPx/locCrossThinness)
 	locFix := newCross(locCrossPx, locCrossThick, locFixColor)
 	locFixCorrect := newCross(locCrossPx, locCrossThick, correctColor)
 	locFixIncorrect := newCross(locCrossPx, locCrossThick, incorrectColor)
@@ -726,7 +727,7 @@ func main() {
 		}
 		t.stim = locPictures[t.image]
 	}
-	locSizes := fmt.Sprintf("words: %.1f pt, widest word %.0f px = %.1f deg (screen %.0f cm wide, %.0f px, seen from %.0f cm); widest localizer word %q %.0f px; pictures %.0f px, their cross %d px (%d cm)",
+	locSizes := fmt.Sprintf("words: %.1f pt, widest word %.0f px = %.1f deg (screen %.0f cm wide, %.0f px, seen from %.0f cm); widest localizer word %q %.0f px; pictures %.0f px, their cross %d px (%.1f cm)",
 		fontSize, targetPx, *wordDeg, *screenCm, drawW, *distanceCm, longest, locWordPx, targetPx, locCrossPx, locCrossCm)
 	exp.AddExperimentInfo(locSizes)
 	log.Print(locSizes)

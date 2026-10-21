@@ -258,11 +258,11 @@ function runLocalizer() {
   return new Promise(resolve => {
     const width = pictureWidth();
     picture.style.width = picture.style.height = width + "px";
-    // The cross on the pictures: 3 cm, as in the program, where the pictures
+    // The cross on the pictures: 2.4 cm, as in the program, where the pictures
     // are 10 degrees wide at 104 cm (18.2 cm).
-    const crossPx = Math.round(width * 3 / 18.2);
+    const crossPx = Math.round(width * 2.4 / 18.2);
     cross.style.setProperty("--s", crossPx + "px");
-    cross.style.setProperty("--t", Math.max(2, Math.floor(crossPx / 12)) + "px");
+    cross.style.setProperty("--t", Math.max(2, Math.floor(crossPx / 20)) + "px");
     const out = LOC_TRIALS.map(() => ({ press: null, outcome: null }));
     let start = null, cur = -1;
     const feedback = color => {
