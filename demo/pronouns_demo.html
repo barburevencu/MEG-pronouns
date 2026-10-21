@@ -273,7 +273,7 @@ function runLocalizer() {
       if (e.key !== "ArrowRight" || start === null || cur < 0) return;
       const o = out[cur], t = LOC_TRIALS[cur];
       if (o.press !== null) return;
-      o.press = e.timeStamp - start - cur * LOC_SOA;
+      o.press = performance.now() - start - cur * LOC_SOA;
       if (!t.match) { o.outcome = "false_alarm"; feedback(COLORS.incorrect); }
       else if (o.outcome === "miss") o.outcome = "late";
       else { o.outcome = "hit"; feedback(COLORS.correct); }
@@ -334,7 +334,10 @@ function runTrial(t) {
     const onKey = e => {
       if (!(e.key in KEYS) || start === null) return;
       // Presses before the last word appears are ignored, as in the MEG version.
-      if (e.timeStamp - start >= respOpen && answer === null) answer = { key: KEYS[e.key], t: e.timeStamp };
+      // performance.now(), not e.timeStamp: some browsers stamp key events on
+      // another clock than requestAnimationFrame, and the press is then lost.
+      const now = performance.now();
+      if (now - start >= respOpen && answer === null) answer = { key: KEYS[e.key], t: now };
     };
     window.addEventListener("keydown", onKey);
 
