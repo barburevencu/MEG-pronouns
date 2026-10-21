@@ -173,7 +173,7 @@ const IMAGES = {"marin": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wB
 
 const FIX = 1000, ON = 500, OFF = 0, RESPONSE = 3000, FEEDBACK = 500;
 const LOC_SOA = 1000, LOC_DEADLINE = 800;
-const LOC_FIX = "#000";  // the large cross on the localizer's pictures, before feedback  // each stimulus stays on until the next
+const LOC_FIX = "#fff";  // the large cross on the localizer's pictures, before feedback  // each stimulus stays on until the next
 const KEYS = { ArrowLeft: "left", ArrowRight: "right" };
 const COLORS = { fix: "var(--fix)", correct: "var(--correct)", incorrect: "var(--incorrect)", timeout: "var(--timeout)" };
 
@@ -292,7 +292,7 @@ function runLocalizer() {
         resolve(aborted ? null : out);
         return;
       }
-      if (i !== cur) {  // next stimulus: no feedback, black cross on a picture
+      if (i !== cur) {  // next stimulus: no feedback, white cross on a picture
         cur = i;
         cross.style.setProperty("--c", LOC_FIX);
         dot.style.display = "none";
