@@ -5,7 +5,7 @@
 // 512. Then the main task:
 //
 // Each trial: fixation (1000 ms), sentence 1 word by word (6 words, each
-// 200 ms on + 300 ms fixation), a 1000 ms break, sentence 2 (3 words, same
+// 500 ms on, no blank in between), a 1000 ms break, sentence 2 (3 words, same
 // timing), then a felicity judgment (two green buttons, max 3000 ms) answered
 // once the last word has gone off, and 500 ms of feedback on the fixation
 // cross (green correct, red incorrect, dark grey timeout). The cross is hidden
@@ -74,8 +74,8 @@ var counterbalancingCSV []byte
 
 const (
 	fixationMs       = 1000 // initial fixation, and the break between sentences
-	wordOnMs         = 200
-	wordOffMs        = 300
+	wordOnMs         = 500  // each word stays on until the next
+	wordOffMs        = 0
 	responseWindowMs = 3000
 	feedbackMs       = 500
 	endScreenMs      = 5000
@@ -107,6 +107,7 @@ const (
 	defaultDistanceCm = 104 // viewing distance in the MEG
 	fixSize           = 16  // fixation cross, width and height in pixels
 	fixThickness      = 2   // fixation cross, line thickness in pixels
+	dotSize           = 10  // localizer feedback dot on a word, diameter in pixels
 )
 
 // ---------------------------------------------------------------------------
@@ -620,7 +621,9 @@ func main() {
 	fixCorrect := newCross(fixSize, fixThickness, correctColor)
 	fixIncorrect := newCross(fixSize, fixThickness, incorrectColor)
 	fixTimeout := newCross(fixSize, fixThickness, timeoutColor)
-	for _, v := range []stimuli.VisualStimulus{fix, fixCorrect, fixIncorrect, fixTimeout} {
+	dotCorrect := newDot(dotSize, correctColor)
+	dotIncorrect := newDot(dotSize, incorrectColor)
+	for _, v := range []stimuli.VisualStimulus{fix, fixCorrect, fixIncorrect, fixTimeout, dotCorrect, dotIncorrect} {
 		if err := stimuli.PreloadVisualOnScreen(exp.Screen, v); err != nil {
 			exp.Fatal("preloading the fixation cross: %v", err)
 		}
@@ -811,7 +814,7 @@ func main() {
 	}
 
 	// The fixed part of every trial's stream: fixation, 6 words, break, 3 words.
-	// The last word of sentence 1 is followed by its 300 ms of fixation plus
+	// The last word of sentence 1 is followed by its wordOffMs of fixation plus
 	// the 1000 ms break; the adjective's stream ends when it goes off.
 	buildStream := func(t *trial) []stimuli.StreamElement {
 		el := []stimuli.StreamElement{{Stimulus: fix, DurationOn: fixationMs * time.Millisecond}}
@@ -867,7 +870,7 @@ func main() {
 				return err
 			}
 
-			timing, outcome, runErr := runLocalizerBlock(exp, block, resp, *auto, locRNG, fix, fixCorrect, fixIncorrect)
+			timing, outcome, runErr := runLocalizerBlock(exp, block, resp, *auto, locRNG, fix, fixCorrect, fixIncorrect, dotCorrect, dotIncorrect)
 			// Log what was presented, also after ESC.
 			for i, tl := range timing {
 				t, o := block[i], outcome[i]
@@ -1037,6 +1040,24 @@ func newCross(size, thickness int, c control.Color) *stimuli.Picture {
 	for y := 0; y < size; y++ {
 		for x := 0; x < size; x++ {
 			if (x >= lo && x < hi) || (y >= lo && y < hi) {
+				img.SetNRGBA(x, y, color.NRGBA{c.R, c.G, c.B, 255})
+			}
+		}
+	}
+	var buf bytes.Buffer
+	if err := png.Encode(&buf, img); err != nil {
+		panic(err) // encoding an in-memory image cannot fail
+	}
+	return stimuli.NewPictureFromMemory(buf.Bytes(), 0, 0)
+}
+
+// newDot returns a filled disc of the given diameter, in pixels, as an image.
+func newDot(size int, c control.Color) *stimuli.Picture {
+	img := image.NewNRGBA(image.Rect(0, 0, size, size))
+	r := float64(size) / 2
+	for y := 0; y < size; y++ {
+		for x := 0; x < size; x++ {
+			if dx, dy := float64(x)+0.5-r, float64(y)+0.5-r; dx*dx+dy*dy <= r*r {
 				img.SetNRGBA(x, y, color.NRGBA{c.R, c.G, c.B, 255})
 			}
 		}

@@ -9,8 +9,8 @@
     {"text": "Et aussi une image suivie de son mot :", "image": "example_picture_word"},
     {"text": "Dans les deux cas, appuyez le plus vite possible sur le bouton vert de droite.", "image": "pad_localizer"},
     {"text": "Si ce qui apparaît ne correspond pas à ce qui précède, n'appuyez pas."},
-    {"text": "La croix devient verte si vous avez appuyé à raison.\n\nElle devient rouge si vous avez appuyé à tort, ou si vous avez oublié d'appuyer."},
-    {"text": "Gardez les yeux sur la croix au centre de l'écran, même quand une image apparaît."}
+    {"text": "Si vous avez appuyé à raison, la croix devient verte (sur un mot, un point vert apparaît).\n\nSi vous avez appuyé à tort, ou oublié d'appuyer, elle devient rouge (ou un point rouge apparaît)."},
+    {"text": "Gardez les yeux au centre de l'écran, sur les mots comme sur les images."}
   ],
 
   "localizer_before_training": [
@@ -38,7 +38,7 @@
     {"text": "Bouton vert de {natural} : la suite est naturelle.\n\nBouton vert de {odd} : la suite est étrange.", "image": "pad_congruent"},
     {"text": "Répondez dès que le dernier mot a disparu, en moins de 3 secondes."},
     {"text": "La croix devient verte si votre réponse est correcte, rouge si elle est incorrecte.\n\nElle devient gris foncé si vous n'avez pas répondu à temps."},
-    {"text": "Gardez les yeux sur la croix et évitez de cligner des yeux pendant la lecture."}
+    {"text": "Gardez les yeux au centre de l'écran et évitez de cligner des yeux pendant la lecture."}
   ],
 
   "main_pause": [

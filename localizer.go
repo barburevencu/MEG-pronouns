@@ -1,12 +1,12 @@
 // Localizer: a one-back task on the 32 nouns, run before the main task.
 //
-// Words and pictures alternate, one every second (200 ms on, 800 ms of
-// fixation). The participant presses the right green button when the stimulus
-// is the same concept as the previous one (a match). The fixation cross is
-// hidden while a word is on screen and stays on top of a picture. Feedback on
-// the cross: green at a press on a match, red at a press on a non-match, red
-// 800 ms after a match's onset if there was no press; grey again at the next
-// stimulus. Sequences come from localizer/localizer.csv (make_localizer.py).
+// Words and pictures alternate, each on screen for a full second, with no
+// blank in between. The participant presses the right green button when the
+// stimulus is the same concept as the previous one (a match). A picture has the
+// fixation cross on top of it; a word has none. Feedback: green at a press on
+// a match, red at a press on a non-match, red 800 ms after a match's onset if
+// there was no press, shown by the cross on a picture and by a small dot at
+// the centre of a word; it disappears at the next stimulus. Sequences come from localizer/localizer.csv (make_localizer.py).
 
 package main
 
@@ -32,11 +32,10 @@ var localizerCSV []byte
 var localizerImages embed.FS
 
 const (
-	locOnMs       = 200
-	locSOAMs      = 1000
-	locDeadlineMs = 800 // a match not answered by then is a miss
-	locBlocks     = 3   // 0 = training, 1 and 2
-	codeLocBlock  = 206 // + block, instruction / pause screen
+	locOnMs       = 1000 // each stimulus stays on until the next
+	locDeadlineMs = 800  // a match not answered by then is a miss
+	locBlocks     = 3    // 0 = training, 1 and 2
+	codeLocBlock  = 206  // + block, instruction / pause screen
 )
 
 // The localizer reuses the main task's feedback codes.
@@ -144,7 +143,7 @@ type locOutcome struct {
 // right button only. With auto, it answers 80% of the matches and 3% of the
 // non-matches, 400-700 ms after the onset, so every kind of feedback occurs.
 func runLocalizerBlock(exp *control.Experiment, trials []*locTrial, resp responder, auto bool, rng *rand.Rand,
-	fix, fixHit, fixWrong stimuli.VisualStimulus) ([]stimuli.TimingLog, []locOutcome, error) {
+	fix, fixHit, fixWrong, dotHit, dotWrong stimuli.VisualStimulus) ([]stimuli.TimingLog, []locOutcome, error) {
 	out := make([]locOutcome, len(trials))
 	onset := make([]uint64, len(trials))
 	autoRT := make([]uint64, len(trials)) // 0: no press
@@ -159,7 +158,7 @@ func runLocalizerBlock(exp *control.Experiment, trials []*locTrial, resp respond
 
 	el := make([]stimuli.StreamElement, len(trials))
 	for i, t := range trials {
-		el[i] = stimuli.StreamElement{Stimulus: t.stim, DurationOn: locOnMs * time.Millisecond, DurationOff: (locSOAMs - locOnMs) * time.Millisecond}
+		el[i] = stimuli.StreamElement{Stimulus: t.stim, DurationOn: locOnMs * time.Millisecond}
 	}
 
 	onFrame := func(ctx stimuli.FrameContext) error {
@@ -214,9 +213,15 @@ func runLocalizerBlock(exp *control.Experiment, trials []*locTrial, resp respond
 			exp.Marker.Arm(byte(feedback))
 		}
 
-		// The stream has drawn the stimulus (on-phase) or cleared the screen
-		// (off-phase); the cross goes on top, except over a word.
-		if ctx.OnPhase && trials[ctx.Index].modality == "word" {
+		// The stream has drawn the stimulus; on a picture the cross goes on
+		// top, on a word only the feedback dot.
+		if trials[ctx.Index].modality == "word" {
+			switch cross {
+			case fixHit:
+				return dotHit.Draw(ctx.Screen)
+			case fixWrong:
+				return dotWrong.Draw(ctx.Screen)
+			}
 			return nil
 		}
 		return cross.Draw(ctx.Screen)

@@ -15,11 +15,11 @@ from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
 
-WORD_ON, WORD_SOA = 200, 500
+WORD_ON, WORD_SOA = 500, 500  # each word stays on until the next
 FIX = 1000                     # initial fixation and inter-sentence break
 RESPONSE_WINDOW = 3000
 FEEDBACK = 500
-LOC_ON, LOC_SOA, LOC_DEADLINE = 200, 1000, 800
+LOC_ON, LOC_SOA, LOC_DEADLINE = 1000, 1000, 800
 
 # role: (name, sentence, position if canonical, position if non-canonical)
 ROLES = {
@@ -40,7 +40,7 @@ EXAMPLE = {  # canonical / non-canonical words, for the on_screen column
 }
 
 S2_START = FIX + 6 * WORD_SOA + FIX          # 5000
-RESP_OPEN = S2_START + 2 * WORD_SOA + WORD_ON  # 6200
+RESP_OPEN = S2_START + 2 * WORD_SOA + WORD_ON  # 6500
 
 
 def word_onset(sentence, position):
@@ -65,14 +65,14 @@ for role, (name, sentence, pos_can, pos_non) in ROLES.items():
         pron_f, agent_f = cell >> 2 & 1, cell >> 3 & 1
         pos = pos_can if canonical else pos_non
         add(16 * role + cell, f"word: {name}",
-            f"'{EXAMPLE[name][0 if canonical else 1]}' then fixation cross at +{WORD_ON} ms",
-            word_onset(sentence, pos), f"{WORD_ON} + {WORD_SOA - WORD_ON} fixation",
+            f"'{EXAMPLE[name][0 if canonical else 1]}' (no fixation cross)",
+            word_onset(sentence, pos), WORD_ON,
             role=name, sentence=sentence, position=pos, cell=cell,
             congruent=congruent, canonical_order=canonical,
             pronoun_gender="f" if pron_f else "m", agent_gender="f" if agent_f else "m")
 
 add(None, "inter_sentence_break", "fixation cross (light grey)", FIX + 6 * WORD_SOA,
-    f"{FIX} (after the last word's {WORD_SOA - WORD_ON} ms fixation)")
+    FIX)
 add(None, "response_window_opens", "fixation cross (light grey)", RESP_OPEN,
     f"until response, max {RESPONSE_WINDOW}")
 # Button presses are recorded by the MEG on their own STI lines; the PC marks
@@ -92,19 +92,19 @@ with open(HERE.parent / "counterbalancing" / "stimuli.csv", newline="", encoding
     stim = list(csv.reader(f))
 nouns = [r[stim[0].index(col)] for col in ("people", "places") for r in stim[1:]]
 for k, noun in enumerate(nouns, 1):
-    for code, modality, on_screen in ((k, "word", f"'{noun}' (no fixation cross)"),
+    for code, modality, on_screen in ((k, "word", f"'{noun}' (no fixation cross; feedback as a dot at its centre)"),
                                       (32 + k, "image", f"picture of '{noun}' with the fixation cross on it")):
         add(code, f"localizer {modality}: {noun}", on_screen, 0,
-            f"{LOC_ON} + {LOC_SOA - LOC_ON} fixation", task="localizer",
+            f"{LOC_ON} (until the next stimulus)", task="localizer",
             modality=modality, concept=k, item=noun)
 for b, what in ((0, "training"), (1, "block 1"), (2, "block 2")):
     add(206 + b, f"localizer: instruction/pause screen before {what}",
         "text; the operator's SPACE starts the block", "", "until SPACE", task="localizer")
-add(211, "localizer feedback: hit", "fixation cross turns green (press on a match)", "RT",
+add(211, "localizer feedback: hit", "cross on a picture, or dot on a word, turns green (press on a match)", "RT",
     "until the next stimulus", task="localizer")
-add(212, "localizer feedback: false alarm", "fixation cross turns red (press on a non-match)", "RT",
+add(212, "localizer feedback: false alarm", "cross on a picture, or dot on a word, turns red (press on a non-match)", "RT",
     "until the next stimulus", task="localizer")
-add(213, "localizer feedback: miss", "fixation cross turns red (no press on a match)", LOC_DEADLINE,
+add(213, "localizer feedback: miss", "cross on a picture, or dot on a word, turns red (no press on a match)", LOC_DEADLINE,
     f"{LOC_SOA - LOC_DEADLINE}", task="localizer")
 
 rows.sort(key=lambda r: (r["task"] != "main", r["code"] is None, r["code"] or 0))
