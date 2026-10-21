@@ -47,6 +47,7 @@ import (
 	"image/png"
 	"io"
 	"log"
+	"math"
 	"math/rand/v2"
 	"os"
 	"path/filepath"
@@ -56,6 +57,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/Zyko0/go-sdl3/ttf"
 	"github.com/chrplr/goxpyriment/apparatus"
 	"github.com/chrplr/goxpyriment/assets_embed"
 	"github.com/chrplr/goxpyriment/control"
@@ -97,10 +99,14 @@ var (
 )
 
 const (
-	megShiftX       = 330 // in -meg fullscreen, everything is drawn this many pixels left of the screen center (MEG projector)
-	defaultFontSize = 48  // point size of the RSVP words
-	fixSize         = 16  // fixation cross, width and height in pixels
-	fixThickness    = 2   // fixation cross, line thickness in pixels
+	megShiftX = 330 // in -meg fullscreen, everything is drawn this many pixels left of the screen center (MEG projector)
+	// Word size: the widest word of both tasks, and the localizer's pictures,
+	// span this visual angle on the MEG screen.
+	defaultWordDeg    = 10
+	defaultScreenCm   = 75  // width of the projected image (estimate; measure it)
+	defaultDistanceCm = 104 // viewing distance in the MEG
+	fixSize           = 16  // fixation cross, width and height in pixels
+	fixThickness      = 2   // fixation cross, line thickness in pixels
 )
 
 // ---------------------------------------------------------------------------
@@ -429,7 +435,9 @@ func main() {
 	ttlMs := flag.Float64("ttl-ms", 0, "how long each trigger code stays on the lines, in ms (0 = 3 frames, 25 ms at 120 Hz)")
 	startBlock := flag.Int("block", 1, "block to start from (to resume an interrupted session)")
 	fontPath := flag.String("font", "", "TTF font file for the words (default: the bundled Inconsolata)")
-	fontSize := flag.Float64("font-size", defaultFontSize, "point size of the words")
+	wordDeg := flag.Float64("word-deg", defaultWordDeg, "width of the widest word (and of the localizer's pictures), in degrees of visual angle")
+	screenCm := flag.Float64("screen-cm", defaultScreenCm, "width of the projected screen image, in cm")
+	distanceCm := flag.Float64("distance-cm", defaultDistanceCm, "viewing distance, in cm")
 	auto := flag.Bool("auto", false, "answer automatically at random and start blocks without SPACE (timing checks)")
 	outDir := flag.String("o", dataDir, "folder for the data files; a relative path is taken from the project folder")
 	cbPath := flag.String("cb", "", "read the counterbalancing table from this file instead of the embedded copy")
@@ -565,10 +573,46 @@ func main() {
 	log.Printf("stimuli shifted left by %.0f px", shift)
 
 	// Stimuli, all built and uploaded before the run.
-	font, err := control.FontFromMemory(assets_embed.InconsolataFont, float32(*fontSize))
-	if *fontPath != "" {
-		font, err = control.FontFromFile(*fontPath, float32(*fontSize))
+	// The word font is scaled so that the widest word of the session (main
+	// task and localizer) spans -word-deg on a screen -screen-cm wide seen
+	// from -distance-cm: measured at a reference size, then scaled.
+	newFont := func(size float32) (*ttf.Font, error) {
+		if *fontPath != "" {
+			return control.FontFromFile(*fontPath, size)
+		}
+		return control.FontFromMemory(assets_embed.InconsolataFont, size)
 	}
+	drawW, _ := exp.DrawArea()
+	targetPx := 2 * *distanceCm * math.Tan(*wordDeg/2*math.Pi/180) / *screenCm * float64(drawW)
+	texts := map[string]bool{}
+	for _, t := range trials {
+		for _, w := range t.words {
+			texts[w.text] = true
+		}
+	}
+	for _, t := range locTrials {
+		if t.modality == "word" {
+			texts[t.item] = true
+		}
+	}
+	const refSize = 100
+	refFont, err := newFont(refSize)
+	if err != nil {
+		exp.Fatal("font: %v", err)
+	}
+	var refW float32
+	for text := range texts {
+		line := stimuli.NewTextLine(text, 0, 0, textColor)
+		line.Font = refFont
+		if err := stimuli.PreloadVisualOnScreen(exp.Screen, line); err != nil {
+			exp.Fatal("measuring %q: %v", text, err)
+		}
+		refW = max(refW, line.Width)
+		line.Unload()
+	}
+	refFont.Close()
+	fontSize := float32(refSize * targetPx / float64(refW))
+	font, err := newFont(fontSize)
 	if err != nil {
 		exp.Fatal("font: %v", err)
 	}
@@ -599,7 +643,7 @@ func main() {
 	}
 
 	// Localizer stimuli: the words in the main task's font and size; the
-	// pictures are as wide as the longest word.
+	// pictures span -word-deg, like the widest word.
 	var locWordPx float32
 	var longest string
 	locWords := map[string]*stimuli.TextLine{}
@@ -632,7 +676,7 @@ func main() {
 				exp.Fatal("%v", err)
 			}
 			p := stimuli.NewPictureFromMemory(data, 0, 0)
-			p.Width, p.Height = locWordPx, locWordPx
+			p.Width, p.Height = float32(targetPx), float32(targetPx)
 			if err := stimuli.PreloadVisualOnScreen(exp.Screen, p); err != nil {
 				exp.Fatal("preloading %s: %v", t.image, err)
 			}
@@ -640,8 +684,8 @@ func main() {
 		}
 		t.stim = locPictures[t.image]
 	}
-	locSizes := fmt.Sprintf("localizer: words in the main task's font (%.0f pt); longest word %q and pictures %.0f px wide",
-		*fontSize, longest, locWordPx)
+	locSizes := fmt.Sprintf("words: %.1f pt, widest word %.0f px = %.1f deg (screen %.0f cm wide, %.0f px, seen from %.0f cm); widest localizer word %q %.0f px; pictures %.0f px",
+		fontSize, targetPx, *wordDeg, *screenCm, drawW, *distanceCm, longest, locWordPx, targetPx)
 	exp.AddExperimentInfo(locSizes)
 	log.Print(locSizes)
 
