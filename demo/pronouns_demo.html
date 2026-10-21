@@ -352,7 +352,10 @@ function runTrial(t) {
       }
       if (el >= wordOff && (answer !== null || el >= wordOff + RESPONSE)) {
         window.removeEventListener("keydown", onKey);
+        // Answered during the last word: the word goes and the feedback cross
+        // takes its place, so the cross must be made visible here.
         wordEl.textContent = "";
+        cross.style.visibility = "visible";
         resolve(answer ? { key: answer.key, rt: answer.t - start - respOpen } : { key: "", rt: null });
         return;
       }
