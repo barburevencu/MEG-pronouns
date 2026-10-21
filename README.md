@@ -145,6 +145,6 @@ on ESC or a program error, everything presented is saved.
 `fixation`, `word`, `response_window`, `response`, `feedback_*`, `end`), with
 the code sent, the time on the SDL clock (ms from the start of the run), the
 time within the trial and its intended value, word on-durations, the answer,
-its correctness and RT (from the adjective's offset), and the trial's
+its correctness and RT (from the adjective's onset: presses count as soon as it appears, until 3 s after it goes off), and the trial's
 condition columns. The `-info.txt` beside it has the session metadata and the
 marker statistics (codes sent, write errors).

@@ -209,7 +209,8 @@ const PRONOUN_PAGES = [
   `<p>Après la seconde phrase, indiquez si elle s'enchaîne naturellement avec la première.</p>` + NEXT,
   `<p>Flèche <kbd>←</kbd> : oui, la suite est naturelle.</p>
    <p>Flèche <kbd>→</kbd> : non, la suite est étrange.</p>` + NEXT,
-  `<p>Répondez dès que le dernier mot a disparu, en moins de 3 secondes.</p>` + NEXT,
+  `<p>Vous pouvez répondre dès que le dernier mot apparaît.</p>
+   <p>Répondez le plus vite possible, en moins de 3 secondes.</p>` + NEXT,
   `<p>La croix devient <span class="ok">verte</span> si votre réponse est correcte,
    <span class="bad">rouge</span> si elle est incorrecte.</p>
    <p>Elle devient <span class="none">gris foncé</span> si vous n'avez pas répondu à temps.</p>` + NEXT,
@@ -315,16 +316,18 @@ function schedule(t) {
   return words;
 }
 
-// Runs one pronoun trial; resolves with the answer ("left", "right" or "") and its RT.
+// Runs one pronoun trial; resolves with the answer ("left", "right" or "") and
+// its RT from the last word's onset. Presses count from that onset; the trial
+// ends when the word has gone off and there is an answer, or 3 s after that.
 function runTrial(t) {
   return new Promise(resolve => {
     const words = schedule(t);
-    const respOpen = words[words.length - 1].onset + ON;
+    const respOpen = words[words.length - 1].onset, wordOff = respOpen + ON;
     let start = null, shown = null, answer = null;
 
     const onKey = e => {
       if (!(e.key in KEYS) || start === null) return;
-      // Presses before the last word has gone off are ignored, as in the MEG version.
+      // Presses before the last word appears are ignored, as in the MEG version.
       if (e.timeStamp - start >= respOpen && answer === null) answer = { key: KEYS[e.key], t: e.timeStamp };
     };
     window.addEventListener("keydown", onKey);
@@ -338,7 +341,7 @@ function runTrial(t) {
         resolve(null);
         return;
       }
-      if (el >= respOpen && (answer !== null || el >= respOpen + RESPONSE)) {
+      if (el >= wordOff && (answer !== null || el >= wordOff + RESPONSE)) {
         window.removeEventListener("keydown", onKey);
         wordEl.textContent = "";
         resolve(answer ? { key: answer.key, rt: answer.t - start - respOpen } : { key: "", rt: null });

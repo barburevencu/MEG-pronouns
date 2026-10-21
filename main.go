@@ -6,9 +6,10 @@
 //
 // Each trial: fixation (1000 ms), sentence 1 word by word (6 words, each
 // 500 ms on, no blank in between), a 1000 ms break, sentence 2 (3 words, same
-// timing), then a felicity judgment (two green buttons, max 3000 ms) answered
-// once the last word has gone off, and 500 ms of feedback on the fixation
-// cross (green correct, red incorrect, dark grey timeout). The cross is hidden
+// timing), then a felicity judgment (two green buttons) that can be given as
+// soon as the last word appears, until 3000 ms after it goes off (RT from its
+// onset), and 500 ms of feedback on the fixation cross, shown once the word is
+// gone (green correct, red incorrect, dark grey timeout). The cross is hidden
 // while a word is on screen. 160 trials per subject
 // in 5 blocks of 32, with a pause before each block that the operator ends with SPACE. Trials come
 // from counterbalancing/counterbalancing.csv (make_counterbalancing.py), embedded in the binary.
@@ -316,12 +317,13 @@ func (k keyboardResponder) poll() (string, uint64, error) {
 
 func (keyboardResponder) desc() string { return "keyboard (left/right arrows)" }
 
-// autoResponder answers at random 500-1500 ms after it starts being polled,
+// autoResponder answers at random 200-1500 ms after it starts being polled,
 // for unattended timing checks (-auto).
 type autoResponder struct {
 	kb      *apparatus.Keyboard
 	rng     *rand.Rand
 	startNS uint64
+	delayNS uint64 // drawn when polling starts
 }
 
 func (a *autoResponder) poll() (string, uint64, error) {
@@ -330,10 +332,10 @@ func (a *autoResponder) poll() (string, uint64, error) {
 	}
 	now := control.TicksNS()
 	if a.startNS == 0 {
-		a.startNS = now
+		a.startNS, a.delayNS = now, uint64(200+a.rng.IntN(1300))*1_000_000
 		return "", 0, nil
 	}
-	if now-a.startNS < uint64(500+a.rng.IntN(1000))*1_000_000 {
+	if now-a.startNS < a.delayNS {
 		return "", 0, nil
 	}
 	a.startNS = 0
@@ -919,8 +921,13 @@ func main() {
 				}
 			}
 
-			// Words.
+			// Words. The response window opens with the adjective: presses are
+			// read from its onset (earlier ones are discarded) and the RT is
+			// measured from that onset.
 			trialCode := codeTrialStart + t.number
+			last := len(t.words) // the adjective's index in the stream
+			var adjNS, pressNS uint64
+			var btn string
 			onFrame := func(ctx stimuli.FrameContext) error {
 				if ctx.OnPhase && ctx.Frame == 0 {
 					code := trialCode
@@ -928,6 +935,21 @@ func main() {
 						code = int(t.words[ctx.Index-1].code)
 					}
 					exp.Marker.Arm(byte(code))
+				}
+				if ctx.Index == last && ctx.OnPhase && btn == "" {
+					if ctx.Frame == 0 {
+						if err := drain(resp); err != nil {
+							return err
+						}
+					} else {
+						b, ts, err := resp.poll()
+						if err != nil {
+							return err
+						}
+						if b != "" && ts >= adjNS {
+							btn, pressNS = b, ts
+						}
+					}
 				}
 				// A word replaces the cross while it is on screen.
 				if err := ctx.Screen.Clear(); err != nil {
@@ -939,26 +961,31 @@ func main() {
 				return fix.Draw(ctx.Screen)
 			}
 			gc := debug.SetGCPercent(-1)
-			_, timing, err := stimuli.PresentStreamOfStimuliHooks(exp.Screen, buildStream(t), 0, 0, onFrame, nil)
+			onOnset := func(i int, ns uint64) error {
+				if i == last {
+					adjNS = ns
+				}
+				return nil
+			}
+			_, timing, err := stimuli.PresentStreamOfStimuliHooks(exp.Screen, buildStream(t), 0, 0, onFrame, onOnset)
 			if err != nil {
 				debug.SetGCPercent(gc)
 				return err
 			}
 
-			// Response window: from the flip that takes the adjective down.
-			openNS, err := exp.ShowTS(fix)
-			if err != nil {
-				debug.SetGCPercent(gc)
-				return err
-			}
-			if err := drain(resp); err != nil {
-				debug.SetGCPercent(gc)
-				return err
-			}
-			btn, pressNS, err := waitResponse(resp, openNS+responseWindowMs*1_000_000)
-			if err != nil {
-				debug.SetGCPercent(gc)
-				return err
+			// Without a press during the adjective, the cross comes back and
+			// the window stays open until responseWindowMs after its offset.
+			// offNS is the flip that takes the adjective down.
+			var offNS uint64
+			if btn == "" {
+				if offNS, err = exp.ShowTS(fix); err != nil {
+					debug.SetGCPercent(gc)
+					return err
+				}
+				if btn, pressNS, err = waitResponse(resp, offNS+responseWindowMs*1_000_000); err != nil {
+					debug.SetGCPercent(gc)
+					return err
+				}
 			}
 
 			// Feedback.
@@ -974,6 +1001,9 @@ func main() {
 			if err != nil {
 				return err
 			}
+			if offNS == 0 { // answered during the adjective: feedback replaces it
+				offNS = fbNS
+			}
 
 			// Log the trial.
 			trialNS := timing[0].OnsetNS
@@ -987,18 +1017,18 @@ func main() {
 					intended += 6*(wordOnMs+wordOffMs) + fixationMs
 				}
 				// The on-phase ends at the next flip: the next element's onset,
-				// or (for the adjective) the response-window flip.
-				offNS := openNS
+				// or (for the adjective) the cross or the feedback.
+				end := offNS
 				if i+2 < len(timing) {
-					offNS = timing[i+1].OffsetNS
+					end = timing[i+1].OffsetNS
 				}
-				addRow(t, "word", w, int(w.code), tl.OnsetNS, rel(tl.OnsetNS), strconv.Itoa(intended), dur(tl.OnsetNS, offNS), "NA", "NA", "NA")
+				addRow(t, "word", w, int(w.code), tl.OnsetNS, rel(tl.OnsetNS), strconv.Itoa(intended), dur(tl.OnsetNS, end), "NA", "NA", "NA")
 			}
-			respIntended := strconv.Itoa(2*fixationMs + 8*(wordOnMs+wordOffMs) + wordOnMs)
-			addRow(t, "response_window", nil, 0, openNS, rel(openNS), respIntended, "NA", "NA", "NA", "NA")
+			respIntended := strconv.Itoa(2*fixationMs + 8*(wordOnMs+wordOffMs))
+			addRow(t, "response_window", nil, 0, adjNS, rel(adjNS), respIntended, "NA", "NA", "NA", "NA")
 			rt := "NA"
 			if btn != "" {
-				rt = dur(openNS, pressNS)
+				rt = dur(adjNS, pressNS)
 				addRow(t, "response", nil, 0, pressNS, rel(pressNS), "NA", "NA", btn, correct, rt)
 			}
 			event := map[int]string{codeCorrect: "feedback_correct", codeIncorrect: "feedback_incorrect", codeTimeout: "feedback_timeout"}[code]

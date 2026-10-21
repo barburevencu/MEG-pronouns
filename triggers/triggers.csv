@@ -180,12 +180,12 @@ main,202,pause/instruction screen before block 2,pause text; the operator's SPAC
 main,203,pause/instruction screen before block 3,pause text; the operator's SPACE starts the block,,until SPACE,,,,,,,,,,,
 main,204,pause/instruction screen before block 4,pause text; the operator's SPACE starts the block,,until SPACE,,,,,,,,,,,
 main,205,pause/instruction screen before block 5,pause text; the operator's SPACE starts the block,,until SPACE,,,,,,,,,,,
-main,211,feedback: correct,fixation cross turns green,6500 + RT,500,,,,,,,,,,,
-main,212,feedback: incorrect,fixation cross turns red,6500 + RT,500,,,,,,,,,,,
+main,211,feedback: correct,fixation cross turns green,"6000 + RT, at the earliest 6500",500,,,,,,,,,,,
+main,212,feedback: incorrect,fixation cross turns red,"6000 + RT, at the earliest 6500",500,,,,,,,,,,,
 main,213,feedback: timeout (no response),fixation cross turns dark grey,9500,500,,,,,,,,,,,
 main,255,end of experiment,end screen,,5000,,,,,,,,,,,
 main,,inter_sentence_break,fixation cross (light grey),4000,1000,,,,,,,,,,,
-main,,response_window_opens,fixation cross (light grey),6500,"until response, max 3000",,,,,,,,,,,
+main,,response_window_opens,the adjective (presses count from its onset; RT from there),6000,"until response, at most until 9500",,,,,,,,,,,
 localizer,1,localizer word: marin,'marin' (no fixation cross; feedback as a dot at its centre),0,1000 (until the next stimulus),,,,,,,,,word,1,marin
 localizer,2,localizer word: facteur,'facteur' (no fixation cross; feedback as a dot at its centre),0,1000 (until the next stimulus),,,,,,,,,word,2,facteur
 localizer,3,localizer word: bûcheron,'bûcheron' (no fixation cross; feedback as a dot at its centre),0,1000 (until the next stimulus),,,,,,,,,word,3,bûcheron

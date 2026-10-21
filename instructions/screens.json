@@ -36,7 +36,7 @@
   "main_intro": [
     {"text": "Après la seconde phrase, indiquez si elle s'enchaîne naturellement avec la première."},
     {"text": "Bouton vert de {natural} : la suite est naturelle.\n\nBouton vert de {odd} : la suite est étrange.", "image": "pad_congruent"},
-    {"text": "Répondez dès que le dernier mot a disparu, en moins de 3 secondes."},
+    {"text": "Vous pouvez répondre dès que le dernier mot apparaît.\n\nRépondez le plus vite possible, en moins de 3 secondes."},
     {"text": "La croix devient verte si votre réponse est correcte, rouge si elle est incorrecte.\n\nElle devient gris foncé si vous n'avez pas répondu à temps."},
     {"text": "Gardez les yeux au centre de l'écran et évitez de cligner des yeux pendant la lecture."}
   ],

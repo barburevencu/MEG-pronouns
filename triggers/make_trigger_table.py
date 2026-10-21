@@ -40,7 +40,8 @@ EXAMPLE = {  # canonical / non-canonical words, for the on_screen column
 }
 
 S2_START = FIX + 6 * WORD_SOA + FIX          # 5000
-RESP_OPEN = S2_START + 2 * WORD_SOA + WORD_ON  # 6500
+RESP_OPEN = S2_START + 2 * WORD_SOA  # 6000: the adjective's onset
+ADJ_OFF = RESP_OPEN + WORD_ON        # 6500
 
 
 def word_onset(sentence, position):
@@ -73,14 +74,14 @@ for role, (name, sentence, pos_can, pos_non) in ROLES.items():
 
 add(None, "inter_sentence_break", "fixation cross (light grey)", FIX + 6 * WORD_SOA,
     FIX)
-add(None, "response_window_opens", "fixation cross (light grey)", RESP_OPEN,
-    f"until response, max {RESPONSE_WINDOW}")
+add(None, "response_window_opens", "the adjective (presses count from its onset; RT from there)", RESP_OPEN,
+    f"until response, at most until {ADJ_OFF + RESPONSE_WINDOW}")
 # Button presses are recorded by the MEG on their own STI lines; the PC marks
 # only the feedback onset (first frame after the press, or the timeout).
-add(211, "feedback: correct", "fixation cross turns green", f"{RESP_OPEN} + RT", FEEDBACK)
-add(212, "feedback: incorrect", "fixation cross turns red", f"{RESP_OPEN} + RT", FEEDBACK)
+add(211, "feedback: correct", "fixation cross turns green", f"{RESP_OPEN} + RT, at the earliest {ADJ_OFF}", FEEDBACK)
+add(212, "feedback: incorrect", "fixation cross turns red", f"{RESP_OPEN} + RT, at the earliest {ADJ_OFF}", FEEDBACK)
 add(213, "feedback: timeout (no response)", "fixation cross turns dark grey",
-    RESP_OPEN + RESPONSE_WINDOW, FEEDBACK)
+    ADJ_OFF + RESPONSE_WINDOW, FEEDBACK)
 for b in range(1, 6):
     add(200 + b, f"pause/instruction screen before block {b}",
         ("instructions" if b == 1 else "pause text") + "; the operator's SPACE starts the block",
