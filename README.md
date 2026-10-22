@@ -78,7 +78,7 @@ GitHub. `buttontest-linux` is in the same release.
 ```bash
 ./pronouns -w -s 1                 # windowed test, answers with ← / →
 ./pronouns -s 1 -meg               # MEG session, subject 1
-./pronouns -s 1 -meg -block 3      # resume at block 3 after a crash (no localizer)
+./pronouns -s 1 -meg -block 3      # resume at block 3 after a crash (no localizer, no instructions)
 ./pronouns -s 1 -meg -localizer 2  # localizer block 2 only, then the main task
 ./pronouns -s 1 -meg -localizer none  # main task only
 ./pronouns -w -s 1 -auto -block 5  # unattended timing check, random answers
@@ -88,7 +88,7 @@ GitHub. `buttontest-linux` is in the same release.
 |---|---|
 | `-s N` | subject (must be in the counterbalancing table) |
 | `-meg` | triggers on `/dev/parport1`, answers with the green buttons of the response pad |
-| `-block N` | start the main task at block N; the first screen is then the instructions; with N > 1 the localizer is skipped unless `-localizer` is given |
+| `-block N` | start the main task at block N (after a crash): with N > 1 the localizer and the instructions are skipped, and the session opens on block N's pause screen (`-localizer` still runs localizer blocks if given) |
 | `-localizer LIST` | localizer blocks to run: `none`, or a comma list of `train`, `1`, `2` (default all) |
 | `-main=false` | skip the main task: run only the localizer blocks chosen with `-localizer` |
 | `-photodiode on/off/auto` | white square top-left at every trigger; `auto` = on with `-meg` |

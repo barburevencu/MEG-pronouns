@@ -959,7 +959,9 @@ func main() {
 			// Pause (or instructions) before each block.
 			if t.number == 1 {
 				runtime.GC()
-				if t.block == *startBlock {
+				// The full instructions before block 1 only; a session resumed
+				// with -block N > 1 opens on the pause screen of block N.
+				if t.block == 1 {
 					first := "main_intro_alone"
 					if ranLoc {
 						first = "main_intro_after_localizer"
