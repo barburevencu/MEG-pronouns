@@ -668,14 +668,24 @@ func main() {
 			exp.Fatal("preloading the fixation cross: %v", err)
 		}
 	}
+	// Each distinct word is rendered and uploaded once, and shared by every
+	// trial (and the localizer) that shows it.
+	wordStims := map[string]*stimuli.TextLine{}
+	wordStim := func(text string) *stimuli.TextLine {
+		if w := wordStims[text]; w != nil {
+			return w
+		}
+		w := stimuli.NewTextLine(text, 0, 0, textColor)
+		w.Font = font
+		if err := stimuli.PreloadVisualOnScreen(exp.Screen, w); err != nil {
+			exp.Fatal("preloading %q: %v", text, err)
+		}
+		wordStims[text] = w
+		return w
+	}
 	for _, t := range trials {
 		for i := range t.words {
-			w := &t.words[i]
-			w.stim = stimuli.NewTextLine(w.text, 0, 0, textColor)
-			w.stim.Font = font
-			if err := stimuli.PreloadVisualOnScreen(exp.Screen, w.stim); err != nil {
-				exp.Fatal("preloading %q: %v", w.text, err)
-			}
+			t.words[i].stim = wordStim(t.words[i].text)
 		}
 	}
 
@@ -689,18 +699,11 @@ func main() {
 	// pictures span -word-deg, like the widest word.
 	var locWordPx float32
 	var longest string
-	locWords := map[string]*stimuli.TextLine{}
 	for _, t := range locTrials {
-		if t.modality != "word" || locWords[t.item] != nil {
+		if t.modality != "word" {
 			continue
 		}
-		w := stimuli.NewTextLine(t.item, 0, 0, textColor)
-		w.Font = font
-		if err := stimuli.PreloadVisualOnScreen(exp.Screen, w); err != nil {
-			exp.Fatal("preloading %q: %v", t.item, err)
-		}
-		locWords[t.item] = w
-		if w.Width > locWordPx {
+		if w := wordStim(t.item); w.Width > locWordPx {
 			locWordPx, longest = w.Width, t.item
 		}
 	}
@@ -710,7 +713,7 @@ func main() {
 			continue
 		}
 		if t.modality == "word" {
-			t.stim = locWords[t.item]
+			t.stim = wordStim(t.item)
 			continue
 		}
 		if locPictures[t.image] == nil {
