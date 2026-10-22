@@ -941,6 +941,12 @@ func main() {
 			}
 			saveBlock(fmt.Sprintf("localizer block %d", b))
 		}
+		// The pictures are not needed after the localizer: free their
+		// textures. (Its words stay: the main task shows them too.)
+		for _, p := range locPictures {
+			p.Unload()
+		}
+		runtime.GC()
 
 		for _, t := range trials {
 			if !*runMain {
