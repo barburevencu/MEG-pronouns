@@ -5,7 +5,7 @@ written with [goxpyriment](https://github.com/chrplr/goxpyriment).
 
 The session opens with a **localizer**: a one-back task on the 32 nouns, words
 and pictures alternating, each on screen for a full second with no blank in
-between (a white 2.4 cm fixation cross stays on the pictures; words have none). The
+between (a white 1.92 cm fixation cross stays on the pictures; words have none). The
 participant presses the right green button when the stimulus is the same
 concept as the previous one; the cross on a picture, or a small dot at the
 centre of a word, turns green on a correct press, red on a press on a
@@ -16,10 +16,10 @@ positions are random (never two in a row), every concept is matched once per
 block, word→picture in one block and picture→word in the other. For decoding,
 leave out the match trials and the trial after each match. Its words are in the
 main task's font and size. Word size: the widest word of the session spans
-10° of visual angle (on the 65 cm wide projected image, seen from 104 cm;
+8° of visual angle (on the 65 cm wide projected image, seen from 104 cm;
 change with `-screen-cm`, `-distance-cm`, `-word-deg`), and the pictures are
-10° wide too. On the 1920 px MEG screen that is about 538 px (≈ 90 pt); the
-localizer's cross is 2.4 cm, about 71 px.
+8° wide too. On the 1920 px MEG screen that is about 430 px (≈ 72 pt); the
+localizer's cross is 1.92 cm, about 57 px.
 
 | File | What it is |
 |---|---|
@@ -94,7 +94,7 @@ GitHub. `buttontest-linux` is in the same release.
 | `-photodiode-size N` | its side, in pixels (default 100) |
 | `-ttl-ms N` | trigger pulse width (default 0 = 3 frames, 25 ms at 120 Hz) |
 | `-font FILE.ttf` | word font (default: bundled Inconsolata) |
-| `-word-deg N` | width of the widest word and of the localizer's pictures, in degrees (default 10) |
+| `-word-deg N` | width of the widest word and of the localizer's pictures, in degrees (default 8) |
 | `-screen-cm N`, `-distance-cm N` | width of the projected image and viewing distance (default 65 and 104, the MEG's); windowed (`-w`), the window's width stands for the screen's |
 | `-o FOLDER` | where to save the data; relative paths are taken from the project folder (default `data`) |
 | `-cb FILE` | counterbalancing table from disk instead of the embedded copy |

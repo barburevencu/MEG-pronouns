@@ -105,14 +105,14 @@ const (
 	megShiftX = 330 // in -meg fullscreen, everything is drawn this many pixels left of the screen center (MEG projector)
 	// Word size: the widest word of both tasks, and the localizer's pictures,
 	// span this visual angle on the MEG screen.
-	defaultWordDeg    = 10
-	defaultScreenCm   = 65  // width of the projected image on the MEG screen
-	defaultDistanceCm = 104 // viewing distance in the MEG
-	fixSize           = 16  // fixation cross, width and height in pixels
-	fixThickness      = 2   // fixation cross, line thickness in pixels
-	dotSize           = 10  // localizer feedback dot on a word, diameter in pixels
-	locCrossCm        = 2.4 // localizer: the cross on the pictures, width and height in cm on the screen
-	locCrossThinness  = 20  // ... and its line thickness: its width divided by this
+	defaultWordDeg    = 8
+	defaultScreenCm   = 65   // width of the projected image on the MEG screen
+	defaultDistanceCm = 104  // viewing distance in the MEG
+	fixSize           = 16   // fixation cross, width and height in pixels
+	fixThickness      = 2    // fixation cross, line thickness in pixels
+	dotSize           = 10   // localizer feedback dot on a word, diameter in pixels
+	locCrossCm        = 1.92 // localizer: the cross on the pictures, width and height in cm on the screen
+	locCrossThinness  = 20   // ... and its line thickness: its width divided by this
 )
 
 // ---------------------------------------------------------------------------

@@ -35,7 +35,7 @@
   #dot { position: absolute; left: 50%; top: 50%; width: 10px; height: 10px; margin: -5px 0 0 -5px;
          border-radius: 50%; display: none; z-index: 1; }
   #word { position: absolute; left: 0; right: 0; top: 50%; transform: translateY(-50%); text-align: center;
-          font: 48pt Inconsolata, Menlo, Consolas, "DejaVu Sans Mono", monospace; white-space: nowrap; }
+          font: 38.4pt Inconsolata, Menlo, Consolas, "DejaVu Sans Mono", monospace; white-space: nowrap; }
   #end { overflow-y: auto; align-items: flex-start; }
   #end .text { max-width: 900px; }
   table { border-collapse: collapse; margin: 1.5em auto 0; font-size: 15px; text-align: left; }
@@ -258,9 +258,9 @@ function runLocalizer() {
   return new Promise(resolve => {
     const width = pictureWidth();
     picture.style.width = picture.style.height = width + "px";
-    // The cross on the pictures: 2.4 cm, as in the program, where the pictures
-    // are 10 degrees wide at 104 cm (18.2 cm).
-    const crossPx = Math.round(width * 2.4 / 18.2);
+    // The cross on the pictures: 1.92 cm, as in the program, where the
+    // pictures are 8 degrees wide at 104 cm (14.55 cm).
+    const crossPx = Math.round(width * 1.92 / 14.55);
     cross.style.setProperty("--s", crossPx + "px");
     cross.style.setProperty("--t", Math.max(2, Math.floor(crossPx / 20)) + "px");
     const out = LOC_TRIALS.map(() => ({ press: null, outcome: null }));
