@@ -475,6 +475,7 @@ func main() {
 	auto := flag.Bool("auto", false, "answer automatically at random and start blocks without SPACE (timing checks)")
 	outDir := flag.String("o", dataDir, "folder for the data files; a relative path is taken from the project folder")
 	cbPath := flag.String("cb", "", "read the counterbalancing table from this file instead of the embedded copy")
+	runMain := flag.Bool("main", true, "run the main (pronoun) task after the localizer; -main=false runs the localizer only")
 	locFlag := flag.String("localizer", "train,1,2", "localizer blocks to run before the main task: none, or a comma list of train, 1, 2 (default: all, or none with -block > 1)")
 
 	// The setup dialog (shown when -s is not given) offers the same default.
@@ -589,7 +590,7 @@ func main() {
 	exp.AddExperimentInfo(fmt.Sprintf("triggers: %v; photodiode: %v (%.0f px, top-left); ttl duration: %v",
 		ttlOut != nil, usePhotodiode, *photodiodeSize, exp.Marker.TTLDuration()))
 	exp.AddExperimentInfo(fmt.Sprintf("congruent_key: %s; start block: %d", congruentKey, *startBlock))
-	exp.AddExperimentInfo(fmt.Sprintf("localizer blocks run (training, 1, 2): %v", runLoc))
+	exp.AddExperimentInfo(fmt.Sprintf("localizer blocks run (training, 1, 2): %v; main task: %v", runLoc, *runMain))
 	log.Print("responses: " + resp.desc())
 
 	// The MEG projector's image is off center: in -meg fullscreen, move the
@@ -942,6 +943,9 @@ func main() {
 		}
 
 		for _, t := range trials {
+			if !*runMain {
+				break
+			}
 			if t.block < *startBlock {
 				continue
 			}

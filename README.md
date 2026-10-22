@@ -90,6 +90,7 @@ GitHub. `buttontest-linux` is in the same release.
 | `-meg` | triggers on `/dev/parport1`, answers with the green buttons of the response pad |
 | `-block N` | start the main task at block N; the first screen is then the instructions; with N > 1 the localizer is skipped unless `-localizer` is given |
 | `-localizer LIST` | localizer blocks to run: `none`, or a comma list of `train`, `1`, `2` (default all) |
+| `-main=false` | skip the main task: run only the localizer blocks chosen with `-localizer` |
 | `-photodiode on/off/auto` | white square top-left at every trigger; `auto` = on with `-meg` |
 | `-photodiode-size N` | its side, in pixels (default 100) |
 | `-ttl-ms N` | trigger pulse width (default 0 = 3 frames, 25 ms at 120 Hz) |
