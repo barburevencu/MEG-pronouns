@@ -106,7 +106,7 @@ const (
 	// Word size: the widest word of both tasks, and the localizer's pictures,
 	// span this visual angle on the MEG screen.
 	defaultWordDeg    = 10
-	defaultScreenCm   = 75  // width of the projected image (estimate; measure it)
+	defaultScreenCm   = 65  // width of the projected image on the MEG screen
 	defaultDistanceCm = 104 // viewing distance in the MEG
 	fixSize           = 16  // fixation cross, width and height in pixels
 	fixThickness      = 2   // fixation cross, line thickness in pixels
