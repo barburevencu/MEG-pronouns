@@ -857,7 +857,7 @@ func main() {
 	// The last word of sentence 1 is followed by its wordOffMs of fixation plus
 	// the 1000 ms break; the adjective's stream ends when it goes off.
 	buildStream := func(t *trial) []stimuli.StreamElement {
-		el := []stimuli.StreamElement{{Stimulus: fix, DurationOn: fixationMs * time.Millisecond}}
+		el := []stimuli.StreamElement{{Stimulus: preloaded{fix}, DurationOn: fixationMs * time.Millisecond}}
 		for i, w := range t.words {
 			off := wordOffMs * time.Millisecond
 			switch {
@@ -866,7 +866,7 @@ func main() {
 			case i == len(t.words)-1:
 				off = 0
 			}
-			el = append(el, stimuli.StreamElement{Stimulus: w.stim, DurationOn: wordOnMs * time.Millisecond, DurationOff: off})
+			el = append(el, stimuli.StreamElement{Stimulus: preloaded{w.stim}, DurationOn: wordOnMs * time.Millisecond, DurationOff: off})
 		}
 		return el
 	}
@@ -1101,6 +1101,14 @@ func main() {
 		exp.Fatal("experiment error: %v", err)
 	}
 }
+
+// preloaded wraps a stimulus that is already on the GPU before it goes into a
+// stream. PresentStreamOfStimuliHooks preloads every element, and preloading
+// a Picture or TextLine uploads a new texture without freeing the old one: a
+// 512-trial localizer block leaked one texture per picture shown (hundreds of
+// MB of GPU memory) and froze the MEG computer. Through this wrapper the
+// stream sees an unknown type and only draws it once, which allocates nothing.
+type preloaded struct{ stimuli.VisualStimulus }
 
 // newCross returns a "+" of the given width and line thickness, in pixels,
 // as an image.

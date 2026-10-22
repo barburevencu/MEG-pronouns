@@ -159,7 +159,7 @@ func runLocalizerBlock(exp *control.Experiment, trials []*locTrial, resp respond
 
 	el := make([]stimuli.StreamElement, len(trials))
 	for i, t := range trials {
-		el[i] = stimuli.StreamElement{Stimulus: t.stim, DurationOn: locOnMs * time.Millisecond}
+		el[i] = stimuli.StreamElement{Stimulus: preloaded{t.stim}, DurationOn: locOnMs * time.Millisecond}
 	}
 
 	onFrame := func(ctx stimuli.FrameContext) error {
