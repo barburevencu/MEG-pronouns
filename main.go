@@ -918,7 +918,14 @@ func main() {
 			// Log what was presented, also after ESC.
 			for i, tl := range timing {
 				t, o := block[i], outcome[i]
-				addLocRow(t, "loc_stimulus", t.code, tl.OnsetNS, "0.0", dur(tl.OnsetNS, tl.OffsetNS), "NA", "NA", "NA")
+				// With no blank after a stimulus the stream does not measure its
+				// offset (OffsetNS is onset + the nominal duration): its measured
+				// duration is the time to the next onset (NA for the last one).
+				onDur := "NA"
+				if i+1 < len(timing) {
+					onDur = dur(tl.OnsetNS, timing[i+1].OnsetNS)
+				}
+				addLocRow(t, "loc_stimulus", t.code, tl.OnsetNS, "0.0", onDur, "NA", "NA", "NA")
 				rel := func(ns uint64) string { return dur(tl.OnsetNS, ns) }
 				if o.pressNS != 0 {
 					correct := "0"
@@ -1071,11 +1078,16 @@ func main() {
 				if w.sentence == 2 {
 					intended += 6*(wordOnMs+wordOffMs) + fixationMs
 				}
-				// The on-phase ends at the next flip: the next element's onset,
-				// or (for the adjective) the cross or the feedback.
+				// The on-phase ends at the next flip: the next word's onset, the
+				// break after sentence 1 (whose first flip the stream measures),
+				// or, for the adjective, the cross or the feedback. (Without a
+				// blank, the stream's OffsetNS is only onset + nominal duration.)
 				end := offNS
-				if i+2 < len(timing) {
+				switch {
+				case i == 5:
 					end = timing[i+1].OffsetNS
+				case i+2 < len(timing):
+					end = timing[i+2].OnsetNS
 				}
 				addRow(t, "word", w, int(w.code), tl.OnsetNS, rel(tl.OnsetNS), strconv.Itoa(intended), dur(tl.OnsetNS, end), "NA", "NA", "NA")
 			}
