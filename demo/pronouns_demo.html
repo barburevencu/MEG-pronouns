@@ -28,10 +28,14 @@
   #end, #end * { cursor: auto; }
   #end button { cursor: pointer; }
   #picture { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); display: none; }
-  #cross { position: absolute; left: 50%; top: 50%; --s: 16px; --t: 2px; --c: var(--fix);
+  /* --s side, --t line width, --o black outline (0 for the main task's cross) */
+  #cross { position: absolute; left: 50%; top: 50%; --s: 16px; --t: 2px; --o: 0px; --c: var(--fix);
            width: var(--s); height: var(--s); margin: calc(var(--s) / -2) 0 0 calc(var(--s) / -2);
-           background: linear-gradient(var(--c), var(--c)) center / var(--t) 100% no-repeat,
-                       linear-gradient(var(--c), var(--c)) center / 100% var(--t) no-repeat; }
+           background:
+             linear-gradient(var(--c), var(--c)) center / var(--t) calc(100% - 2 * var(--o)) no-repeat,
+             linear-gradient(var(--c), var(--c)) center / calc(100% - 2 * var(--o)) var(--t) no-repeat,
+             linear-gradient(#000, #000) center / calc(var(--t) + 2 * var(--o)) 100% no-repeat,
+             linear-gradient(#000, #000) center / 100% calc(var(--t) + 2 * var(--o)) no-repeat; }
   #dot { position: absolute; left: 50%; top: 50%; width: 10px; height: 10px; margin: -5px 0 0 -5px;
          border-radius: 50%; display: none; z-index: 1; }
   #word { position: absolute; left: 0; right: 0; top: 50%; transform: translateY(-50%); text-align: center;
@@ -262,7 +266,9 @@ function runLocalizer() {
     // pictures are 8 degrees wide at 104 cm (14.55 cm).
     const crossPx = Math.round(width * 1.92 / 14.55);
     cross.style.setProperty("--s", crossPx + "px");
-    cross.style.setProperty("--t", Math.max(2, Math.floor(crossPx / 20)) + "px");
+    const crossT = Math.max(2, Math.floor(crossPx / 20));
+    cross.style.setProperty("--t", crossT + "px");
+    cross.style.setProperty("--o", Math.max(1, Math.floor(crossT / 2)) + "px");  // black outline
     const out = LOC_TRIALS.map(() => ({ press: null, outcome: null }));
     let start = null, cur = -1;
     const feedback = color => {
@@ -288,7 +294,7 @@ function runLocalizer() {
         window.removeEventListener("keydown", onKey);
         wordEl.textContent = ""; picture.style.display = "none"; dot.style.display = "none";
         cross.style.visibility = "visible";
-        cross.style.removeProperty("--s"); cross.style.removeProperty("--t");
+        cross.style.removeProperty("--s"); cross.style.removeProperty("--t"); cross.style.removeProperty("--o");
         resolve(aborted ? null : out);
         return;
       }

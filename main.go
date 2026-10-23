@@ -651,18 +651,19 @@ func main() {
 	if err != nil {
 		exp.Fatal("font: %v", err)
 	}
-	fix := newCross(fixSize, fixThickness, fixColor)
-	fixCorrect := newCross(fixSize, fixThickness, correctColor)
-	fixIncorrect := newCross(fixSize, fixThickness, incorrectColor)
-	fixTimeout := newCross(fixSize, fixThickness, timeoutColor)
+	fix := newCross(fixSize, fixThickness, 0, fixColor)
+	fixCorrect := newCross(fixSize, fixThickness, 0, correctColor)
+	fixIncorrect := newCross(fixSize, fixThickness, 0, incorrectColor)
+	fixTimeout := newCross(fixSize, fixThickness, 0, timeoutColor)
 	dotCorrect := newDot(dotSize, correctColor)
 	dotIncorrect := newDot(dotSize, incorrectColor)
 	// The localizer's cross on the pictures: locCrossCm on the screen.
 	locCrossPx := int(math.Round(locCrossCm / *screenCm * float64(drawW)))
 	locCrossThick := max(2, locCrossPx/locCrossThinness)
-	locFix := newCross(locCrossPx, locCrossThick, locFixColor)
-	locFixCorrect := newCross(locCrossPx, locCrossThick, correctColor)
-	locFixIncorrect := newCross(locCrossPx, locCrossThick, incorrectColor)
+	locCrossOutline := max(1, locCrossThick/2) // black, around the lines
+	locFix := newCross(locCrossPx, locCrossThick, locCrossOutline, locFixColor)
+	locFixCorrect := newCross(locCrossPx, locCrossThick, locCrossOutline, correctColor)
+	locFixIncorrect := newCross(locCrossPx, locCrossThick, locCrossOutline, incorrectColor)
 	for _, v := range []stimuli.VisualStimulus{fix, fixCorrect, fixIncorrect, fixTimeout, dotCorrect, dotIncorrect,
 		locFix, locFixCorrect, locFixIncorrect} {
 		if err := stimuli.PreloadVisualOnScreen(exp.Screen, v); err != nil {
@@ -1138,14 +1139,24 @@ func main() {
 type preloaded struct{ stimuli.VisualStimulus }
 
 // newCross returns a "+" of the given width and line thickness, in pixels,
-// as an image.
-func newCross(size, thickness int, c control.Color) *stimuli.Picture {
-	img := image.NewNRGBA(image.Rect(0, 0, size, size))
-	lo, hi := (size-thickness)/2, (size+thickness)/2
-	for y := 0; y < size; y++ {
-		for x := 0; x < size; x++ {
-			if (x >= lo && x < hi) || (y >= lo && y < hi) {
+// as an image, with a black outline of the given width around it (0: none).
+func newCross(size, thickness, outline int, c control.Color) *stimuli.Picture {
+	full := size + 2*outline
+	img := image.NewNRGBA(image.Rect(0, 0, full, full))
+	// in reports whether (x, y) is on a plus of side n and line width t
+	// centred in the image.
+	in := func(x, y, n, t int) bool {
+		lo, hi := (full-t)/2, (full+t)/2
+		edge0, edge1 := (full-n)/2, (full+n)/2
+		return (x >= lo && x < hi && y >= edge0 && y < edge1) || (y >= lo && y < hi && x >= edge0 && x < edge1)
+	}
+	for y := 0; y < full; y++ {
+		for x := 0; x < full; x++ {
+			switch {
+			case in(x, y, size, thickness):
 				img.SetNRGBA(x, y, color.NRGBA{c.R, c.G, c.B, 255})
+			case outline > 0 && in(x, y, full, thickness+2*outline):
+				img.SetNRGBA(x, y, color.NRGBA{0, 0, 0, 255})
 			}
 		}
 	}
