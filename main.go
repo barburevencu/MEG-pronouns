@@ -96,7 +96,7 @@ var (
 	backgroundColor = control.Black
 	textColor       = control.White
 	fixColor        = control.RGB(192, 192, 192) // light grey
-	locFixColor     = control.White              // the localizer's large cross on the pictures
+	locFixColor     = control.RGB(128, 128, 128) // the localizer's large cross (mid grey, so white words stay readable over it)
 	correctColor    = control.RGB(153, 229, 153)
 	incorrectColor  = control.RGB(240, 128, 128)
 	timeoutColor    = control.RGB(96, 96, 96) // dark grey

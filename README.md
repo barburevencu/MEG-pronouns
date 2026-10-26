@@ -5,7 +5,7 @@ written with [goxpyriment](https://github.com/chrplr/goxpyriment).
 
 The session opens with a **localizer**: a one-back task on the 32 nouns, words
 and pictures alternating, each on screen for a full second with no blank in
-between (a white 1.92 cm fixation cross with a thin black outline stays on the pictures, and the words are drawn on top of it). The
+between (a grey 1.92 cm fixation cross with a thin black outline stays on the pictures, and the words are drawn on top of it). The
 participant presses the right green button when the stimulus is the same
 concept as the previous one; the cross turns green on a correct press, red on a press on a
 non-match or on a match left unanswered for 800 ms. A training block
