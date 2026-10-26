@@ -4,11 +4,11 @@
 // and pictures of the 32 nouns, a 64-trial training block and two blocks of
 // 512. Then the main task:
 //
-// Each trial: fixation (1000 ms), sentence 1 word by word (6 words, each
-// 500 ms on, no blank in between), a 1000 ms break, sentence 2 (3 words, same
+// Each trial: fixation (500 ms), sentence 1 word by word (6 words, each
+// 250 ms on, no blank in between), a 1000 ms break, sentence 2 (3 words, same
 // timing), then a felicity judgment (two green buttons) that can be given as
 // soon as the last word appears, until 3000 ms after it goes off (RT from its
-// onset), and 500 ms of feedback on the fixation cross, shown once the word is
+// onset), and 250 ms of feedback on the fixation cross, shown once the word is
 // gone (green correct, red incorrect, dark grey timeout). The cross is hidden
 // while a word is on screen. 160 trials per subject
 // in 5 blocks of 32, with a pause before each block that the operator ends with SPACE. Trials come
@@ -75,11 +75,12 @@ var counterbalancingCSV []byte
 // Timing (ms)
 
 const (
-	fixationMs       = 1000 // initial fixation, and the break between sentences
-	wordOnMs         = 500  // each word stays on until the next
+	fixationMs       = 500  // initial fixation
+	breakMs          = 1000 // break between sentences
+	wordOnMs         = 250  // each word stays on until the next
 	wordOffMs        = 0
 	responseWindowMs = 3000
-	feedbackMs       = 500
+	feedbackMs       = 250
 	endScreenMs      = 5000
 	nBlocks          = 5
 )
@@ -860,14 +861,14 @@ func main() {
 
 	// The fixed part of every trial's stream: fixation, 6 words, break, 3 words.
 	// The last word of sentence 1 is followed by its wordOffMs of fixation plus
-	// the 1000 ms break; the adjective's stream ends when it goes off.
+	// the breakMs break; the adjective's stream ends when it goes off.
 	buildStream := func(t *trial) []stimuli.StreamElement {
 		el := []stimuli.StreamElement{{Stimulus: preloaded{fix}, DurationOn: fixationMs * time.Millisecond}}
 		for i, w := range t.words {
 			off := wordOffMs * time.Millisecond
 			switch {
 			case i == 5:
-				off += fixationMs * time.Millisecond
+				off += breakMs * time.Millisecond
 			case i == len(t.words)-1:
 				off = 0
 			}
@@ -1077,7 +1078,7 @@ func main() {
 				tl := timing[i+1]
 				intended := fixationMs + (w.position-1)*(wordOnMs+wordOffMs)
 				if w.sentence == 2 {
-					intended += 6*(wordOnMs+wordOffMs) + fixationMs
+					intended += 6*(wordOnMs+wordOffMs) + breakMs
 				}
 				// The on-phase ends at the next flip: the next word's onset, the
 				// break after sentence 1 (whose first flip the stream measures),
@@ -1092,7 +1093,7 @@ func main() {
 				}
 				addRow(t, "word", w, int(w.code), tl.OnsetNS, rel(tl.OnsetNS), strconv.Itoa(intended), dur(tl.OnsetNS, end), "NA", "NA", "NA")
 			}
-			respIntended := strconv.Itoa(2*fixationMs + 8*(wordOnMs+wordOffMs))
+			respIntended := strconv.Itoa(fixationMs + breakMs + 8*(wordOnMs+wordOffMs))
 			addRow(t, "response_window", nil, 0, adjNS, rel(adjNS), respIntended, "NA", "NA", "NA", "NA")
 			rt := "NA"
 			if btn != "" {
