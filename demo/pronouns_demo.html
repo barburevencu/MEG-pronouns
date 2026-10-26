@@ -16,6 +16,7 @@
   .screen.on { display: flex; }
   .text { max-width: 720px; padding: 24px 16px; text-align: center; }
   .text p { margin: 0 0 1em; }
+  .menu { display: inline-block; text-align: left; }
   .next { color: var(--muted); font-size: 16px; margin-top: 2.5em; }
   .en { color: var(--muted); font-size: 15px; margin-top: 2em; }
   kbd { border: 1px solid var(--muted); border-radius: 4px; padding: 0 6px; font-family: inherit; }
@@ -70,7 +71,8 @@
 
 <script>
 // Demo of the MEG session: the localizer (one-back on words and pictures) and
-// the pronoun task, with the timing of main.go / localizer.go. Instruction
+// the pronoun task, with the timing of main.go / localizer.go. A first screen
+// picks both parts, the localizer alone or the pronoun task alone. Instruction
 // screens advance with SPACE; ESC ends the demo. Localizer stimuli stay on
 // for a second each, pronoun-task words for 250 ms each, with no blank. The localizer's "same"
 // answer is → (the right green button in the MEG); the pronoun task uses
@@ -190,10 +192,16 @@ const example = (a, b) => `<div class="example">${a}<span class="arrow">→</spa
 const w = text => `<span class="w">${text}</span>`;
 const img = item => `<img src="${IMAGES[item]}" alt="${item}">`;
 
+const MENU = `<p><b>Bienvenue !</b></p><p>Cette expérience comporte deux parties.</p>
+  <p class="menu"><kbd>1</kbd> Both localizer and pronoun task<br><kbd>2</kbd> Only localizer<br><kbd>3</kbd> Only pronoun task</p>
+  <p class="next">Appuyez sur <kbd>1</kbd>, <kbd>2</kbd> ou <kbd>3</kbd>.</p>
+  <p class="en">Demo of a French MEG experiment: a one-back localizer (32 trials, about 30 s), then the
+   pronoun task (10 trials, about 2 minutes). SPACE advances the instructions; ESC stops the demo.</p>`;
+
+// The parts each choice of the menu runs.
+const PARTS = { 1: { loc: true, pronoun: true }, 2: { loc: true, pronoun: false }, 3: { loc: false, pronoun: true } };
+
 const LOC_PAGES = [
-  `<p><b>Bienvenue !</b></p><p>Cette expérience comporte deux parties.</p>` + NEXT +
-  `<p class="en">Demo of a French MEG experiment: a one-back localizer (32 trials, about 30 s), then the
-   pronoun task (10 trials, about 2 minutes). SPACE advances the instructions; ESC stops the demo.</p>`,
   `<p>Dans la première partie, des mots et des images vont apparaître au centre de l'écran, l'un après l'autre.</p>
    <p>Mots et images alternent, au rythme d'un par seconde.</p>` + NEXT,
   `<p>Votre tâche : repérer quand ce qui apparaît correspond à ce qui vient juste avant.</p>` + NEXT,
@@ -208,9 +216,10 @@ const LOC_PAGES = [
   `<p>Gardez les yeux au centre de l'écran, sur les mots comme sur les images.</p>` + START,
 ];
 
-const PRONOUN_PAGES = [
-  `<p><b>Fin de la première partie.</b></p>
-   <p>Dans la seconde partie, vous allez lire des paires de phrases, mot par mot.</p>` + NEXT,
+// The first page depends on whether the localizer came before.
+const PRONOUN_PAGES = afterLoc => [
+  (afterLoc ? `<p><b>Fin de la première partie.</b></p><p>Dans la seconde partie` : `<p>Dans cette partie`) +
+  `, vous allez lire des paires de phrases, mot par mot.</p>` + NEXT,
   `<p>Après la seconde phrase, indiquez si elle s'enchaîne naturellement avec la première.</p>` + NEXT,
   `<p>Flèche <kbd>←</kbd> : oui, la suite est naturelle.</p>
    <p>Flèche <kbd>→</kbd> : non, la suite est étrange.</p>` + NEXT,
@@ -242,6 +251,20 @@ function pages(list) {
       if (++i < list.length) { $("pageText").innerHTML = list[i]; return; }
       window.removeEventListener("keydown", onKey);
       resolve(true);
+    };
+    window.addEventListener("keydown", onKey);
+  });
+}
+
+// Shows the menu; resolves with the parts to run once 1, 2 or 3 is pressed.
+function menu() {
+  return new Promise(resolve => {
+    show("page");
+    $("pageText").innerHTML = MENU;
+    const onKey = e => {
+      if (!(e.key in PARTS)) return;
+      window.removeEventListener("keydown", onKey);
+      resolve(PARTS[e.key]);
     };
     window.addEventListener("keydown", onKey);
   });
@@ -386,11 +409,14 @@ async function run() {
   aborted = false;
   let loc = null;
   const results = [];
-  if (await pages(LOC_PAGES)) {
-    document.documentElement.requestFullscreen?.().catch(() => {});
-    show("stage");
-    loc = await runLocalizer();
-    if (loc && await pages(PRONOUN_PAGES)) {
+  const parts = await menu();
+  document.documentElement.requestFullscreen?.().catch(() => {});
+  if (!parts.loc || await pages(LOC_PAGES)) {
+    if (parts.loc) {
+      show("stage");
+      loc = await runLocalizer();
+    }
+    if (parts.pronoun && (loc || !parts.loc) && await pages(PRONOUN_PAGES(parts.loc))) {
       show("stage");
       for (const t of TRIALS) {
         const r = await runTrial(t);
@@ -417,6 +443,7 @@ function finish(loc, results) {
   $("score").textContent = results.length ?
     `Seconde partie : ${n} réponse${n > 1 ? "s" : ""} correcte${n > 1 ? "s" : ""} sur ${results.length}.` : "";
   const label = { left: "← naturel", right: "→ étrange", "": "—" };
+  document.querySelector("#end table").style.display = results.length ? "" : "none";
   $("rows").innerHTML = results.map((r, i) => `<tr>
     <td>${i + 1}</td>
     <td>${r.t.sentence1} ${r.t.sentence2}<br><span class="tr">${r.t.translation}</span></td>
