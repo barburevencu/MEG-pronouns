@@ -467,7 +467,7 @@ func main() {
 	photodiode := flag.String("photodiode", "auto", "photodiode square in the top-left corner: on, off, or auto (on with -meg)")
 	photodiodeSize := flag.Float64("photodiode-size", control.DefaultPhotodiodeSize, "side of the photodiode square, in pixels")
 	ttlMs := flag.Float64("ttl-ms", 0, "how long each trigger code stays on the lines, in ms (0 = 3 frames, 25 ms at 120 Hz)")
-	startBlock := flag.Int("block", 1, "block to start from (to resume an interrupted session)")
+	startBlock := flag.Int("block", 1, "block to start from (to resume an interrupted session); skips the localizer unless -localizer is given")
 	fontPath := flag.String("font", "", "TTF font file for the words (default: the bundled Inconsolata)")
 	wordDeg := flag.Float64("word-deg", defaultWordDeg, "width of the widest word (and of the localizer's pictures), in degrees of visual angle")
 	screenCm := flag.Float64("screen-cm", defaultScreenCm, "width of the projected screen image, in cm")
@@ -476,7 +476,7 @@ func main() {
 	outDir := flag.String("o", dataDir, "folder for the data files; a relative path is taken from the project folder")
 	cbPath := flag.String("cb", "", "read the counterbalancing table from this file instead of the embedded copy")
 	runMain := flag.Bool("main", true, "run the main (pronoun) task after the localizer; -main=false runs the localizer only")
-	locFlag := flag.String("localizer", "train,1,2", "localizer blocks to run before the main task: none, or a comma list of train, 1, 2 (default: all, or none with -block > 1)")
+	locFlag := flag.String("localizer", "train,1,2", "localizer blocks to run before the main task: none, or a comma list of train, 1, 2 (default: all, or none with -block)")
 
 	// The setup dialog (shown when -s is not given) offers the same default.
 	exp := control.NewExperimentFromFlags("Pronouns", backgroundColor, textColor, 32,
@@ -517,13 +517,13 @@ func main() {
 	}
 	congruentKey := trials[0].fields["congruent_key"]
 
-	// Localizer: all blocks, unless -localizer says otherwise; resuming the
-	// main task (-block > 1) skips it unless -localizer is given.
+	// Localizer: all blocks, unless -localizer says otherwise; -block (even
+	// -block 1) skips it unless -localizer is given.
 	runLoc, err := parseLocalizerBlocks(*locFlag)
 	if err != nil {
 		exp.Fatal("%v", err)
 	}
-	if *startBlock > 1 && !flagGiven("localizer") {
+	if flagGiven("block") && !flagGiven("localizer") {
 		runLoc = [locBlocks]bool{}
 	}
 	locTrials, err := loadLocalizer(localizerCSV, exp.SubjectID)
