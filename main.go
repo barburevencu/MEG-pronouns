@@ -4,7 +4,7 @@
 // and pictures of the 32 nouns, a 64-trial training block and two blocks of
 // 512. Then the main task:
 //
-// Each trial: fixation (500 ms), sentence 1 word by word (6 words, each
+// Each trial: fixation (1000 ms), sentence 1 word by word (6 words, each
 // 250 ms on, no blank in between), a 1000 ms break, sentence 2 (3 words, same
 // timing), then a felicity judgment (two green buttons) that can be given as
 // soon as the last word appears, until 3000 ms after it goes off (RT from its
@@ -75,7 +75,7 @@ var counterbalancingCSV []byte
 // Timing (ms)
 
 const (
-	fixationMs       = 500  // initial fixation
+	fixationMs       = 1000 // initial fixation
 	breakMs          = 1000 // break between sentences
 	wordOnMs         = 250  // each word stays on until the next
 	wordOffMs        = 0
