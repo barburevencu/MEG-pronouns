@@ -9,8 +9,8 @@
 // timing), then a felicity judgment (two green buttons) that can be given as
 // soon as the last word appears, until 3000 ms after it goes off (RT from its
 // onset), and 250 ms of feedback on the fixation cross, shown once the word is
-// gone (green correct, red incorrect, dark grey timeout). The cross is hidden
-// while a word is on screen. 160 trials per subject
+// gone (green correct, red incorrect, dark grey timeout). The cross stays on
+// for the whole trial, the words drawn on top of it. 160 trials per subject
 // in 5 blocks of 32, with a pause before each block that the operator ends with SPACE. Trials come
 // from counterbalancing/counterbalancing.csv (make_counterbalancing.py), embedded in the binary.
 //
@@ -111,7 +111,6 @@ const (
 	defaultDistanceCm = 104  // viewing distance in the MEG
 	fixSize           = 16   // fixation cross, width and height in pixels
 	fixThickness      = 2    // fixation cross, line thickness in pixels
-	dotSize           = 10   // localizer feedback dot on a word, diameter in pixels
 	locCrossCm        = 1.92 // localizer: the cross on the pictures, width and height in cm on the screen
 	locCrossThinness  = 20   // ... and its line thickness: its width divided by this
 )
@@ -656,8 +655,6 @@ func main() {
 	fixCorrect := newCross(fixSize, fixThickness, 0, correctColor)
 	fixIncorrect := newCross(fixSize, fixThickness, 0, incorrectColor)
 	fixTimeout := newCross(fixSize, fixThickness, 0, timeoutColor)
-	dotCorrect := newDot(dotSize, correctColor)
-	dotIncorrect := newDot(dotSize, incorrectColor)
 	// The localizer's cross on the pictures: locCrossCm on the screen.
 	locCrossPx := int(math.Round(locCrossCm / *screenCm * float64(drawW)))
 	locCrossThick := max(2, locCrossPx/locCrossThinness)
@@ -665,7 +662,7 @@ func main() {
 	locFix := newCross(locCrossPx, locCrossThick, locCrossOutline, locFixColor)
 	locFixCorrect := newCross(locCrossPx, locCrossThick, locCrossOutline, correctColor)
 	locFixIncorrect := newCross(locCrossPx, locCrossThick, locCrossOutline, incorrectColor)
-	for _, v := range []stimuli.VisualStimulus{fix, fixCorrect, fixIncorrect, fixTimeout, dotCorrect, dotIncorrect,
+	for _, v := range []stimuli.VisualStimulus{fix, fixCorrect, fixIncorrect, fixTimeout,
 		locFix, locFixCorrect, locFixIncorrect} {
 		if err := stimuli.PreloadVisualOnScreen(exp.Screen, v); err != nil {
 			exp.Fatal("preloading the fixation cross: %v", err)
@@ -916,7 +913,7 @@ func main() {
 				return err
 			}
 
-			timing, outcome, runErr := runLocalizerBlock(exp, block, resp, *auto, locRNG, locFix, locFixCorrect, locFixIncorrect, dotCorrect, dotIncorrect)
+			timing, outcome, runErr := runLocalizerBlock(exp, block, resp, *auto, locRNG, locFix, locFixCorrect, locFixIncorrect)
 			// Log what was presented, also after ESC.
 			for i, tl := range timing {
 				t, o := block[i], outcome[i]
@@ -1015,14 +1012,17 @@ func main() {
 						}
 					}
 				}
-				// A word replaces the cross while it is on screen.
+				// The cross stays on, with a word drawn on top of it.
 				if err := ctx.Screen.Clear(); err != nil {
+					return err
+				}
+				if err := fix.Draw(ctx.Screen); err != nil {
 					return err
 				}
 				if ctx.OnPhase && ctx.Index > 0 {
 					return t.words[ctx.Index-1].stim.Draw(ctx.Screen)
 				}
-				return fix.Draw(ctx.Screen)
+				return nil
 			}
 			gc := debug.SetGCPercent(-1)
 			onOnset := func(i int, ns uint64) error {
@@ -1158,24 +1158,6 @@ func newCross(size, thickness, outline int, c control.Color) *stimuli.Picture {
 				img.SetNRGBA(x, y, color.NRGBA{c.R, c.G, c.B, 255})
 			case outline > 0 && in(x, y, full, thickness+2*outline):
 				img.SetNRGBA(x, y, color.NRGBA{0, 0, 0, 255})
-			}
-		}
-	}
-	var buf bytes.Buffer
-	if err := png.Encode(&buf, img); err != nil {
-		panic(err) // encoding an in-memory image cannot fail
-	}
-	return stimuli.NewPictureFromMemory(buf.Bytes(), 0, 0)
-}
-
-// newDot returns a filled disc of the given diameter, in pixels, as an image.
-func newDot(size int, c control.Color) *stimuli.Picture {
-	img := image.NewNRGBA(image.Rect(0, 0, size, size))
-	r := float64(size) / 2
-	for y := 0; y < size; y++ {
-		for x := 0; x < size; x++ {
-			if dx, dy := float64(x)+0.5-r, float64(y)+0.5-r; dx*dx+dy*dy <= r*r {
-				img.SetNRGBA(x, y, color.NRGBA{c.R, c.G, c.B, 255})
 			}
 		}
 	}

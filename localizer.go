@@ -3,10 +3,10 @@
 // Words and pictures alternate, each on screen for a full second, with no
 // blank in between. The participant presses the right green button when the
 // stimulus is the same concept as the previous one (a match). A picture has the
-// fixation cross on top of it; a word has none. Feedback: green at a press on
-// a match, red at a press on a non-match, red 800 ms after a match's onset if
-// there was no press, shown by the cross on a picture and by a small dot at
-// the centre of a word; it disappears at the next stimulus. Sequences come from localizer/localizer.csv (make_localizer.py).
+// fixation cross on top of it; a word is drawn on top of the cross. Feedback:
+// green at a press on a match, red at a press on a non-match, red 800 ms after
+// a match's onset if there was no press, shown by the cross; it disappears at
+// the next stimulus. Sequences come from localizer/localizer.csv (make_localizer.py).
 
 package main
 
@@ -143,7 +143,7 @@ type locOutcome struct {
 // right button only. With auto, it answers 80% of the matches and 3% of the
 // non-matches, 400-700 ms after the onset, so every kind of feedback occurs.
 func runLocalizerBlock(exp *control.Experiment, trials []*locTrial, resp responder, auto bool, rng *rand.Rand,
-	fix, fixHit, fixWrong, dotHit, dotWrong stimuli.VisualStimulus) ([]stimuli.TimingLog, []locOutcome, error) {
+	fix, fixHit, fixWrong stimuli.VisualStimulus) ([]stimuli.TimingLog, []locOutcome, error) {
 	out := make([]locOutcome, len(trials))
 	onset := make([]uint64, len(trials))
 	autoRT := make([]uint64, len(trials)) // 0: no press
@@ -215,15 +215,15 @@ func runLocalizerBlock(exp *control.Experiment, trials []*locTrial, resp respond
 		}
 
 		// The stream has drawn the stimulus; on a picture the cross goes on
-		// top, on a word only the feedback dot.
+		// top, a word is redrawn on top of the cross.
 		if trials[ctx.Index].modality == "word" {
-			switch cross {
-			case fixHit:
-				return dotHit.Draw(ctx.Screen)
-			case fixWrong:
-				return dotWrong.Draw(ctx.Screen)
+			if err := ctx.Screen.Clear(); err != nil {
+				return err
 			}
-			return nil
+			if err := cross.Draw(ctx.Screen); err != nil {
+				return err
+			}
+			return trials[ctx.Index].stim.Draw(ctx.Screen)
 		}
 		return cross.Draw(ctx.Screen)
 	}

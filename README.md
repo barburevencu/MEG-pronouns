@@ -5,10 +5,9 @@ written with [goxpyriment](https://github.com/chrplr/goxpyriment).
 
 The session opens with a **localizer**: a one-back task on the 32 nouns, words
 and pictures alternating, each on screen for a full second with no blank in
-between (a white 1.92 cm fixation cross with a thin black outline stays on the pictures; words have none). The
+between (a white 1.92 cm fixation cross with a thin black outline stays on the pictures, and the words are drawn on top of it). The
 participant presses the right green button when the stimulus is the same
-concept as the previous one; the cross on a picture, or a small dot at the
-centre of a word, turns green on a correct press, red on a press on a
+concept as the previous one; the cross turns green on a correct press, red on a press on a
 non-match or on a match left unanswered for 800 ms. A training block
 of 64 trials (every word and picture once, 4 matches, ~1 min), then two blocks
 of 512 (every word and picture 8 times, 32 matches, ~8.5 min each). Match
