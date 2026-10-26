@@ -1,17 +1,17 @@
-people,gender,num_letters_people,freq_films_people,freq_books_people,log_freq_films_people,log_freq_books_people,verbs,num_letters_verb,freq_films_verb,freq_books_verb,log_freq_films_verb,log_freq_books_verb,places,gender,num_letters_places,freq_films_places,freq_books_places,log_freq_films_places,log_freq_books_places,"adjectives (masculine, for people)",adjectives for places,num_letters_adj,freq_films_adj_people,freq_books_adj_people,log_freq_films_adj_people,log_freq_books_adj_people,freq_films_adj_places,freq_books_adj_places,log_freq_films_adj_places,log_freq_books_adj_places
-marin,m,5,8.48,15.34,0.928,1.186,attendait,9,25.02,127.09,1.398,2.104,musée,m,5,18.59,21.55,1.269,1.333,têtu,vide,4,6.17,5.14,0.790,0.711,48.53,102.84,1.686,2.012
-facteur,m,7,9.67,12.36,0.985,1.092,buvait,6,7.06,23.38,0.849,1.369,dortoir,m,7,4.83,9.32,0.684,0.969,déçu,aéré,4,15.25,14.59,1.183,1.164,0.47,1.56,-0.328,0.193
-bûcheron,m,8,2.13,4.12,0.328,0.615,courait,7,3.38,32.43,0.529,1.511,tribunal,m,8,35.35,15,1.548,1.176,fâché,vaste,5,19.91,7.23,1.299,0.859,8.44,55.61,0.926,1.745
-plongeur,m,8,2.06,1.69,0.314,0.228,criait,6,6.37,26.35,0.804,1.421,pressing,m,8,2.52,0.74,0.401,-0.131,jaloux,rénové,6,29.87,15.14,1.475,1.180,0.53,0.54,-0.276,-0.268
-bijoutier,m,9,1.54,1.62,0.188,0.210,dormait,7,9.72,41.89,0.988,1.622,parlement,m,9,4.71,5.54,0.673,0.744,bavard,humide,6,2.39,4.86,0.378,0.687,8.24,38.24,0.916,1.583
-chauffeur,m,9,37.35,44.19,1.572,1.645,écrivait,8,6.04,25.68,0.781,1.410,vestiaire,m,9,4.04,9.86,0.606,0.994,content,aménagé,7,114.75,51.22,2.060,1.709,0.48,3.72,-0.319,0.571
-menuisier,m,9,2.88,4.05,0.459,0.607,hésitait,8,1.01,15.07,0.004,1.178,chapiteau,m,9,1.83,1.96,0.262,0.292,fatigué,délabré,7,49.89,32.9,1.698,1.517,0.45,2.57,-0.347,0.410
-mécanicien,m,10,5.38,5.34,0.731,0.728,lisait,6,3.88,39.12,0.589,1.592,réfectoire,m,10,1.11,9.59,0.045,0.982,inquiet,repeint,7,17.9,23.38,1.253,1.369,1.46,1.35,0.164,0.130
-nonne,f,5,5.46,1.69,0.737,0.228,parlait,7,44.37,157.09,1.647,2.196,serre,f,5,3.79,4.53,0.579,0.656,enrhumé,luxueux,7,1.18,1.22,0.072,0.086,1.98,4.66,0.297,0.668
-bergère,f,7,1.27,6.76,0.104,0.830,pensait,7,32.53,109.05,1.512,2.038,piscine,f,7,22.19,15.74,1.346,1.197,méfiant,ventilé,7,2.07,5.14,0.316,0.711,0.25,0.21,-0.602,-0.678
-danseuse,f,8,10.05,8.58,1.002,0.933,pleurait,8,7.54,26.49,0.877,1.423,garderie,f,8,1.67,0.47,0.223,-0.328,peureux,saccagé,7,1.25,2.16,0.097,0.334,1.81,1.96,0.258,0.292
-serveuse,f,8,9.96,6.62,0.998,0.821,rêvait,6,3.59,18.65,0.555,1.271,clinique,f,8,17.72,10.81,1.248,1.034,gourmand,spacieux,8,1.81,4.53,0.258,0.656,1.12,2.09,0.049,0.320
-caissière,f,9,2.03,4.19,0.307,0.622,riait,5,3.34,37.97,0.524,1.579,brasserie,f,9,1.31,7.97,0.117,0.901,distrait,restauré,8,5.76,13.52,0.760,1.131,0.93,1.49,-0.032,0.173
-chanteuse,f,9,7.81,4.39,0.893,0.642,toussait,8,0.35,3.65,-0.456,0.562,librairie,f,9,5.02,8.24,0.701,0.916,nerveux,vétuste,7,32.52,21.82,1.512,1.339,0.05,2.03,-1.301,0.307
-coiffeuse,f,9,2.27,5.34,0.356,0.728,tremblait,9,2,22.64,0.301,1.355,boucherie,f,9,4.02,7.43,0.604,0.871,courageux,climatisé,9,20.22,8.38,1.306,0.923,0.45,0.41,-0.347,-0.387
-couturière,f,10,2.45,5.81,0.389,0.764,marchait,8,12.13,48.65,1.084,1.687,cathédrale,f,10,3.24,17.23,0.511,1.236,paresseux,insalubre,9,3.19,6.28,0.504,0.798,0.35,0.68,-0.456,-0.167
+people,gender,num_letters_people,log_freq_films_people,log_freq_books_people,verbs,num_letters_verb,log_freq_films_verb,log_freq_books_verb,places,gender,num_letters_places,log_freq_films_places,log_freq_books_places,"adjectives (masculine, for people)",adjectives for places,num_letters_adj,log_freq_films_adj_people,log_freq_books_adj_people,log_freq_films_adj_places,log_freq_books_adj_places
+marin,m,5,0.928,1.186,attendait,9,1.398,2.104,musée,m,5,1.269,1.333,têtu,vide,4,0.790,0.711,1.686,2.012
+facteur,m,7,0.985,1.092,buvait,6,0.849,1.369,dortoir,m,7,0.684,0.969,déçu,aéré,4,1.183,1.164,-0.328,0.193
+bûcheron,m,8,0.328,0.615,courait,7,0.529,1.511,tribunal,m,8,1.548,1.176,fâché,vaste,5,1.299,0.859,0.926,1.745
+plongeur,m,8,0.314,0.228,criait,6,0.804,1.421,pressing,m,8,0.401,-0.131,jaloux,rénové,6,1.475,1.180,-0.276,-0.268
+bijoutier,m,9,0.188,0.210,dormait,7,0.988,1.622,parlement,m,9,0.673,0.744,bavard,humide,6,0.378,0.687,0.916,1.583
+chauffeur,m,9,1.572,1.645,écrivait,8,0.781,1.410,vestiaire,m,9,0.606,0.994,content,aménagé,7,2.060,1.709,-0.319,0.571
+menuisier,m,9,0.459,0.607,hésitait,8,0.004,1.178,chapiteau,m,9,0.262,0.292,fatigué,délabré,7,1.698,1.517,-0.347,0.410
+mécanicien,m,10,0.731,0.728,lisait,6,0.589,1.592,réfectoire,m,10,0.045,0.982,inquiet,repeint,7,1.253,1.369,0.164,0.130
+nonne,f,5,0.737,0.228,parlait,7,1.647,2.196,serre,f,5,0.579,0.656,enrhumé,luxueux,7,0.072,0.086,0.297,0.668
+bergère,f,7,0.104,0.830,pensait,7,1.512,2.038,piscine,f,7,1.346,1.197,méfiant,ventilé,7,0.316,0.711,-0.602,-0.678
+danseuse,f,8,1.002,0.933,pleurait,8,0.877,1.423,garderie,f,8,0.223,-0.328,peureux,saccagé,7,0.097,0.334,0.258,0.292
+serveuse,f,8,0.998,0.821,rêvait,6,0.555,1.271,clinique,f,8,1.248,1.034,gourmand,spacieux,8,0.258,0.656,0.049,0.320
+caissière,f,9,0.307,0.622,riait,5,0.524,1.579,brasserie,f,9,0.117,0.901,distrait,restauré,8,0.760,1.131,-0.032,0.173
+chanteuse,f,9,0.893,0.642,toussait,8,-0.456,0.562,librairie,f,9,0.701,0.916,nerveux,vétuste,7,1.512,1.339,-1.301,0.307
+coiffeuse,f,9,0.356,0.728,tremblait,9,0.301,1.355,boucherie,f,9,0.604,0.871,courageux,climatisé,9,1.306,0.923,-0.347,-0.387
+couturière,f,10,0.389,0.764,marchait,8,1.084,1.687,cathédrale,f,10,0.511,1.236,paresseux,insalubre,9,0.504,0.798,-0.456,-0.167
