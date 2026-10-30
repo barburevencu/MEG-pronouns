@@ -4,6 +4,8 @@
 /data/
 # design slides
 Design.key
+# study approval slides (CODIR)
+/codir.pdf
 .DS_Store
 /pronouns-linux
 /buttontest-linux
