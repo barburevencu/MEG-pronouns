@@ -31,7 +31,6 @@ const (
 	instrPadHeight  = 140.0 / 270
 	instrExHeight   = 95.0 / 270
 	instrGap        = 0.03 // between text and picture, of the height
-	instrHintMargin = 0.07 // continue hint's centre above the bottom edge, of the height
 )
 
 type screenSpec struct {
@@ -67,8 +66,7 @@ func loadScreens() (map[string][]screenSpec, error) {
 type instructionScreen struct {
 	stimuli.BaseVisual
 	text *stimuli.TextBox
-	pic  *stimuli.Picture  // nil if none
-	hint *stimuli.TextLine // continueHint at the bottom, or nil
+	pic  *stimuli.Picture // nil if none
 }
 
 func (s *instructionScreen) Draw(screen *apparatus.Screen) error {
@@ -76,12 +74,7 @@ func (s *instructionScreen) Draw(screen *apparatus.Screen) error {
 		return err
 	}
 	if s.pic != nil {
-		if err := s.pic.Draw(screen); err != nil {
-			return err
-		}
-	}
-	if s.hint != nil {
-		return s.hint.Draw(screen)
+		return s.pic.Draw(screen)
 	}
 	return nil
 }
@@ -98,27 +91,7 @@ type instructions struct {
 	specs        map[string][]screenSpec
 	font         *ttf.Font
 	pics         map[string]*stimuli.Picture
-	hint         *stimuli.TextLine
 	congruentKey string
-}
-
-// continueHintText is drawn in grey at the bottom of the screens the
-// participant advances (all but the last before a block).
-const continueHintText = "Bouton vert de droite : continuer"
-
-// continueHint returns the hint line, built once.
-func (in *instructions) continueHint() (*stimuli.TextLine, error) {
-	if in.hint != nil {
-		return in.hint, nil
-	}
-	_, h := in.exp.DrawArea()
-	line := stimuli.NewTextLine(continueHintText, 0, -h*(0.5-instrHintMargin), control.Gray)
-	line.Font = in.font
-	if err := stimuli.PreloadVisualOnScreen(in.exp.Screen, line); err != nil {
-		return nil, err
-	}
-	in.hint = line
-	return line, nil
 }
 
 func newInstructions(exp *control.Experiment, congruentKey string) (*instructions, error) {

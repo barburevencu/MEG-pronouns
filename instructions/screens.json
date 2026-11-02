@@ -1,5 +1,5 @@
 {
-  "_comment": "Instruction screens of the MEG session, one or two sentences each. The participant advances every screen with the right green button (a grey hint at the bottom says so), except the last one before a block, which the operator's SPACE ends. image: a PNG of this folder shown under the text; pad_congruent is pad_congruent_left or pad_congruent_right depending on the subject's congruent_key. {done} and {total} are filled in pause screens, {natural} and {odd} with gauche / droite.",
+  "_comment": "Instruction screens of the MEG session, one or two sentences each. The participant advances every screen with the right green button, except the last one before a block, which the operator's SPACE ends. image: a PNG of this folder shown under the text; pad_congruent is pad_congruent_left or pad_congruent_right depending on the subject's congruent_key. {done} and {total} are filled in pause screens, {natural} and {odd} with gauche / droite.",
 
   "main_intro_two_parts": [
     {"text": "Bienvenue !\n\nCette expérience comporte deux parties."},

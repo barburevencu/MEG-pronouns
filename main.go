@@ -876,7 +876,7 @@ func main() {
 
 	// showScreens shows the named lists of instruction screens one by one (no
 	// waiting with -auto). The participant advances with the right green
-	// button, shown by a hint at the bottom; only the operator's SPACE leaves
+	// button; only the operator's SPACE leaves
 	// the last screen, and starts the block after a 3, 2, 1 countdown. The
 	// first screen carries code; log writes the rows "pause" (first screen),
 	// "instruction" (later ones), "pause_end" (the SPACE that starts the
@@ -890,15 +890,9 @@ func main() {
 			}
 			screens = append(screens, list...)
 		}
-		hint, err := instr.continueHint()
-		if err != nil {
-			return err
-		}
+		var err error
 		for i, sc := range screens {
 			last := i == len(screens)-1
-			if !last {
-				sc.hint = hint
-			}
 			var onset uint64
 			if i == 0 {
 				onset, err = showMarked(sc, code)

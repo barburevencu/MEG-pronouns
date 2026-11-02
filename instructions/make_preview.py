@@ -66,12 +66,6 @@ SECTIONS = [
     ("end", "End", None),
 ]
 
-# Lists whose last screen is the last before a block: the operator's SPACE
-# leaves it. Every other screen shows the hint (as continueHintText in
-# instructions.go) and the participant's right green button advances it.
-ENDS_WITH_BLOCK = {"main_before_training", "main_after_training", "main_ready", "main_pause",
-                   "localizer_before_training", "localizer_after_training", "localizer_pause", "end"}
-CONTINUE_HINT = "Bouton vert de droite : continuer"
 TOTAL_BLOCKS = 6  # as main.go's nBlocks, for {total} in the pause screens
 
 
@@ -87,7 +81,7 @@ def main():
     example("pic:nonne", "nonne", "example_picture_word")
     screens = json.loads((HERE / "screens.json").read_text(encoding="utf-8"))
 
-    def screen(s, mapping, with_hint):
+    def screen(s, mapping):
         text = fill(s["text"], mapping)
         body = '<div class="txt">' + "".join(f"<p>{p}</p>" for p in text.split("\n\n")) + "</div>"
         img = s.get("image")
@@ -96,8 +90,6 @@ def main():
                 img = f"pad_congruent_{mapping}"
             cls = "pad" if img.startswith("pad") else "ex"
             body += f'<img class="{cls}" src="{data_url(HERE / (img + ".png"))}">'
-        if with_hint:
-            body += f'<span class="hint">{CONTINUE_HINT}</span>'
         return f'<div class="screen">{body}</div>'
 
     font = data_url(FONT).replace("image/png", "font/ttf")
@@ -105,10 +97,9 @@ def main():
     n = 0
     for key, title, mapping in SECTIONS:
         cards = []
-        for i, s in enumerate(screens[key]):
+        for s in screens[key]:
             n += 1
-            with_hint = not (key in ENDS_WITH_BLOCK and i == len(screens[key]) - 1)
-            cards.append(f'<figure><figcaption>{n}</figcaption>{screen(s, mapping or "left", with_hint)}</figure>')
+            cards.append(f'<figure><figcaption>{n}</figcaption>{screen(s, mapping or "left")}</figure>')
         parts.append(f"<h2>{title}</h2><div class='row'>{''.join(cards)}</div>")
 
     html = f"""<!doctype html>
@@ -128,13 +119,12 @@ figure {{ margin: 0; }} figcaption {{ font-size: 12px; color: #888; }}
 .screen p {{ margin: 0 0 8px; }}
 .screen img.pad {{ height: 140px; margin-top: 6px; }}
 .screen img.ex {{ height: 95px; margin-top: 8px; }}
-.screen .hint {{ position: absolute; left: 0; right: 0; bottom: 6px; color: #808080; }}
 </style></head><body>
 <h1>Instruction screens of the MEG session</h1>
 <p class="note">Each black box is one full screen, scaled down (text in the program's font, Inconsolata;
 lines at most 55% of the screen width).
-The participant advances with the right green button (grey hint at the bottom); the last screen
-before each block has no hint, and only the operator's SPACE leaves it and starts the block.</p>
+The participant advances with the right green button; only the operator's SPACE leaves the last
+screen before each block and starts it.</p>
 {''.join(parts)}
 </body></html>"""
     (HERE / "preview.html").write_text(html, encoding="utf-8")

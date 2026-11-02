@@ -22,7 +22,7 @@ ROOT = HERE.parent
 sys.path.insert(0, str(ROOT / "localizer"))
 sys.path.insert(0, str(ROOT / "instructions"))
 from make_localizer import read_concepts  # noqa: E402
-from make_preview import CONTINUE_HINT, ENDS_WITH_BLOCK, FONT, SECTIONS, fill  # noqa: E402
+from make_preview import FONT, SECTIONS, fill  # noqa: E402
 
 SEED = 7
 N_TRIALS, N_MATCHES = 32, 4
@@ -89,14 +89,13 @@ def meg_screens():
     specs = json.loads((ROOT / "instructions" / "screens.json").read_text(encoding="utf-8"))
     screens, pictures = [], {}
     for key, title, mapping in SECTIONS:
-        for i, sc in enumerate(specs[key]):
+        for sc in specs[key]:
             img = sc.get("image")
             if img == "pad_congruent":
                 img = f"pad_congruent_{mapping or 'right'}"
             if img and img not in pictures:
                 pictures[img] = picture_url(ROOT / "instructions" / f"{img}.png", 540 if img.startswith("pad_") else 300)
-            screens.append({"title": title, "text": fill(sc["text"], mapping or "right"), "image": img or "",
-                            "hint": CONTINUE_HINT if not (key in ENDS_WITH_BLOCK and i == len(specs[key]) - 1) else ""})
+            screens.append({"title": title, "text": fill(sc["text"], mapping or "right"), "image": img or ""})
     return screens, pictures
 
 
