@@ -4,7 +4,7 @@ menu), with their pictures embedded as data URLs so the demo stays a single file
 
 The sequence is a localizer training block (localizer/make_localizer.py): a
 mini-block of 36 words, then one of 36 pictures, each with the 32 people and
-places once and 4 animals.
+places once and 4 animals, with the 10 s screen announcing pictures between them.
 
 Usage: python3 make_demo.py   (rewrites the block between the GENERATED markers)
 """
@@ -66,7 +66,8 @@ def main():
     concepts = read_concepts()
     seq = block_sequence(0, "word", random.Random(SEED))
     check(seq, 0, "word")
-    trials = [{"modality": mod, "item": concepts[k - 1]["item"], "target": k > 32} for _, mod, k in seq]
+    trials = [{"miniblock": mini, "modality": mod, "item": concepts[k - 1]["item"], "target": k > 32}
+              for mini, mod, k in seq]
     shown = {concepts[k - 1]["item"] for _, mod, k in seq if mod == "image"}
     images = {c["item"]: data_url(ROOT / "localizer" / "images" / c["image"])
               for c in concepts if c["item"] in shown}

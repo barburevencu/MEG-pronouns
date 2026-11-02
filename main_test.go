@@ -4,6 +4,7 @@ import (
 	"encoding/csv"
 	"os"
 	"strconv"
+	"strings"
 	"testing"
 )
 
@@ -135,8 +136,8 @@ func TestLocalizer(t *testing.T) {
 					counts[tr.concept]++
 					if tr.target {
 						animals[key{tr.modality, tr.item}]++
-						if tr.number < 6 || lastAnimal > 0 && tr.number-lastAnimal < 7 || tr.number == len(block) {
-							t.Fatalf("subject %d block %d trial %d: animal too early, too close to the previous one, or last", s, b, tr.number)
+						if tr.number < 6 || lastAnimal > 0 && tr.number-lastAnimal < 7 || tr.number%size == 0 {
+							t.Fatalf("subject %d block %d trial %d: animal too early, too close to the previous one, or last of its mini-block", s, b, tr.number)
 						}
 						lastAnimal = tr.number
 					}
@@ -192,10 +193,13 @@ func TestInstructionScreens(t *testing.T) {
 	for _, name := range []string{"main_intro_two_parts", "main_intro_alone", "main_intro",
 		"main_before_training", "main_after_training", "main_ready", "main_pause",
 		"localizer_intro_after_main", "localizer_intro_alone", "localizer_intro", "localizer_before_training",
-		"localizer_after_training", "localizer_pause", "end"} {
+		"localizer_after_training", "localizer_pause", "localizer_next_words", "localizer_next_images", "end"} {
 		list := screens[name]
 		if len(list) == 0 {
 			t.Fatalf("instructions/screens.json: no %q", name)
+		}
+		if strings.HasPrefix(name, "localizer_next_") && (len(list) != 1 || !strings.Contains(list[0].Text, "{seconds}")) {
+			t.Fatalf("instructions/screens.json: %q must be one screen with {seconds}", name)
 		}
 		for _, s := range list {
 			if s.Image == "" {

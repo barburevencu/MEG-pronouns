@@ -32,6 +32,7 @@
 //	                211 only, a hit on an animal, training block only)
 //	214 + 4*(role-1) + 2*canonical + natural
 //	                filler word onsets (214-249)
+//	250 / 251       localizer: screen before a word / picture mini-block
 //	255             end screen
 //
 // Every code is written right after the flip that shows the event, together
@@ -1146,6 +1147,37 @@ func main() {
 
 		// Localizer.
 		locRNG := rand.New(rand.NewPCG(uint64(exp.SubjectID), 3))
+		// The screen before a mini-block: its modality, and a counter of the
+		// seconds left (locBreakS down to 1), one screen per second. Its row
+		// carries the mini-block's first trial.
+		nextScreens := map[string][]*instructionScreen{}
+		if willRunLoc {
+			for modality, name := range map[string]string{"word": "localizer_next_words", "image": "localizer_next_images"} {
+				if nextScreens[modality], err = instr.countdown(name, locBreakS); err != nil {
+					return err
+				}
+			}
+		}
+		showMiniBreak := func(first *locTrial) error {
+			code := map[string]int{"word": codeLocNextWords, "image": codeLocNextImages}[first.modality]
+			var start uint64
+			for k, sc := range nextScreens[first.modality] {
+				if k == 0 {
+					onset, err := showMarked(sc, code)
+					if err != nil {
+						return err
+					}
+					start = onset
+					addLocRow(first, "loc_miniblock_screen", code, onset, "NA", "NA", "NA", "NA", "NA")
+				} else if _, err := exp.ShowTS(sc); err != nil {
+					return err
+				}
+				if err := exp.Wait((k+1)*1000 - int((control.TicksNS()-start)/1_000_000)); err != nil {
+					return err
+				}
+			}
+			return drain(resp)
+		}
 		ranLoc, lastLoc := false, -1
 		for b := 0; b < locBlocks; b++ {
 			if !runLoc[b] {
@@ -1185,40 +1217,56 @@ func main() {
 				return err
 			}
 
-			timing, outcome, presses, runErr := runLocalizerBlock(exp, block, resp, *auto, locRNG,
-				locCrosses{word: fix, wordHit: fixCorrect, image: locFix, imageHit: locFixCorrect})
-			// Log what was presented, also after ESC. An animal's row says
-			// whether it was hit (correct 1) or missed (0), with the RT. Each
-			// press follows the trial it answers: the animal it hit, or the
-			// trial on screen (a false alarm, correct 0).
-			byTrial := map[int][]locPress{}
-			for _, p := range presses {
-				byTrial[p.trial] = append(byTrial[p.trial], p)
+			// Mini-block by mini-block, each after a screen announcing its
+			// modality, with a counter (except the first, after the countdown).
+			var minis [][]*locTrial
+			for _, t := range block {
+				if len(minis) < t.miniblock {
+					minis = append(minis, nil)
+				}
+				minis[t.miniblock-1] = append(minis[t.miniblock-1], t)
 			}
-			for i, tl := range timing {
-				t, o := block[i], outcome[i]
-				rel := func(ns uint64) string { return dur(tl.OnsetNS, ns) }
-				response, correct, rt := "NA", "NA", "NA"
-				if t.target {
-					correct = "0"
-					if o.hitNS != 0 {
-						response, correct, rt = "right", "1", rel(o.hitNS)
+			for m, mini := range minis {
+				if m > 0 {
+					if err := showMiniBreak(mini[0]); err != nil {
+						return err
 					}
 				}
-				addLocRow(t, "loc_stimulus", t.code, tl.OnsetNS, "0.0", rel(tl.OffsetNS), response, correct, rt)
-				for _, p := range byTrial[i] {
-					correct := "0"
-					if p.hit {
-						correct = "1"
+				timing, outcome, presses, runErr := runLocalizerBlock(exp, mini, resp, *auto, locRNG,
+					locCrosses{word: fix, wordHit: fixCorrect, image: locFix, imageHit: locFixCorrect})
+				// Log what was presented, also after ESC. An animal's row says
+				// whether it was hit (correct 1) or missed (0), with the RT. Each
+				// press follows the trial it answers: the animal it hit, or the
+				// trial on screen (a false alarm, correct 0).
+				byTrial := map[int][]locPress{}
+				for _, p := range presses {
+					byTrial[p.trial] = append(byTrial[p.trial], p)
+				}
+				for i, tl := range timing {
+					t, o := mini[i], outcome[i]
+					rel := func(ns uint64) string { return dur(tl.OnsetNS, ns) }
+					response, correct, rt := "NA", "NA", "NA"
+					if t.target {
+						correct = "0"
+						if o.hitNS != 0 {
+							response, correct, rt = "right", "1", rel(o.hitNS)
+						}
 					}
-					addLocRow(t, "loc_response", 0, p.ns, rel(p.ns), "NA", "right", correct, rel(p.ns))
+					addLocRow(t, "loc_stimulus", t.code, tl.OnsetNS, "0.0", rel(tl.OffsetNS), response, correct, rt)
+					for _, p := range byTrial[i] {
+						correct := "0"
+						if p.hit {
+							correct = "1"
+						}
+						addLocRow(t, "loc_response", 0, p.ns, rel(p.ns), "NA", "right", correct, rel(p.ns))
+					}
+					if o.fbNS != 0 {
+						addLocRow(t, "loc_feedback_hit", codeLocHit, o.fbNS, rel(o.fbNS), "NA", "NA", "NA", "NA")
+					}
 				}
-				if o.fbNS != 0 {
-					addLocRow(t, "loc_feedback_hit", codeLocHit, o.fbNS, rel(o.fbNS), "NA", "NA", "NA", "NA")
+				if runErr != nil {
+					return runErr
 				}
-			}
-			if runErr != nil {
-				return runErr
 			}
 			saveBlock(fmt.Sprintf("localizer block %d", b))
 		}

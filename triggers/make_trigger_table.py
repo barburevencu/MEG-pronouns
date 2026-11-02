@@ -22,7 +22,8 @@ FIX = 1000                     # initial fixation and inter-sentence break
 RESPONSE_WINDOW = 3000
 FEEDBACK = 500
 ITI = 2000                     # plain cross after the feedback, no code
-LOC_ON, LOC_OFF, LOC_FEEDBACK = 300, 500, 500
+LOC_ON, LOC_OFF, LOC_FEEDBACK = 600, 200, 500
+LOC_BREAK = 10000  # screen between two mini-blocks
 LOC_HIT_WINDOW = (200, 1200)  # a press this long after an animal's onset is a hit
 
 # role: (name, sentence, position if canonical, position if non-canonical)
@@ -109,7 +110,7 @@ add(210, "instruction screens before the training block (block 0, 20 trials)",
     "instructions; the operator's SPACE starts the block", "", "until SPACE")
 add(255, "end of experiment", "end screen", "", 5000)
 
-# Localizer: a stimulus every 800 ms (300 on, 500 of fixation), times from
+# Localizer: a stimulus every 800 ms (600 on, 200 of fixation), times from
 # the stimulus onset. Word mini-blocks show the main task's small cross, the
 # word on top; picture mini-blocks the large grey cross, on top of the picture.
 with open(HERE.parent / "counterbalancing" / "stimuli.csv", newline="", encoding="utf-8") as f:
@@ -127,6 +128,10 @@ for k, noun in enumerate(nouns + animals, 1):
 for b, what in ((0, "training"), (1, "block 1"), (2, "block 2")):
     add(207 + b, f"localizer: instruction/pause screen before {what}",
         "text; the operator's SPACE starts the block", "", "until SPACE", task="localizer")
+add(250, "localizer: screen announcing a word mini-block",
+    f"'Maintenant : des mots.' and a counter, {LOC_BREAK // 1000} to 1", "", LOC_BREAK, task="localizer")
+add(251, "localizer: screen announcing a picture mini-block",
+    f"'Maintenant : des images.' and a counter, {LOC_BREAK // 1000} to 1", "", LOC_BREAK, task="localizer")
 add(211, "localizer feedback: hit (training block only)",
     f"the fixation cross turns green (press {LOC_HIT_WINDOW[0]}-{LOC_HIT_WINDOW[1]} ms after an animal's onset)",
     "animal onset + RT", LOC_FEEDBACK, task="localizer")

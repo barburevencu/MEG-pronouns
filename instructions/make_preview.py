@@ -36,6 +36,8 @@ SECTIONS = [
     ("localizer_before_training", "Then, before the training block", None),
     ("localizer_after_training", "Before localizer block 1 (after training)", None),
     ("localizer_pause", "Before localizer block 2", None),
+    ("localizer_next_words", "Between localizer mini-blocks, 10 s, the counter going 10 to 1: before words", None),
+    ("localizer_next_images", "… or before pictures", None),
     ("end", "End", None),
 ]
 
@@ -46,7 +48,7 @@ def fill(text, mapping):
     """The text as the program shows it, for subject mapping "left"/"right"."""
     natural = {"left": "gauche", "right": "droite"}[mapping]
     odd = {"left": "droite", "right": "gauche"}[mapping]
-    return text.format(done=1, total=TOTAL_BLOCKS, natural=natural, odd=odd)
+    return text.format(done=1, total=TOTAL_BLOCKS, natural=natural, odd=odd, seconds=10)
 
 
 def main():

@@ -2,11 +2,12 @@
 
 The localizer is an animal-detection task: words and pictures of the 32 nouns
 of stimuli.csv (16 people, 16 places) and of 16 animals (animals.csv), each
-on for 300 ms with 500 ms of fixation after it; the participant presses when
+on for 600 ms with 200 ms of fixation after it; the participant presses when
 they see an animal, word or picture (about 11% of the trials).
 
 The stimuli come in mini-blocks of one modality, words and pictures
-alternating. A mini-block holds every person and place of its modality the
+alternating, with a 10 s screen between mini-blocks announcing the next
+modality. A mini-block holds every person and place of its modality the
 same number of times (in random order, each one once in each half of the
 mini-block) plus a few animals. The same concept never comes twice in a row,
 not even across mini-blocks (a word, then its picture).
@@ -21,8 +22,9 @@ Per subject:
 The first mini-block of training and block 1 is words for odd subjects,
 pictures for even subjects; block 2 starts with the other modality.
 
-Animals: never in the first 5 trials of a block nor in its last trial, and at
-least 6 other trials between two animals of a block (also across mini-blocks).
+Animals: never in the first 5 trials of a block nor in the last trial of a
+mini-block, and at least 6 other trials between two animals of a block (also
+across mini-blocks).
 
 Also writes images/<noun>.png: the pictures of ../pictures, shrunk to 512 px.
 An animal without a picture in ../pictures gets a placeholder: its name on a
@@ -127,8 +129,9 @@ def block_sequence(block, first_modality, rng):
         n = 32 * reps + n_animals
         start = len(seq)
         lo = FIRST_ANIMAL - 1 if last is None else max(0, last + ANIMAL_GAP - start)
-        # Not the block's last trial: its response window would outlast the block.
-        pos = set(animal_positions(n - (mini == n_mini - 1), n_animals, lo, rng))
+        # Not the mini-block's last trial: its response window would run into
+        # the screen that follows.
+        pos = set(animal_positions(n - 1, n_animals, lo, rng))
         mine = iter(animals[modality][(mini // 2) * n_animals:(mini // 2 + 1) * n_animals])
         rest = iter(fillers(reps, seq[-1][2] if seq and 0 not in pos else None, rng))
         for i in range(n):
@@ -142,7 +145,7 @@ def check(seq, block, first_modality):
     n = 32 * reps + n_animals
     assert len(seq) == n_mini * n
     animal_trials = [t for t, (_, _, k) in enumerate(seq, 1) if k > 32]
-    assert animal_trials[0] >= FIRST_ANIMAL and animal_trials[-1] < len(seq)
+    assert animal_trials[0] >= FIRST_ANIMAL and all(t % n for t in animal_trials)
     assert all(b - a >= ANIMAL_GAP for a, b in zip(animal_trials, animal_trials[1:]))
     animal_counts = {}
     for mini in range(n_mini):

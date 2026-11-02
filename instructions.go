@@ -129,6 +129,24 @@ func (in *instructions) screens(name string, done, total int) ([]*instructionScr
 	return out, nil
 }
 
+// countdown returns the named screen once for each second left, from
+// seconds down to 1, with {seconds} in its text set to that number.
+func (in *instructions) countdown(name string, seconds int) ([]*instructionScreen, error) {
+	specs, ok := in.specs[name]
+	if !ok || len(specs) != 1 {
+		return nil, fmt.Errorf("instructions/screens.json: %q must be one screen", name)
+	}
+	var out []*instructionScreen
+	for k := seconds; k >= 1; k-- {
+		s, err := in.build(strings.ReplaceAll(specs[0].Text, "{seconds}", fmt.Sprint(k)), specs[0].Image)
+		if err != nil {
+			return nil, err
+		}
+		out = append(out, s)
+	}
+	return out, nil
+}
+
 func (in *instructions) build(text, img string) (*instructionScreen, error) {
 	w, h := in.exp.DrawArea()
 	// Lines are left-aligned; the block, as wide as its longest line, is centred.

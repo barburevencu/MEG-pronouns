@@ -8,8 +8,10 @@ then a **localizer**: an animal-detection task on words and pictures of the 32
 nouns (16 people, 16 places) and of 16 animals (`localizer/animals.csv`, 8
 masculine and 8 feminine, matched to the people and places in length and in
 film and book frequency: mean 8.1 letters, log frequencies 0.69 and 0.77 vs.
-0.66 and 0.77). Each stimulus is on for 300 ms, then 500 ms of fixation. The
-stimuli come in mini-blocks of one modality, words and pictures alternating;
+0.66 and 0.77). Each stimulus is on for 600 ms, then 200 ms of fixation. The
+stimuli come in mini-blocks of one modality, words and pictures alternating,
+with a 10 s screen between two mini-blocks announcing the next modality
+(« Maintenant : des mots. » / « des images. ») and counting down the seconds;
 in word mini-blocks the main task's small cross stays on with the word drawn on
 top, in picture mini-blocks a grey 1.92 cm cross with a thin black outline sits
 on top of the picture and stays on in the blank. The participant presses the
@@ -17,10 +19,10 @@ right green button on an animal; a press 200–1200 ms after an animal's onset i
 a hit; in the training block only, it turns the cross green for 500 ms (the
 main blocks have no feedback, so the green cross never spills onto the next
 stimuli); false alarms and misses get no feedback. A training block of 72 trials (a word and a picture mini-block of 36:
-every person and place once, 4 animals; ~1 min), then two blocks of 576 (8
+every person and place once, 4 animals; ~1.1 min), then two blocks of 576 (8
 mini-blocks of 72: every person and place twice, 8 animals; each animal word
-and picture twice per block; ~7.7 min each). Animals are 11% of the trials,
-never in a block's first 5 trials or its last, with at least 6 other trials
+and picture twice per block; ~8.8 min each). Animals are 11% of the trials,
+never in a block's first 5 trials or a mini-block's last, with at least 6 other trials
 between two of them; the same concept never comes twice in a row. Odd subjects
 start training and block 1 with words, even subjects with pictures; block 2
 starts with the other modality. Until the animal pictures exist, the program
@@ -148,13 +150,16 @@ was presented so far is saved.
 
 Localizer rows have `task` = `localizer`, `block_number` 0 (training), 1 or 2,
 the item in `word`, `modality`, `miniblock` (1-8), `category` (`person`,
-`place`, `animal`) and `target` (1 for an animal); events `loc_stimulus` (its
+`place`, `animal`) and `target` (1 for an animal); events
+`loc_miniblock_screen` (the screen before a mini-block, on its first trial's
+row), `loc_stimulus` (its
 measured on-duration; for an animal, `correct` 1 if hit, 0 if missed, and the
 RT), `loc_response` (every press, on the animal it hit, correct 1, or else on
 the trial on screen, a false alarm, correct 0; time and RT from that trial's
 onset) and `loc_feedback_hit` (training only). Localizer trigger codes: word of person/place k
 = k (1-32), its picture = 32 + k, word of animal a = 64 + a (65-80), its
-picture = 80 + a (81-96), pause screens 207-209, hit feedback 211 (training only); they overlap
+picture = 80 + a (81-96), pause screens 207-209, hit feedback 211 (training only),
+screen before a word / picture mini-block 250 / 251; they overlap
 main-task codes, so split the recording at the localizer's first pause code
 (207-209).
 

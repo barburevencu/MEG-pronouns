@@ -1,10 +1,12 @@
 // Localizer: an animal-detection task on words and pictures, run after the
 // main task.
 //
-// Each stimulus is on for 300 ms, followed by 500 ms of fixation. Stimuli come
+// Each stimulus is on for 600 ms, followed by 200 ms of fixation. Stimuli come
 // in mini-blocks of one modality, words and pictures alternating: the 32
 // people and places of the main task, plus animals (about 11% of the trials).
-// The participant presses the right green button when they see an animal. In
+// Between mini-blocks, a 10 s screen announces the next modality, with a
+// counter of the seconds left. The participant presses the right green button
+// when they see an animal. In
 // a word mini-block the cross is the main task's (small, light grey), the
 // word drawn on top of it; in a picture mini-block it is the large grey cross,
 // drawn on top of the picture. A press 200-1200 ms after an animal's onset is
@@ -37,14 +39,17 @@ var localizerCSV []byte
 var localizerImages embed.FS
 
 const (
-	locOnMs       = 300  // stimulus on
-	locOffMs      = 500  // fixation after it
-	locHitFromMs  = 200  // a press this long after an animal's onset ...
-	locHitUntilMs = 1200 // ... and up to this long after it is a hit
-	locFeedbackMs = 500  // green cross after a hit
-	locBlocks     = 3    // 0 = training, 1 and 2
-	codeLocBlock  = 207  // + block, instruction / pause screen
-	codeLocHit    = codeCorrect
+	locOnMs           = 600  // stimulus on
+	locOffMs          = 200  // fixation after it
+	locHitFromMs      = 200  // a press this long after an animal's onset ...
+	locHitUntilMs     = 1200 // ... and up to this long after it is a hit
+	locFeedbackMs     = 500  // green cross after a hit
+	locBlocks         = 3    // 0 = training, 1 and 2
+	codeLocBlock      = 207  // + block, instruction / pause screen
+	codeLocHit        = codeCorrect
+	locBreakS         = 10  // screen announcing the next mini-block, in seconds
+	codeLocNextWords  = 250 // onset of that screen, before a word mini-block
+	codeLocNextImages = 251 // ... before a picture mini-block
 )
 
 type locTrial struct {
@@ -151,7 +156,7 @@ type locCrosses struct {
 	word, wordHit, image, imageHit stimuli.VisualStimulus
 }
 
-// runLocalizerBlock presents one block as a single stream and returns the
+// runLocalizerBlock presents one mini-block as a single stream and returns the
 // stimulus timing, each trial's outcome (for animals) and every press.
 // Presses are read every frame, the right button only. A hit turns the cross
 // green only in the training block (block 0). With auto, it answers
