@@ -16,7 +16,18 @@
     {"text": "Bouton vert de {natural} : ça a du sens.\n\nBouton vert de {odd} : ça n'a pas de sens.", "image": "pad_congruent"},
     {"text": "Ne réfléchissez pas trop : lisez le plus naturellement possible et répondez vite, en moins de 3 secondes.\n\nVous pouvez répondre dès que le dernier mot apparaît."},
     {"text": "La croix devient verte si votre réponse est correcte, rouge si elle est incorrecte.\n\nElle devient gris foncé si vous n'avez pas répondu à temps."},
-    {"text": "Gardez les yeux au centre de l'écran et évitez de cligner des yeux pendant la lecture."},
+    {"text": "Gardez les yeux au centre de l'écran et évitez de cligner des yeux pendant la lecture."}
+  ],
+
+  "main_before_training": [
+    {"text": "Commençons par un court entraînement.\n\nDites-nous quand vous souhaitez commencer."}
+  ],
+
+  "main_after_training": [
+    {"text": "Fin de l'entraînement.\n\nReposez-vous quelques instants.\n\nRappel : gardez les yeux sur la croix au centre de l'écran.", "image": "pad_congruent"}
+  ],
+
+  "main_ready": [
     {"text": "Dites-nous quand vous souhaitez commencer."}
   ],
 

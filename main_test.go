@@ -37,7 +37,7 @@ func TestTrialsMatchTriggerTable(t *testing.T) {
 		if err != nil {
 			t.Fatalf("subject %d: %v", s, err)
 		}
-		if len(trials) != nBlocks*trialsPerBlock {
+		if len(trials) != trainingTrials+nBlocks*trialsPerBlock {
 			t.Fatalf("subject %d: %d trials", s, len(trials))
 		}
 		for _, tr := range trials {
@@ -154,7 +154,8 @@ func TestInstructionScreens(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	for _, name := range []string{"main_intro_two_parts", "main_intro_alone", "main_intro", "main_pause",
+	for _, name := range []string{"main_intro_two_parts", "main_intro_alone", "main_intro",
+		"main_before_training", "main_after_training", "main_ready", "main_pause",
 		"localizer_intro_after_main", "localizer_intro_alone", "localizer_intro", "localizer_before_training",
 		"localizer_after_training", "localizer_pause", "end"} {
 		list := screens[name]

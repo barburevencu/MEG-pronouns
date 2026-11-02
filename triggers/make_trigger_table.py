@@ -102,6 +102,8 @@ for b in range(1, 7):
     add(200 + b, f"pause/instruction screen before block {b}",
         ("instructions" if b == 1 else "pause text") + "; the operator's SPACE starts the block",
         "", "until SPACE")
+add(210, "instruction screens before the training block (block 0, 20 trials)",
+    "instructions; the operator's SPACE starts the block", "", "until SPACE")
 add(255, "end of experiment", "end screen", "", 5000)
 
 # Localizer: one stimulus every second, times from the stimulus onset.

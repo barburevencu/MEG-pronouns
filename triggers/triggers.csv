@@ -189,6 +189,7 @@ main,203,pause/instruction screen before block 3,pause text; the operator's SPAC
 main,204,pause/instruction screen before block 4,pause text; the operator's SPACE starts the block,,until SPACE,,,,,,,,,,,,
 main,205,pause/instruction screen before block 5,pause text; the operator's SPACE starts the block,,until SPACE,,,,,,,,,,,,
 main,206,pause/instruction screen before block 6,pause text; the operator's SPACE starts the block,,until SPACE,,,,,,,,,,,,
+main,210,"instruction screens before the training block (block 0, 20 trials)",instructions; the operator's SPACE starts the block,,until SPACE,,,,,,,,,,,,
 main,211,feedback: correct,fixation cross turns green,"4400 + RT, at the earliest 4700",500,,,,,,,,,,,,
 main,212,feedback: incorrect,fixation cross turns red,"4400 + RT, at the earliest 4700",500,,,,,,,,,,,,
 main,213,feedback: timeout (no response),fixation cross turns dark grey,7700,500,,,,,,,,,,,,

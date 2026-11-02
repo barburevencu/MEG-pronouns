@@ -14,6 +14,11 @@ block, and with which gender and word order, rotates over subjects (a cycle of
 once in each pair of blocks; a person never gets an adjective in EXCLUDE, and
 no filler repeats the first sentence of a main trial or of another filler.
 
+Training (block 0, before block 1): 20 trials, one more set of 16 main trials
+(a random half of each adjective list) and 4 of the 48 fillers (2 natural, 2
+odd, rotating over subjects), shuffled with a main trial first and never two
+fillers in a row; no first sentence repeats one of the subject's other trials.
+
 Every subject answers "congruent" / "natural" with the right button and
 "incongruent" / "odd" with the left one (no counterbalancing).
 
@@ -151,6 +156,8 @@ if sorted({r["adjective_m"] for r in filler_items}) != sorted(FILLER_EN):
 NATURAL, ODD = ([r for k in range(2) for r in
                  [x for x in filler_items if x["judgment"] == j][k::2]] for j in ("natural", "odd"))
 assert len(NATURAL) == len(ODD) == 24
+# Either form of a filler adjective -> its masculine form.
+FILLER_ADJ = {r[k]: r["adjective_m"] for r in filler_items for k in ("adjective_m", "adjective_f")}
 
 
 def make_fillers(subject_id, main_trials, rng):
@@ -185,30 +192,100 @@ def make_fillers(subject_id, main_trials, rng):
     else:
         sys.exit(f"subject {subject_id}: no filler nouns satisfy the constraints")
 
+    return [filler_row(subject_id, item, block, agent_g, canonical, subj, place)
+            for item, block, agent_g, place_g, canonical, subj, place in fillers]
+
+
+def filler_row(subject_id, item, block, agent_g, canonical, subj, place):
+    place_g = "f" if agent_g == "m" else "m"
+    verb, adj_m = item["verb"], item["adjective_m"]
+    adj = adj_m if agent_g == "m" else item["adjective_f"]
+    np_subj, np_place = f"{ART[agent_g]} {subj}", f"{ART[place_g]} {place}"
+    s1 = f"{np_subj} {verb} dans {np_place}." if canonical else f"dans {np_place} {np_subj} {verb}."
+    s1 = s1[0].upper() + s1[1:]
+    s2 = f"{PRON[agent_g]} était {adj}."
+    en1 = (f"the {EN[subj]} {EN[verb]} in {EN[place]}." if canonical
+           else f"in {EN[place]} the {EN[subj]} {EN[verb]}.")
+    en1 = en1[0].upper() + en1[1:]
+    return {
+        "subject_id": subject_id,
+        "block_number": block,
+        "trial_type": "filler",
+        "judgment": item["judgment"],
+        "cb_set": "NA",
+        "agent_gender": agent_g,
+        "place_gender": place_g,
+        "pronoun_gender": agent_g,
+        "pronoun_referent": "agent",
+        "canonical_order": int(canonical),
+        "congruent": "NA",
+        "adjective_type": "people",
+        "subject": subj,
+        "verb": verb,
+        "place": place,
+        "adjective": adj,
+        "sentence1": s1,
+        "sentence2": s2,
+        "stimulus": f"{s1} {s2}",
+        "translation": f"{en1} {EN_PRON[agent_g]} was {FILLER_EN[adj_m]}.",
+    }
+
+
+def make_set(rng, subject_id, cb_set, ppl, plc, a_ppl, a_plc, avoid=frozenset()):
+    """16 main trials, one per cell, from shuffled people and places (by
+    gender) and 8 people- and 8 place-adjectives. Verbs are drawn so that no
+    congruent person-referent trial clashes (CLASH) and no first sentence is
+    in avoid."""
     out = []
-    for item, block, agent_g, place_g, canonical, subj, place in fillers:
-        verb, adj_m = item["verb"], item["adjective_m"]
-        adj = adj_m if agent_g == "m" else item["adjective_f"]
-        np_subj, np_place = f"{ART[agent_g]} {subj}", f"{ART[place_g]} {place}"
-        s1 = f"{np_subj} {verb} dans {np_place}." if canonical else f"dans {np_place} {np_subj} {verb}."
+    draws = []
+    for agent_g, pron_g, canonical, congruent in cells:
+        place_g = "f" if agent_g == "m" else "m"
+        referent = "agent" if pron_g == agent_g else "place"
+        # Congruent: adjective fits the pronoun's referent; incongruent: fits the other noun.
+        adj_type = referent if congruent else ("place" if referent == "agent" else "agent")
+        adj_m = a_ppl.pop() if adj_type == "agent" else a_plc.pop()
+        draws.append((agent_g, pron_g, canonical, congruent, place_g, referent, adj_type, adj_m,
+                      ppl[agent_g].pop(), plc[place_g].pop()))
+    # Verbs: reshuffled until no congruent person-referent trial clashes.
+    while True:
+        vbs = rng.sample(verbs, len(verbs))
+        if not any(c and r == "agent" and (v, a) in CLASH or (sj, v, pl) in avoid
+                   for (_, _, _, c, _, r, _, a, sj, pl), v in zip(draws, vbs)):
+            break
+
+    for (agent_g, pron_g, canonical, congruent, place_g, referent, adj_type, adj_m, subj, place), verb \
+            in zip(draws, vbs):
+        adj = adj_m if pron_g == "m" else FEM[adj_m]
+
+        np_subj = f"{ART[agent_g]} {subj}"
+        np_place = f"{ART[place_g]} {place}"
+        if canonical:
+            s1 = f"{np_subj} {verb} dans {np_place}."
+        else:
+            s1 = f"dans {np_place} {np_subj} {verb}."
         s1 = s1[0].upper() + s1[1:]
-        s2 = f"{PRON[agent_g]} était {adj}."
-        en1 = (f"the {EN[subj]} {EN[verb]} in {EN[place]}." if canonical
-               else f"in {EN[place]} the {EN[subj]} {EN[verb]}.")
+        s2 = f"{PRON[pron_g]} était {adj}."
+
+        en_subj = f"the {EN[subj]}"
+        if canonical:
+            en1 = f"{en_subj} {EN[verb]} in {EN[place]}."
+        else:
+            en1 = f"in {EN[place]} {en_subj} {EN[verb]}."
         en1 = en1[0].upper() + en1[1:]
+        en2 = f"{EN_PRON[pron_g] if referent == 'agent' else 'It'} was {EN[adj_m]}."
+
         out.append({
             "subject_id": subject_id,
-            "block_number": block,
-            "trial_type": "filler",
-            "judgment": item["judgment"],
-            "cb_set": "NA",
+            "trial_type": "main",
+            "judgment": "natural" if congruent else "odd",
+            "cb_set": cb_set,
             "agent_gender": agent_g,
             "place_gender": place_g,
-            "pronoun_gender": agent_g,
-            "pronoun_referent": "agent",
+            "pronoun_gender": pron_g,
+            "pronoun_referent": referent,
             "canonical_order": int(canonical),
-            "congruent": "NA",
-            "adjective_type": "people",
+            "congruent": int(congruent),
+            "adjective_type": "people" if adj_type == "agent" else "place",
             "subject": subj,
             "verb": verb,
             "place": place,
@@ -216,8 +293,54 @@ def make_fillers(subject_id, main_trials, rng):
             "sentence1": s1,
             "sentence2": s2,
             "stimulus": f"{s1} {s2}",
-            "translation": f"{en1} {EN_PRON[agent_g]} was {FILLER_EN[adj_m]}.",
+            "translation": f"{en1} {en2}",
         })
+    return out
+
+
+def make_training(subject_id, avoid, rng):
+    """Block 0: 16 main trials (one set, with a random half of each adjective
+    list) and 4 of the 48 fillers, shuffled, a main trial first and never two
+    fillers in a row. No first sentence repeats one in avoid (the subject's
+    other trials)."""
+    p, q = adj_people[:], adj_places[:]
+    rng.shuffle(p)
+    rng.shuffle(q)
+    ppl = {g: rng.sample(people[g], len(people[g])) for g in "mf"}
+    plc = {g: rng.sample(places[g], len(places[g])) for g in "mf"}
+    main = make_set(rng, subject_id, "training", ppl, plc, p[:8], q[:8], avoid)
+    avoid = avoid | {(t["subject"], t["verb"], t["place"]) for t in main}
+
+    # Fillers: 2 natural, 2 odd, of 4 different adjectives, with gender and
+    # word order crossed; over 24 subjects each item is used twice.
+    k = (subject_id - 1) % 24
+    swap = {"m": "f", "f": "m"} if k % 2 else {"m": "m", "f": "f"}
+    specs = [(NATURAL[k], swap["m"], True), (NATURAL[(k + 6) % 24], swap["f"], False),
+             (ODD[(k + 3) % 24], swap["m"], False), (ODD[(k + 9) % 24], swap["f"], True)]
+    for _ in range(10000):
+        ppl = {g: rng.sample(people[g], 2) for g in "mf"}
+        plc = {g: rng.sample(places[g], 2) for g in "mf"}
+        fillers = []
+        for item, agent_g, canonical in specs:
+            subj, place = ppl[agent_g].pop(), plc["f" if agent_g == "m" else "m"].pop()
+            fillers.append(filler_row(subject_id, item, 0, agent_g, canonical, subj, place))
+        if not any((t["subject"], t["verb"], t["place"]) in avoid
+                   or (t["subject"], FILLER_ADJ[t["adjective"]]) in EXCLUDE for t in fillers):
+            break
+    else:
+        sys.exit(f"subject {subject_id}: no training filler nouns satisfy the constraints")
+
+    rng.shuffle(main)
+    rng.shuffle(fillers)
+    gaps = set(rng.sample(range(1, len(main) + 1), len(fillers)))  # not before the first trial
+    out = []
+    for g in range(len(main) + 1):
+        if g in gaps:
+            out.append(fillers.pop())
+        if g < len(main):
+            out.append(main[g])
+    for i, t in enumerate(out, 1):
+        t["block_number"], t["trial_number"] = 0, i
     return out
 
 
@@ -229,64 +352,7 @@ def make_subject(subject_id):
         ppl = {g: rng.sample(people[g], len(people[g])) for g in "mf"}
         plc = {g: rng.sample(places[g], len(places[g])) for g in "mf"}
         a_ppl, a_plc = (list(x) for x in next(pools))
-        draws = []
-        for agent_g, pron_g, canonical, congruent in cells:
-            place_g = "f" if agent_g == "m" else "m"
-            referent = "agent" if pron_g == agent_g else "place"
-            # Congruent: adjective fits the pronoun's referent; incongruent: fits the other noun.
-            adj_type = referent if congruent else ("place" if referent == "agent" else "agent")
-            adj_m = a_ppl.pop() if adj_type == "agent" else a_plc.pop()
-            draws.append((agent_g, pron_g, canonical, congruent, place_g, referent, adj_type, adj_m,
-                          ppl[agent_g].pop(), plc[place_g].pop()))
-        # Verbs: reshuffled until no congruent person-referent trial clashes.
-        while True:
-            vbs = rng.sample(verbs, len(verbs))
-            if not any(c and r == "agent" and (v, a) in CLASH
-                       for (_, _, _, c, _, r, _, a, _, _), v in zip(draws, vbs)):
-                break
-
-        for (agent_g, pron_g, canonical, congruent, place_g, referent, adj_type, adj_m, subj, place), verb \
-                in zip(draws, vbs):
-            adj = adj_m if pron_g == "m" else FEM[adj_m]
-
-            np_subj = f"{ART[agent_g]} {subj}"
-            np_place = f"{ART[place_g]} {place}"
-            if canonical:
-                s1 = f"{np_subj} {verb} dans {np_place}."
-            else:
-                s1 = f"dans {np_place} {np_subj} {verb}."
-            s1 = s1[0].upper() + s1[1:]
-            s2 = f"{PRON[pron_g]} était {adj}."
-
-            en_subj = f"the {EN[subj]}"
-            if canonical:
-                en1 = f"{en_subj} {EN[verb]} in {EN[place]}."
-            else:
-                en1 = f"in {EN[place]} {en_subj} {EN[verb]}."
-            en1 = en1[0].upper() + en1[1:]
-            en2 = f"{EN_PRON[pron_g] if referent == 'agent' else 'It'} was {EN[adj_m]}."
-
-            trials.append({
-                "subject_id": subject_id,
-                "trial_type": "main",
-                "judgment": "natural" if congruent else "odd",
-                "cb_set": cb_set,
-                "agent_gender": agent_g,
-                "place_gender": place_g,
-                "pronoun_gender": pron_g,
-                "pronoun_referent": referent,
-                "canonical_order": int(canonical),
-                "congruent": int(congruent),
-                "adjective_type": "people" if adj_type == "agent" else "place",
-                "subject": subj,
-                "verb": verb,
-                "place": place,
-                "adjective": adj,
-                "sentence1": s1,
-                "sentence2": s2,
-                "stimulus": f"{s1} {s2}",
-                "translation": f"{en1} {en2}",
-            })
+        trials += make_set(rng, subject_id, cb_set, ppl, plc, a_ppl, a_plc)
 
     # Same response mapping for everyone: right = congruent / natural.
     congruent_key, incongruent_key = "right", "left"
@@ -299,7 +365,9 @@ def make_subject(subject_id):
     # Fillers, from their own generator so the main trials stay as they were.
     frng = random.Random(SEED * 1000 + subject_id)
     fillers = make_fillers(subject_id, trials, frng)
-    out = []
+    # Training (block 0), from its own generator too.
+    avoid = {(t["subject"], t["verb"], t["place"]) for t in trials + fillers}
+    out = make_training(subject_id, avoid, random.Random(SEED * 2000 + subject_id))
     for b, block in enumerate(blocks, 1):
         fb = [t for t in fillers if t["block_number"] == b]
         assert len(fb) == FILLERS_PER_BLOCK

@@ -89,7 +89,7 @@ GitHub. `buttontest-linux` is in the same release.
 |---|---|
 | `-s N` | subject (must be in the counterbalancing table) |
 | `-meg` | triggers on `/dev/parport1`, answers with the green buttons of the response pad |
-| `-block N` | start the main task at block N (after a crash); with N > 1 its instructions are skipped, and the session opens on block N's pause screen. The localizer still follows (add `-localizer none` to skip it) |
+| `-block N` | start the main task at block N (after a crash), without the training block; with N > 1 its instructions are skipped too, and the session opens on block N's pause screen. The localizer still follows (add `-localizer none` to skip it) |
 | `-localizer LIST` | localizer blocks to run after the main task: `none`, or a comma list of `train`, `1`, `2` (default all) |
 | `-main=false` | skip the main task: run only the localizer blocks chosen with `-localizer` |
 | `-photodiode on/off/auto` | white square top-left at every trigger; `auto` = on with `-meg` |
@@ -154,6 +154,13 @@ time within the trial and its intended value, word on-durations, the answer,
 its correctness and RT (from the adjective's onset: presses count as soon as it appears, until 3 s after it goes off), and the trial's
 condition columns: `trial_type` (`main` or `filler`), `judgment` (`natural` or `odd`, the correct answer), and for main trials
 `congruent`, `pronoun_referent` and the rest.
+
+**Training.** The main task opens with a training block (block 0, pause code 210):
+20 trials, one more set of 16 main trials (one per condition cell, with a random half of
+each adjective list) and 4 of the 48 fillers (2 natural, 2 odd, gender and word order crossed,
+rotating over subjects), with a main trial first and never two fillers in a row, and feedback as
+in the real blocks. No training sentence repeats the first sentence of a trial in the real blocks.
+`-block N` skips it.
 
 **Fillers.** Each block has 8 fillers among its 32 main trials, at random positions,
 never two in a row. They look like main trials, but the pronoun always refers to the person,

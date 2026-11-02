@@ -13,7 +13,8 @@
 // inter-trial interval on the plain cross. The cross stays on for the whole
 // trial, the words drawn on top of it. 240 trials per subject in 6 blocks of
 // 40: 32 main trials and 8 fillers (the adjective fits or clashes with the
-// verb; the pronoun always refers to the person), never two fillers in a row, with a pause before each block that the operator ends with SPACE,
+// verb; the pronoun always refers to the person), never two fillers in a row,
+// after a 20-trial training block (16 main trials and 4 fillers), with a pause before each block that the operator ends with SPACE,
 // then a 3, 2, 1 countdown. Trials come
 // from counterbalancing/counterbalancing.csv (make_counterbalancing.py), embedded in the binary.
 //
@@ -24,6 +25,7 @@
 //	160 + trial     trial start, fixation onset (161-200)
 //	200 + block     pause / instruction screen before block (201-206)
 //	207 + block     localizer: pause / instruction screen (207 training, 208-209)
+//	210             instruction screen before the main task's training block
 //	211 / 212 / 213 feedback onset: correct / incorrect / timeout (localizer:
 //	                hit / false alarm / miss)
 //	214 + 4*(role-1) + 2*canonical + natural
@@ -92,6 +94,7 @@ const (
 	endScreenMs      = 5000
 	nBlocks          = 6
 	trialsPerBlock   = 40 // 32 main + 8 fillers
+	trainingTrials   = 20 // block 0: 16 main + 4 fillers
 )
 
 // dataDir is where the data files go, relative to the project folder (the
@@ -149,6 +152,7 @@ const (
 const (
 	codeTrialStart = 160 // + trial_number
 	codeBlockStart = 200 // + block_number
+	codeTraining   = 210
 	codeCorrect    = 211
 	codeIncorrect  = 212
 	codeTimeout    = 213
@@ -234,8 +238,17 @@ func loadTrials(raw []byte, subject int) ([]*trial, error) {
 	if len(trials) == 0 {
 		return nil, fmt.Errorf("no trials for subject %d", subject)
 	}
+	// The training block (block 0) comes first, then blocks 1-6.
+	n0 := 0
+	for n0 < len(trials) && trials[n0].block == 0 {
+		n0++
+	}
 	for i, t := range trials {
-		if want := (i/trialsPerBlock+1)*1000 + i%trialsPerBlock + 1; t.block*1000+t.number != want {
+		want := i + 1
+		if j := i - n0; j >= 0 {
+			want = (j/trialsPerBlock+1)*1000 + j%trialsPerBlock + 1
+		}
+		if t.block*1000+t.number != want {
 			return nil, fmt.Errorf("trial %d is block %d trial %d: rows not in presentation order", i+1, t.block, t.number)
 		}
 	}
@@ -488,7 +501,7 @@ func main() {
 	photodiode := flag.String("photodiode", "auto", "photodiode square in the top-left corner: on, off, or auto (on with -meg)")
 	photodiodeSize := flag.Float64("photodiode-size", control.DefaultPhotodiodeSize, "side of the photodiode square, in pixels")
 	ttlMs := flag.Float64("ttl-ms", 0, "how long each trigger code stays on the lines, in ms (0 = 3 frames, 25 ms at 120 Hz)")
-	startBlock := flag.Int("block", 1, "main-task block to start from (to resume an interrupted session); the localizer still follows")
+	startBlock := flag.Int("block", 1, "main-task block to start from (to resume an interrupted session); skips the training block; the localizer still follows")
 	fontPath := flag.String("font", "", "TTF font file for the words (default: the bundled Inconsolata)")
 	wordDeg := flag.Float64("word-deg", defaultWordDeg, "width of the widest word (and of the localizer's pictures), in degrees of visual angle")
 	screenCm := flag.Float64("screen-cm", defaultScreenCm, "width of the projected screen image, in cm")
@@ -954,33 +967,45 @@ func main() {
 	err = exp.Run(func() error {
 		t0 = control.TicksNS()
 
-		ranMain := false
+		ranMain, ranTraining := false, false
+		runTraining := !flagGiven("block") // -block resumes without training
 		for _, t := range trials {
 			if !*runMain {
 				break
 			}
-			if t.block < *startBlock {
+			if t.block == 0 && !runTraining || t.block > 0 && t.block < *startBlock {
 				continue
 			}
 
-			// Pause (or instructions) before each block.
+			// Pause (or instructions) before each block: the full instructions
+			// before the training block (or before block 1 without training), a
+			// recap after training; a session resumed with -block N > 1 opens
+			// on the pause screen of block N.
 			if t.number == 1 {
 				runtime.GC()
-				// The full instructions before block 1 only; a session resumed
-				// with -block N > 1 opens on the pause screen of block N.
-				if t.block == 1 {
-					first := "main_intro_alone"
-					if willRunLoc {
-						first = "main_intro_two_parts"
-					}
-					if err := showScreens([]string{first, "main_intro"}, 0, 0, codeBlockStart+t.block, mainLog); err != nil {
-						return err
-					}
-				} else if err := showScreens([]string{"main_pause"}, t.block-1, nBlocks, codeBlockStart+t.block, mainLog); err != nil {
+				first := "main_intro_alone"
+				if willRunLoc {
+					first = "main_intro_two_parts"
+				}
+				var err error
+				switch {
+				case t.block == 0:
+					err = showScreens([]string{first, "main_intro", "main_before_training"}, 0, 0, codeTraining, mainLog)
+				case t.block == 1 && ranTraining:
+					err = showScreens([]string{"main_after_training"}, 0, 0, codeBlockStart+1, mainLog)
+				case t.block == 1:
+					err = showScreens([]string{first, "main_intro", "main_ready"}, 0, 0, codeBlockStart+1, mainLog)
+				default:
+					err = showScreens([]string{"main_pause"}, t.block-1, nBlocks, codeBlockStart+t.block, mainLog)
+				}
+				if err != nil {
 					return err
 				}
 			}
 			ranMain = true
+			if t.block == 0 {
+				ranTraining = true
+			}
 
 			// Words. The response window opens with the adjective: presses are
 			// read from its onset (earlier ones are discarded) and the RT is
@@ -1118,7 +1143,7 @@ func main() {
 			if err := exp.Wait(itiMs - int((control.TicksNS()-itiNS)/1_000_000)); err != nil {
 				return err
 			}
-			if t.number == trialsPerBlock {
+			if t.number == trialsPerBlock || t.block == 0 && t.number == trainingTrials {
 				saveBlock(fmt.Sprintf("block %d", t.block))
 			}
 		}

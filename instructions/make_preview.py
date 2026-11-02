@@ -55,7 +55,7 @@ def main():
     # Lists whose last screen is the last before a block: the operator's SPACE
     # leaves it. Every other screen shows the hint (as continueHintText in
     # instructions.go) and the participant's right green button advances it.
-    ends_with_block = {"main_intro", "main_pause", "localizer_before_training",
+    ends_with_block = {"main_before_training", "main_after_training", "main_ready", "main_pause", "localizer_before_training",
                        "localizer_after_training", "localizer_pause", "end"}
     hint = "Bouton vert de droite : continuer"
 
@@ -63,7 +63,7 @@ def main():
         text = s["text"]
         natural = {"left": "gauche", "right": "droite"}[mapping]
         odd = {"left": "droite", "right": "gauche"}[mapping]
-        text = text.format(done=1, total=5, natural=natural, odd=odd)
+        text = text.format(done=1, total=6, natural=natural, odd=odd)  # as main.go's nBlocks
         body = "".join(f"<p>{p}</p>" for p in text.split("\n\n"))
         img = s.get("image")
         if img:
@@ -79,6 +79,9 @@ def main():
         ("main_intro_two_parts", "Main task (first part): opening screens", None),
         ("main_intro_alone", "… or, when no localizer follows", None),
         ("main_intro", "Main task instructions (natural = right for every subject)", "right"),
+        ("main_before_training", "Then, before the training block", "right"),
+        ("main_after_training", "Before main block 1 (after training)", "right"),
+        ("main_ready", "… or, without training (-block 1), right after the instructions", "right"),
         ("main_pause", "Pause before main blocks 2-5", "right"),
         ("localizer_intro_after_main", "Localizer (second part): first screen, after the main task", None),
         ("localizer_intro_alone", "… or, when the main task was skipped", None),
