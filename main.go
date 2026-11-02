@@ -83,6 +83,7 @@ const (
 	responseWindowMs = 3000
 	feedbackMs       = 500
 	itiMs            = 2000 // plain cross after the feedback
+	advanceLockMs    = 500  // instruction screens ignore presses this long
 	endScreenMs      = 5000
 	nBlocks          = 5
 )
@@ -377,6 +378,11 @@ func (b *buttonResponder) poll() (string, uint64, error) {
 	if key, _, quit := b.kb.PollKeysWithTS(); quit || key == control.K_ESCAPE {
 		return "", 0, control.EndLoop
 	}
+	return b.buttons()
+}
+
+// buttons is poll without the keyboard, for callers that read it themselves.
+func (b *buttonResponder) buttons() (string, uint64, error) {
 	ts := control.TicksNS()
 	sl, err := b.left.ReadStatus()
 	if err != nil {
@@ -809,10 +815,39 @@ func main() {
 		return exp.ShowTS(v)
 	}
 
-	// showScreens shows the named lists of instruction screens one by one; the
-	// operator advances each with SPACE (not with -auto). The first screen
-	// carries code; log writes the rows "pause" (first screen), "instruction"
-	// (later ones) and "pause_end" (the SPACE that starts the block).
+	// waitAdvance waits for the participant's right green button (→ on the
+	// keyboard) or the operator's SPACE. Presses in the first advanceLockMs
+	// after onset are ignored, so a double press does not skip a screen.
+	waitAdvance := func(onset uint64) error {
+		bp, _ := resp.(*buttonResponder)
+		for {
+			key, ts, quit := exp.Keyboard.PollKeysWithTS()
+			if quit || key == control.K_ESCAPE {
+				return control.EndLoop
+			}
+			pressed := key == control.K_SPACE || key == control.K_RIGHT
+			if bp != nil {
+				btn, bts, err := bp.buttons()
+				if err != nil {
+					return err
+				}
+				if btn == "right" && !pressed {
+					pressed, ts = true, bts
+				}
+			}
+			if pressed && ts >= onset+advanceLockMs*1_000_000 {
+				return nil
+			}
+			time.Sleep(pollInterval)
+		}
+	}
+
+	// showScreens shows the named lists of instruction screens one by one (no
+	// waiting with -auto). The participant advances with the right green
+	// button, shown by a hint at the bottom; only the operator's SPACE leaves
+	// the last screen, and starts the block. The first screen carries code;
+	// log writes the rows "pause" (first screen), "instruction" (later ones)
+	// and "pause_end" (the SPACE that starts the block).
 	showScreens := func(names []string, done, total, code int, log func(event string, code int, ts uint64, duration, response string)) error {
 		var screens []*instructionScreen
 		for _, name := range names {
@@ -822,7 +857,15 @@ func main() {
 			}
 			screens = append(screens, list...)
 		}
+		hint, err := instr.continueHint()
+		if err != nil {
+			return err
+		}
 		for i, sc := range screens {
+			last := i == len(screens)-1
+			if !last {
+				sc.hint = hint
+			}
 			var onset uint64
 			if i == 0 {
 				onset, err = showMarked(sc, code)
@@ -838,11 +881,16 @@ func main() {
 			ts := control.TicksNS()
 			if !*auto {
 				exp.Keyboard.Clear()
-				if _, ts, err = exp.Keyboard.GetKeyEventTS([]control.Keycode{control.K_SPACE}, -1); err != nil {
+				if !last {
+					err = waitAdvance(onset)
+				} else {
+					_, ts, err = exp.Keyboard.GetKeyEventTS([]control.Keycode{control.K_SPACE}, -1)
+				}
+				if err != nil {
 					return err
 				}
 			}
-			if i == len(screens)-1 {
+			if last {
 				log("pause_end", 0, ts, dur(onset, ts), "space")
 			}
 		}

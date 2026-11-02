@@ -52,7 +52,14 @@ def main():
     example("pic:nonne", "nonne", "example_picture_word")
     screens = json.loads((HERE / "screens.json").read_text(encoding="utf-8"))
 
-    def screen(s, mapping):
+    # Lists whose last screen is the last before a block: the operator's SPACE
+    # leaves it. Every other screen shows the hint (as continueHintText in
+    # instructions.go) and the participant's right green button advances it.
+    ends_with_block = {"main_intro", "main_pause", "localizer_before_training",
+                       "localizer_after_training", "localizer_pause", "end"}
+    hint = "Bouton vert de droite : continuer"
+
+    def screen(s, mapping, with_hint):
         text = s["text"]
         natural = {"left": "gauche", "right": "droite"}[mapping]
         odd = {"left": "droite", "right": "gauche"}[mapping]
@@ -64,6 +71,8 @@ def main():
                 img = f"pad_congruent_{mapping}"
             cls = "pad" if img.startswith("pad") else "ex"
             body += f'<img class="{cls}" src="{data_url(HERE / (img + ".png"))}">'
+        if with_hint:
+            body += f'<span class="hint">{hint}</span>'
         return f'<div class="screen">{body}</div>'
 
     sections = [
@@ -84,9 +93,10 @@ def main():
     n = 0
     for key, title, mapping in sections:
         cards = []
-        for s in screens[key]:
+        for i, s in enumerate(screens[key]):
             n += 1
-            cards.append(f'<figure><figcaption>{n}</figcaption>{screen(s, mapping or "left")}</figure>')
+            with_hint = not (key in ends_with_block and i == len(screens[key]) - 1)
+            cards.append(f'<figure><figcaption>{n}</figcaption>{screen(s, mapping or "left", with_hint)}</figure>')
         parts.append(f"<h2>{title}</h2><div class='row'>{''.join(cards)}</div>")
 
     html = f"""<!doctype html>
@@ -99,17 +109,19 @@ h1 {{ font-size: 20px; margin: 0 0 4px; }} h2 {{ font-size: 15px; margin: 28px 0
 .note {{ color: #666; max-width: 900px; }}
 .row {{ display: flex; flex-wrap: wrap; gap: 14px; }}
 figure {{ margin: 0; }} figcaption {{ font-size: 12px; color: #888; }}
-.screen {{ width: 480px; height: 270px; background: #000; color: #fff; display: flex; flex-direction: column;
+.screen {{ position: relative; width: 480px; height: 270px; background: #000; color: #fff; display: flex; flex-direction: column;
           align-items: center; justify-content: center; text-align: center; padding: 0 28px; box-sizing: border-box;
           font: 13px/1.35 Inconsolata, monospace; }}
 .screen p {{ margin: 0 0 8px; max-width: 55%; }}
 .screen img.pad {{ height: 140px; margin-top: 6px; }}
 .screen img.ex {{ height: 95px; margin-top: 8px; }}
+.screen .hint {{ position: absolute; left: 0; right: 0; bottom: 6px; color: #808080; }}
 </style></head><body>
 <h1>Instruction screens of the MEG session</h1>
 <p class="note">Each black box is one full screen, scaled down (text in the program's font, Inconsolata;
 lines at most 55% of the screen width).
-The operator advances every screen with SPACE, as now; the last screen before each block starts it.</p>
+The participant advances with the right green button (grey hint at the bottom); the last screen
+before each block has no hint, and only the operator's SPACE leaves it and starts the block.</p>
 {''.join(parts)}
 </body></html>"""
     (HERE / "preview.html").write_text(html, encoding="utf-8")

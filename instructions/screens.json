@@ -1,5 +1,5 @@
 {
-  "_comment": "Instruction screens of the MEG session, one or two sentences each. The operator advances every screen with SPACE. image: a PNG of this folder shown under the text; pad_congruent is pad_congruent_left or pad_congruent_right depending on the subject's congruent_key. {done} and {total} are filled in pause screens, {natural} and {odd} with gauche / droite.",
+  "_comment": "Instruction screens of the MEG session, one or two sentences each. The participant advances every screen with the right green button (a grey hint at the bottom says so), except the last one before a block, which the operator's SPACE ends. image: a PNG of this folder shown under the text; pad_congruent is pad_congruent_left or pad_congruent_right depending on the subject's congruent_key. {done} and {total} are filled in pause screens, {natural} and {odd} with gauche / droite.",
 
   "main_intro_two_parts": [
     {"text": "Bienvenue !\n\nCette expérience comporte deux parties."},
@@ -16,7 +16,8 @@
     {"text": "Bouton vert de {natural} : ça a du sens.\n\nBouton vert de {odd} : ça n'a pas de sens.", "image": "pad_congruent"},
     {"text": "Ne réfléchissez pas trop : lisez le plus naturellement possible et répondez vite, en moins de 3 secondes.\n\nVous pouvez répondre dès que le dernier mot apparaît."},
     {"text": "La croix devient verte si votre réponse est correcte, rouge si elle est incorrecte.\n\nElle devient gris foncé si vous n'avez pas répondu à temps."},
-    {"text": "Gardez les yeux au centre de l'écran et évitez de cligner des yeux pendant la lecture."}
+    {"text": "Gardez les yeux au centre de l'écran et évitez de cligner des yeux pendant la lecture."},
+    {"text": "Dites-nous quand vous souhaitez commencer."}
   ],
 
   "main_pause": [
