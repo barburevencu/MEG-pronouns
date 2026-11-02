@@ -28,8 +28,8 @@
 //	200 + block     pause / instruction screen before block (201-206)
 //	207 + block     localizer: pause / instruction screen (207 training, 208-209)
 //	210             instruction screen before the main task's training block
-//	211 / 212 / 213 feedback onset: correct / incorrect / timeout (localizer:
-//	                211 only, a hit on an animal, training block only)
+//	211 / 212 / 213 feedback onset: correct / incorrect / timeout (main task
+//	                only; the localizer has no feedback)
 //	214 + 4*(role-1) + 2*canonical + natural
 //	                filler word onsets (214-249)
 //	250 / 251       localizer: screen before a word / picture mini-block
@@ -694,9 +694,8 @@ func main() {
 	locCrossThick := max(2, locCrossPx/locCrossThinness)
 	locCrossOutline := max(1, locCrossThick/2) // black, around the lines
 	locFix := newCross(locCrossPx, locCrossThick, locCrossOutline, locFixColor)
-	locFixCorrect := newCross(locCrossPx, locCrossThick, locCrossOutline, correctColor)
 	for _, v := range []stimuli.VisualStimulus{fix, fixCorrect, fixIncorrect, fixTimeout,
-		locFix, locFixCorrect} {
+		locFix} {
 		if err := stimuli.PreloadVisualOnScreen(exp.Screen, v); err != nil {
 			exp.Fatal("preloading the fixation cross: %v", err)
 		}
@@ -1246,7 +1245,7 @@ func main() {
 					}
 				}
 				timing, outcome, presses, runErr := runLocalizerBlock(exp, mini, resp, *auto, locRNG,
-					locCrosses{word: fix, wordHit: fixCorrect, image: locFix, imageHit: locFixCorrect})
+					locCrosses{word: fix, image: locFix})
 				// Log what was presented, also after ESC. An animal's row says
 				// whether it was hit (correct 1) or missed (0), with the RT. Each
 				// press follows the trial it answers: the animal it hit, or the
@@ -1272,9 +1271,6 @@ func main() {
 							correct = "1"
 						}
 						addLocRow(t, "loc_response", 0, p.ns, rel(p.ns), "NA", "right", correct, rel(p.ns))
-					}
-					if o.fbNS != 0 {
-						addLocRow(t, "loc_feedback_hit", codeLocHit, o.fbNS, rel(o.fbNS), "NA", "NA", "NA", "NA")
 					}
 				}
 				if runErr != nil {

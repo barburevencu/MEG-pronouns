@@ -11,9 +11,9 @@
 // a word mini-block the cross is the main task's (small, light grey), the
 // word drawn on top of it; in a picture mini-block it is the large grey cross,
 // drawn on top of the picture. A press 200-1200 ms after an animal's onset is
-// a hit: in the training block only, the cross turns green for 500 ms (in the
-// main blocks, so that it never spills onto the next stimuli, there is no
-// feedback at all). Other presses (false alarms) and misses get no feedback. Sequences come from localizer/localizer.csv
+// a hit. No press gets feedback, in training as in the main blocks: the
+// participant only learns the percentage of animals hit, on the screen after
+// each mini-block. Sequences come from localizer/localizer.csv
 // (make_localizer.py).
 
 package main
@@ -44,13 +44,11 @@ const (
 	locOffMs          = 200  // fixation after it
 	locHitFromMs      = 200  // a press this long after an animal's onset ...
 	locHitUntilMs     = 1200 // ... and up to this long after it is a hit
-	locFeedbackMs     = 500  // green cross after a hit
 	locBlocks         = 3    // 0 = training, 1 and 2
 	codeLocBlock      = 207  // + block, instruction / pause screen
-	codeLocHit        = codeCorrect
-	locBreakS         = 10  // screen announcing the next mini-block, in seconds
-	codeLocNextWords  = 250 // onset of that screen, before a word mini-block
-	codeLocNextImages = 251 // ... before a picture mini-block
+	locBreakS         = 10   // screen announcing the next mini-block, in seconds
+	codeLocNextWords  = 250  // onset of that screen, before a word mini-block
+	codeLocNextImages = 251  // ... before a picture mini-block
 )
 
 type locTrial struct {
@@ -141,7 +139,6 @@ func parseLocalizerBlocks(s string) ([locBlocks]bool, error) {
 // locOutcome is what happened on one animal trial.
 type locOutcome struct {
 	hitNS uint64 // the press that made it a hit, 0 for a miss
-	fbNS  uint64 // time the green cross was drawn (just before its flip); training only
 }
 
 // locPress is one press of the right button during a block.
@@ -151,16 +148,14 @@ type locPress struct {
 	hit   bool
 }
 
-// locCrosses are the fixation crosses of the two kinds of mini-block, plain
-// and green (after a hit).
+// locCrosses are the fixation crosses of the two kinds of mini-block.
 type locCrosses struct {
-	word, wordHit, image, imageHit stimuli.VisualStimulus
+	word, image stimuli.VisualStimulus
 }
 
 // runLocalizerBlock presents one mini-block as a single stream and returns the
 // stimulus timing, each trial's outcome (for animals) and every press.
-// Presses are read every frame, the right button only. A hit turns the cross
-// green only in the training block (block 0). With auto, it answers
+// Presses are read every frame, the right button only. With auto, it answers
 // 85% of the animals and 1% of the other trials, 400-700 ms after the onset.
 func runLocalizerBlock(exp *control.Experiment, trials []*locTrial, resp responder, auto bool, rng *rand.Rand,
 	crosses locCrosses) ([]stimuli.TimingLog, []locOutcome, []locPress, error) {
@@ -173,13 +168,9 @@ func runLocalizerBlock(exp *control.Experiment, trials []*locTrial, resp respond
 			autoRT[i] = uint64(400+rng.IntN(300)) * 1_000_000
 		}
 	}
-	half := uint64(exp.Screen.FrameDuration()) / 2
-	feedback := trials[0].block == 0
 	cur := -1        // trial whose stimulus or fixation is on screen
 	lastTarget := -1 // latest animal shown
 	seen := 0        // ctx.Events already read (keyboard)
-	fbTrial := -1    // a hit whose feedback is still to be drawn
-	var fbUntil uint64
 
 	el := make([]stimuli.StreamElement, len(trials))
 	for i, t := range trials {
@@ -213,34 +204,20 @@ func runLocalizerBlock(exp *control.Experiment, trials []*locTrial, resp respond
 				pressNS >= onset[a]+locHitFromMs*1_000_000 && pressNS <= onset[a]+locHitUntilMs*1_000_000 {
 				p.trial, p.hit = a, true
 				out[a].hitNS = pressNS
-				if feedback {
-					fbTrial = a
-				}
 			}
 			presses = append(presses, p)
 		}
 
 		if ctx.OnPhase && ctx.Frame == 0 {
-			// The stimulus code goes with the onset; feedback due now waits
-			// for the next frame and its own code.
+			// The stimulus code goes with the onset.
 			cur = ctx.Index
 			exp.Marker.Arm(byte(trials[cur].code))
-		} else if fbTrial >= 0 {
-			out[fbTrial].fbNS, fbUntil = ctx.NowNS, ctx.NowNS+locFeedbackMs*1_000_000
-			exp.Marker.Arm(byte(codeLocHit))
-			fbTrial = -1
 		}
 
 		t := trials[ctx.Index]
-		green := ctx.NowNS+half < fbUntil
 		cross := crosses.image
-		switch {
-		case t.modality == "word" && green:
-			cross = crosses.wordHit
-		case t.modality == "word":
+		if t.modality == "word" {
 			cross = crosses.word
-		case green:
-			cross = crosses.imageHit
 		}
 		if err := ctx.Screen.Clear(); err != nil {
 			return err

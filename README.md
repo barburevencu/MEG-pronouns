@@ -16,9 +16,8 @@ in word mini-blocks the main task's small cross stays on with the word drawn on
 top, in picture mini-blocks a grey 1.92 cm cross with a thin black outline sits
 on top of the picture and stays on in the blank. The participant presses the
 right green button on an animal; a press 200–1200 ms after an animal's onset is
-a hit; in the training block only, it turns the cross green for 500 ms (the
-main blocks have no feedback, so the green cross never spills onto the next
-stimuli); false alarms and misses get no feedback. A training block of 72 trials (a word and a picture mini-block of 36:
+a hit. No press gets feedback, in training either: the screen after each
+mini-block gives the percentage of animals hit. A training block of 72 trials (a word and a picture mini-block of 36:
 every person and place once, 4 animals; ~1.1 min), then two blocks of 576 (8
 mini-blocks of 72: every person and place twice, 8 animals; each animal word
 and picture twice per block; ~8.8 min each). Animals are 11% of the trials,
@@ -156,9 +155,9 @@ row), `loc_stimulus` (its
 measured on-duration; for an animal, `correct` 1 if hit, 0 if missed, and the
 RT), `loc_response` (every press, on the animal it hit, correct 1, or else on
 the trial on screen, a false alarm, correct 0; time and RT from that trial's
-onset) and `loc_feedback_hit` (training only). Localizer trigger codes: word of person/place k
+onset). Localizer trigger codes: word of person/place k
 = k (1-32), its picture = 32 + k, word of animal a = 64 + a (65-80), its
-picture = 80 + a (81-96), pause screens 207-209, hit feedback 211 (training only),
+picture = 80 + a (81-96), pause screens 207-209,
 screen before a word / picture mini-block 250 / 251; they overlap
 main-task codes, so split the recording at the localizer's first pause code
 (207-209).
