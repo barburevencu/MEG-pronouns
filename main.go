@@ -5,12 +5,13 @@
 // 512. Then the main task:
 //
 // Each trial: fixation (1000 ms), sentence 1 word by word (6 words, each
-// 250 ms on, no blank in between), a 1000 ms break, sentence 2 (3 words, same
+// 300 ms on, no blank in between), a 1000 ms break, sentence 2 (3 words, same
 // timing), then a felicity judgment (two green buttons) that can be given as
 // soon as the last word appears, until 3000 ms after it goes off (RT from its
-// onset), and 250 ms of feedback on the fixation cross, shown once the word is
-// gone (green correct, red incorrect, dark grey timeout). The cross stays on
-// for the whole trial, the words drawn on top of it. 160 trials per subject
+// onset), 500 ms of feedback on the fixation cross, shown once the word is
+// gone (green correct, red incorrect, dark grey timeout), and a 2000 ms
+// inter-trial interval on the plain cross. The cross stays on for the whole
+// trial, the words drawn on top of it. 160 trials per subject
 // in 5 blocks of 32, with a pause before each block that the operator ends with SPACE. Trials come
 // from counterbalancing/counterbalancing.csv (make_counterbalancing.py), embedded in the binary.
 //
@@ -77,10 +78,11 @@ var counterbalancingCSV []byte
 const (
 	fixationMs       = 1000 // initial fixation
 	breakMs          = 1000 // break between sentences
-	wordOnMs         = 250  // each word stays on until the next
+	wordOnMs         = 300  // each word stays on until the next
 	wordOffMs        = 0
 	responseWindowMs = 3000
-	feedbackMs       = 250
+	feedbackMs       = 500
+	itiMs            = 2000 // plain cross after the feedback
 	endScreenMs      = 5000
 	nBlocks          = 5
 )
@@ -1104,6 +1106,16 @@ func main() {
 			addRow(t, event, nil, code, fbNS, rel(fbNS), "NA", "NA", btn, correct, rt)
 
 			if err := exp.Wait(feedbackMs - int((control.TicksNS()-fbNS)/1_000_000)); err != nil {
+				return err
+			}
+
+			// Inter-trial interval: the plain cross.
+			itiNS, err := exp.ShowTS(fix)
+			if err != nil {
+				return err
+			}
+			addRow(t, "iti", nil, 0, itiNS, rel(itiNS), "NA", "NA", "NA", "NA", "NA")
+			if err := exp.Wait(itiMs - int((control.TicksNS()-itiNS)/1_000_000)); err != nil {
 				return err
 			}
 			if t.number == 32 {

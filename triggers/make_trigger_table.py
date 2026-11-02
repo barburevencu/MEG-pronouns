@@ -15,10 +15,11 @@ from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
 
-WORD_ON, WORD_SOA = 500, 500  # each word stays on until the next
+WORD_ON, WORD_SOA = 300, 300  # each word stays on until the next
 FIX = 1000                     # initial fixation and inter-sentence break
 RESPONSE_WINDOW = 3000
 FEEDBACK = 500
+ITI = 2000                     # plain cross after the feedback, no code
 LOC_ON, LOC_SOA, LOC_DEADLINE = 1000, 1000, 800
 
 # role: (name, sentence, position if canonical, position if non-canonical)
@@ -39,9 +40,9 @@ EXAMPLE = {  # canonical / non-canonical words, for the on_screen column
     "pronoun": ("Il/Elle",) * 2, "etait": ("était",) * 2, "adjective": ("<adjective>",) * 2,
 }
 
-S2_START = FIX + 6 * WORD_SOA + FIX          # 5000
-RESP_OPEN = S2_START + 2 * WORD_SOA  # 6000: the adjective's onset
-ADJ_OFF = RESP_OPEN + WORD_ON        # 6500
+S2_START = FIX + 6 * WORD_SOA + FIX          # 3800
+RESP_OPEN = S2_START + 2 * WORD_SOA  # 4400: the adjective's onset
+ADJ_OFF = RESP_OPEN + WORD_ON        # 4700
 
 
 def word_onset(sentence, position):
@@ -66,7 +67,7 @@ for role, (name, sentence, pos_can, pos_non) in ROLES.items():
         pron_f, agent_f = cell >> 2 & 1, cell >> 3 & 1
         pos = pos_can if canonical else pos_non
         add(16 * role + cell, f"word: {name}",
-            f"'{EXAMPLE[name][0 if canonical else 1]}' (no fixation cross)",
+            f"'{EXAMPLE[name][0 if canonical else 1]}' (on the fixation cross)",
             word_onset(sentence, pos), WORD_ON,
             role=name, sentence=sentence, position=pos, cell=cell,
             congruent=congruent, canonical_order=canonical,
@@ -82,6 +83,7 @@ add(211, "feedback: correct", "fixation cross turns green", f"{RESP_OPEN} + RT, 
 add(212, "feedback: incorrect", "fixation cross turns red", f"{RESP_OPEN} + RT, at the earliest {ADJ_OFF}", FEEDBACK)
 add(213, "feedback: timeout (no response)", "fixation cross turns dark grey",
     ADJ_OFF + RESPONSE_WINDOW, FEEDBACK)
+add(None, "inter_trial_interval", "fixation cross (light grey)", f"feedback onset + {FEEDBACK}", ITI)
 for b in range(1, 6):
     add(200 + b, f"pause/instruction screen before block {b}",
         ("instructions" if b == 1 else "pause text") + "; the operator's SPACE starts the block",

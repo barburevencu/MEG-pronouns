@@ -143,7 +143,7 @@ task), so a crash or a frozen computer loses at most the block in progress;
 on ESC or a program error, everything presented is saved.
 
 `data/Pronouns_sub-NNN_date-….csv` in the project folder (beside the executable; `-o FOLDER` to change), one row per event (`pause`,
-`fixation`, `word`, `response_window`, `response`, `feedback_*`, `end`), with
+`fixation`, `word`, `response_window`, `response`, `feedback_*`, `iti`, `end`), with
 the code sent, the time on the SDL clock (ms from the start of the run), the
 time within the trial and its intended value, word on-durations, the answer,
 its correctness and RT (from the adjective's onset: presses count as soon as it appears, until 3 s after it goes off), and the trial's
