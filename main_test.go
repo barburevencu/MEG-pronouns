@@ -80,11 +80,14 @@ func TestLocalizer(t *testing.T) {
 			table[code] = key{r[col["modality"]], r[col["item"]]}
 		}
 	}
-	if len(table) != 64 {
-		t.Fatalf("%d localizer stimulus codes in triggers.csv, expected 64", len(table))
+	if len(table) != 96 {
+		t.Fatalf("%d localizer stimulus codes in triggers.csv, expected 96", len(table))
 	}
 
-	want := []struct{ reps, matches int }{{1, 4}, {8, 32}, {8, 32}} // training, blocks 1 and 2, in order
+	// training, blocks 1 and 2, in order: mini-blocks, showings of each
+	// person/place per mini-block, animals per mini-block
+	want := []struct{ minis, reps, animals int }{{2, 1, 4}, {8, 2, 8}, {8, 2, 8}}
+	other := map[string]string{"word": "image", "image": "word"}
 	for s := 1; s <= 30; s++ {
 		trials, err := loadLocalizer(localizerCSV, s)
 		if err != nil {
@@ -96,52 +99,84 @@ func TestLocalizer(t *testing.T) {
 			if got := (key{tr.modality, tr.item}); table[tr.code] != got {
 				t.Fatalf("subject %d: code %d is %v in triggers.csv, sequence has %v", s, tr.code, table[tr.code], got)
 			}
+			if tr.target != (tr.concept > 32) {
+				t.Fatalf("subject %d block %d trial %d: target column wrong", s, tr.block, tr.number)
+			}
 			if _, err := localizerImages.ReadFile("localizer/images/" + tr.image); err != nil {
 				t.Fatalf("subject %d: %v", s, err)
 			}
 		}
-		direction := map[int]string{} // concept -> modality of the match in block 1
+		// Odd subjects start training and block 1 with words, block 2 with
+		// the other modality.
+		first := map[bool]string{true: "word", false: "image"}[s%2 == 1]
 		for b, w := range want {
 			block := byBlock[b]
-			if len(block) != 64*w.reps {
+			size := 32*w.reps + w.animals
+			if len(block) != w.minis*size {
 				t.Fatalf("subject %d block %d: %d trials", s, b, len(block))
 			}
-			counts := map[key]int{}
-			matches := 0
-			for i, tr := range block {
-				counts[key{tr.modality, tr.item}]++
-				if wantMod := [2]string{"word", "image"}[i%2]; tr.modality != wantMod {
-					t.Fatalf("subject %d block %d trial %d: %s, expected %s", s, b, tr.number, tr.modality, wantMod)
+			start := first
+			if b == 2 {
+				start = other[first]
+			}
+			animals := map[key]int{}
+			lastAnimal := 0
+			for mini := 0; mini < w.minis; mini++ {
+				modality := start
+				if mini%2 == 1 {
+					modality = other[start]
 				}
-				isMatch := i > 0 && block[i-1].concept == tr.concept
-				if tr.match != isMatch {
-					t.Fatalf("subject %d block %d trial %d: match column wrong", s, b, tr.number)
-				}
-				if tr.match {
-					matches++
-					if block[i-1].match {
-						t.Fatalf("subject %d block %d trial %d: two matches in a row", s, b, tr.number)
+				counts := map[int]int{}
+				for _, tr := range block[mini*size : (mini+1)*size] {
+					if tr.miniblock != mini+1 || tr.modality != modality {
+						t.Fatalf("subject %d block %d trial %d: mini-block %d %s, expected %d %s",
+							s, b, tr.number, tr.miniblock, tr.modality, mini+1, modality)
 					}
-					switch b {
-					case 1:
-						direction[tr.concept] = tr.modality
-					case 2:
-						if direction[tr.concept] == tr.modality {
-							t.Fatalf("subject %d: concept %d matched the same way in both blocks", s, tr.concept)
+					counts[tr.concept]++
+					if tr.target {
+						animals[key{tr.modality, tr.item}]++
+						if tr.number < 6 || lastAnimal > 0 && tr.number-lastAnimal < 7 || tr.number == len(block) {
+							t.Fatalf("subject %d block %d trial %d: animal too early, too close to the previous one, or last", s, b, tr.number)
 						}
+						lastAnimal = tr.number
 					}
 				}
-			}
-			if len(counts) != 64 {
-				t.Fatalf("subject %d block %d: %d distinct stimuli", s, b, len(counts))
-			}
-			for k, n := range counts {
-				if n != w.reps {
-					t.Fatalf("subject %d block %d: %v shown %d times", s, b, k, n)
+				n := 0
+				for k := 1; k <= 48; k++ {
+					if k <= 32 && counts[k] != w.reps {
+						t.Fatalf("subject %d block %d mini-block %d: concept %d shown %d times", s, b, mini+1, k, counts[k])
+					}
+					if k > 32 {
+						n += counts[k]
+					}
+				}
+				if n != w.animals {
+					t.Fatalf("subject %d block %d mini-block %d: %d animals", s, b, mini+1, n)
 				}
 			}
-			if matches != w.matches {
-				t.Fatalf("subject %d block %d: %d matches", s, b, matches)
+			for i := 1; i < len(block); i++ {
+				if block[i].concept == block[i-1].concept {
+					t.Fatalf("subject %d block %d trial %d: same concept twice in a row", s, b, block[i].number)
+				}
+			}
+			// Training: 8 different animals, each once; blocks 1 and 2: every
+			// animal word and picture twice.
+			wantN, wantDistinct := 2, 32
+			if b == 0 {
+				wantN, wantDistinct = 1, 8
+			}
+			if len(animals) != wantDistinct {
+				t.Fatalf("subject %d block %d: %d distinct animal stimuli", s, b, len(animals))
+			}
+			names := map[string]bool{}
+			for k, c := range animals {
+				names[k.item] = true
+				if c != wantN {
+					t.Fatalf("subject %d block %d: %v shown %d times", s, b, k, c)
+				}
+			}
+			if b == 0 && len(names) != 8 {
+				t.Fatalf("subject %d training: an animal both as word and as picture", s)
 			}
 		}
 	}

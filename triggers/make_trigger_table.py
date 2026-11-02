@@ -5,10 +5,12 @@ Word codes are 16 * role + cell, where cell packs the trial's condition:
     bit 0 congruent, bit 1 canonical order, bit 2 pronoun feminine, bit 3 agent feminine.
 Times are ms from the trial's fixation onset (code 160 + trial_number).
 
-The localizer (task "localizer", after the main task) reuses codes 1-64 for its
-stimuli: word of concept k = k, picture = 32 + k, concepts numbered as in
-stimuli.csv (people 1-16, places 17-32). Its blocks open with codes 207-209, so
-the two tasks are separate segments of the recording.
+The localizer (task "localizer", after the main task) reuses codes 1-96 for its
+stimuli: word of person/place k = k, its picture = 32 + k, concepts numbered as
+in stimuli.csv (people 1-16, places 17-32); word of animal a = 64 + a, its
+picture = 80 + a, animals numbered as in localizer/animals.csv (concepts 33-48).
+Its blocks open with codes 207-209, so the two tasks are separate segments of
+the recording.
 """
 import csv
 from pathlib import Path
@@ -20,7 +22,8 @@ FIX = 1000                     # initial fixation and inter-sentence break
 RESPONSE_WINDOW = 3000
 FEEDBACK = 500
 ITI = 2000                     # plain cross after the feedback, no code
-LOC_ON, LOC_SOA, LOC_DEADLINE = 1000, 1000, 800
+LOC_ON, LOC_OFF, LOC_FEEDBACK = 300, 500, 500
+LOC_HIT_WINDOW = (200, 1200)  # a press this long after an animal's onset is a hit
 
 # role: (name, sentence, position if canonical, position if non-canonical)
 ROLES = {
@@ -106,25 +109,27 @@ add(210, "instruction screens before the training block (block 0, 20 trials)",
     "instructions; the operator's SPACE starts the block", "", "until SPACE")
 add(255, "end of experiment", "end screen", "", 5000)
 
-# Localizer: one stimulus every second, times from the stimulus onset.
+# Localizer: a stimulus every 800 ms (300 on, 500 of fixation), times from
+# the stimulus onset. Word mini-blocks show the main task's small cross, the
+# word on top; picture mini-blocks the large grey cross, on top of the picture.
 with open(HERE.parent / "counterbalancing" / "stimuli.csv", newline="", encoding="utf-8") as f:
     stim = list(csv.reader(f))
 nouns = [r[stim[0].index(col)] for col in ("people", "places") for r in stim[1:]]
-for k, noun in enumerate(nouns, 1):
-    for code, modality, on_screen in ((k, "word", f"'{noun}' (no fixation cross; feedback as a dot at its centre)"),
-                                      (32 + k, "image", f"picture of '{noun}' with the fixation cross on it")):
-        add(code, f"localizer {modality}: {noun}", on_screen, 0,
-            f"{LOC_ON} (until the next stimulus)", task="localizer",
+with open(HERE.parent / "localizer" / "animals.csv", newline="", encoding="utf-8") as f:
+    animals = [r["animals"] for r in csv.DictReader(f)]
+for k, noun in enumerate(nouns + animals, 1):
+    word, image = (k, 32 + k) if k <= 32 else (32 + k, 48 + k)
+    for code, modality, on_screen in ((word, "word", f"'{noun}' on the small fixation cross"),
+                                      (image, "image", f"picture of '{noun}', the large fixation cross on top")):
+        add(code, f"localizer {modality}: {noun}" + (" (animal: target)" if k > 32 else ""), on_screen, 0,
+            f"{LOC_ON}, then {LOC_OFF} of fixation", task="localizer",
             modality=modality, concept=k, item=noun)
 for b, what in ((0, "training"), (1, "block 1"), (2, "block 2")):
     add(207 + b, f"localizer: instruction/pause screen before {what}",
         "text; the operator's SPACE starts the block", "", "until SPACE", task="localizer")
-add(211, "localizer feedback: hit", "cross on a picture, or dot on a word, turns green (press on a match)", "RT",
-    "until the next stimulus", task="localizer")
-add(212, "localizer feedback: false alarm", "cross on a picture, or dot on a word, turns red (press on a non-match)", "RT",
-    "until the next stimulus", task="localizer")
-add(213, "localizer feedback: miss", "cross on a picture, or dot on a word, turns red (no press on a match)", LOC_DEADLINE,
-    f"{LOC_SOA - LOC_DEADLINE}", task="localizer")
+add(211, "localizer feedback: hit (training block only)",
+    f"the fixation cross turns green (press {LOC_HIT_WINDOW[0]}-{LOC_HIT_WINDOW[1]} ms after an animal's onset)",
+    "animal onset + RT", LOC_FEEDBACK, task="localizer")
 
 rows.sort(key=lambda r: (r["task"] != "main", r["code"] is None, r["code"] or 0))
 fields = ["task", "code", "event", "on_screen", "onset_ms", "duration_ms", "role", "sentence",

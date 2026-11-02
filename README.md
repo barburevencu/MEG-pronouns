@@ -4,22 +4,33 @@ French pronoun resolution, word-by-word reading (RSVP) with a felicity judgment,
 written with [goxpyriment](https://github.com/chrplr/goxpyriment).
 
 The session opens with the **main task** (pronoun pairs and felicity judgments),
-then a **localizer**: a one-back task on the 32 nouns, words
-and pictures alternating, each on screen for a full second with no blank in
-between (a grey 1.92 cm fixation cross with a thin black outline stays on the pictures, and the words are drawn on top of it). The
-participant presses the right green button when the stimulus is the same
-concept as the previous one; the cross turns green on a correct press, red on a press on a
-non-match or on a match left unanswered for 800 ms. A training block
-of 64 trials (every word and picture once, 4 matches, ~1 min), then two blocks
-of 512 (every word and picture 8 times, 32 matches, ~8.5 min each). Match
-positions are random (never two in a row), every concept is matched once per
-block, word→picture in one block and picture→word in the other. For decoding,
-leave out the match trials and the trial after each match. Its words are in the
+then a **localizer**: an animal-detection task on words and pictures of the 32
+nouns (16 people, 16 places) and of 16 animals (`localizer/animals.csv`, 8
+masculine and 8 feminine, matched to the people and places in length and in
+film and book frequency: mean 8.1 letters, log frequencies 0.69 and 0.77 vs.
+0.66 and 0.77). Each stimulus is on for 300 ms, then 500 ms of fixation. The
+stimuli come in mini-blocks of one modality, words and pictures alternating;
+in word mini-blocks the main task's small cross stays on with the word drawn on
+top, in picture mini-blocks a grey 1.92 cm cross with a thin black outline sits
+on top of the picture and stays on in the blank. The participant presses the
+right green button on an animal; a press 200–1200 ms after an animal's onset is
+a hit; in the training block only, it turns the cross green for 500 ms (the
+main blocks have no feedback, so the green cross never spills onto the next
+stimuli); false alarms and misses get no feedback. A training block of 72 trials (a word and a picture mini-block of 36:
+every person and place once, 4 animals; ~1 min), then two blocks of 576 (8
+mini-blocks of 72: every person and place twice, 8 animals; each animal word
+and picture twice per block; ~7.7 min each). Animals are 11% of the trials,
+never in a block's first 5 trials or its last, with at least 6 other trials
+between two of them; the same concept never comes twice in a row. Odd subjects
+start training and block 1 with words, even subjects with pictures; block 2
+starts with the other modality. Until the animal pictures exist, the program
+shows placeholders (the name on a grey square; add `pictures/<animal>.png` and
+rerun `make_localizer.py`). Its words are in the
 main task's font and size. Word size: the widest word of the session spans
 8° of visual angle (on the 65 cm wide projected image, seen from 104 cm;
 change with `-screen-cm`, `-distance-cm`, `-word-deg`), and the pictures are
 8° wide too. On the 1920 px MEG screen that is about 430 px (≈ 72 pt); the
-localizer's cross is 1.92 cm, about 57 px.
+localizer's large cross is 1.92 cm, about 57 px.
 
 | File | What it is |
 |---|---|
@@ -28,14 +39,15 @@ localizer's cross is 1.92 cm, about 57 px.
 | `counterbalancing/fillers.csv` | the 48 filler items: 12 person-adjectives, each natural after 2 verbs and odd after 2 others, with an example sentence |
 | `triggers/make_trigger_table.py` | writes `triggers/triggers.csv`, every trigger code and what is on screen when it fires |
 | `pictures/` | the image prompts (`faces_prompts.md` people, `places_prompts.md` places); the full-size PNGs are not committed |
-| `localizer/make_localizer.py` | writes `localizer/localizer.csv` (all subjects' localizer sequences) and `localizer/images/` (the pictures shrunk to 512 px) from `pictures/` |
+| `localizer/animals.csv` | the 16 animals, with gender, length and log frequencies (Lexique 3.83, as in `stimuli.csv`) |
+| `localizer/make_localizer.py` | writes `localizer/localizer.csv` (all subjects' localizer sequences) and `localizer/images/` (the pictures shrunk to 512 px, placeholders for animals without a picture) from `pictures/` |
 | `main.go` | the experiment; `counterbalancing/counterbalancing.csv` is embedded in the binary |
 | `localizer.go` | the localizer; `localizer/localizer.csv` and `localizer/images/` are embedded |
 | `instructions.go`, `instructions/screens.json` | the instruction screens (one or two sentences each, some with a picture), embedded; the operator advances each with SPACE |
 | `instructions/make_button_images.py` | draws the response-pad pictures (`pad_*.png`) from `response_pad_reference.png`, green buttons highlighted and labelled |
-| `instructions/make_preview.py` | draws the localizer example pictures and `instructions/preview.html`, every screen as the program shows it (run after editing `screens.json`) |
+| `instructions/make_preview.py` | draws `instructions/preview.html`, every screen as the program shows it (run after editing `screens.json`) |
 | `main_test.go` | checks that every subject loads, every word code matches `triggers/triggers.csv`, and every localizer sequence has the designed structure |
-| `demo/pronouns_demo.html` | standalone browser demo to share: instructions (one short screen at a time, SPACE), 32 localizer trials (→ for a match) and 10 pronoun trials of subject 1 (← / →); trials and pictures are embedded. Key 0 in its menu shows the MEG program's instruction screens, in session order (→ / ← to browse) |
+| `demo/pronouns_demo.html` | standalone browser demo to share: instructions (one short screen at a time, SPACE), 72 localizer trials (a localizer training block; → on an animal) and 10 pronoun trials of subject 1 (← / →); trials and pictures are embedded. Key 0 in its menu shows the MEG program's instruction screens, in session order (→ / ← to browse) |
 | `.github/workflows/pages.yml` | publishes the demo at https://barburevencu.github.io/MEG-pronouns/ whenever it changes on `main` |
 | `demo/make_demo.py` | refreshes the demo's localizer sequence and pictures, and its copy of the MEG instruction screens (run after changing the stimuli, the pictures or `instructions/screens.json`) |
 | `tools/buttontest` | prints which parallel-port pin each response-pad button moves (run on the MEG computer: `go build -o buttontest ./tools/buttontest && ./buttontest`) |
@@ -135,12 +147,16 @@ was presented so far is saved.
 ## Data
 
 Localizer rows have `task` = `localizer`, `block_number` 0 (training), 1 or 2,
-the item in `word`, `modality` and `match`; events `loc_stimulus`,
-`loc_response` (RT from the stimulus onset; `loc_response_late` after a missed
-deadline), `loc_feedback_hit`, `loc_feedback_false_alarm`, `loc_feedback_miss`.
-Localizer trigger codes: word of concept k = k (1-32), picture = 32 + k, pause
-screens 207-209, feedback 211-213; they overlap main-task codes, so split the
-recording at the localizer's first pause code (207-209).
+the item in `word`, `modality`, `miniblock` (1-8), `category` (`person`,
+`place`, `animal`) and `target` (1 for an animal); events `loc_stimulus` (its
+measured on-duration; for an animal, `correct` 1 if hit, 0 if missed, and the
+RT), `loc_response` (every press, on the animal it hit, correct 1, or else on
+the trial on screen, a false alarm, correct 0; time and RT from that trial's
+onset) and `loc_feedback_hit` (training only). Localizer trigger codes: word of person/place k
+= k (1-32), its picture = 32 + k, word of animal a = 64 + a (65-80), its
+picture = 80 + a (81-96), pause screens 207-209, hit feedback 211 (training only); they overlap
+main-task codes, so split the recording at the localizer's first pause code
+(207-209).
 
 The data are written to disk at the end of every block (localizer and main
 task), so a crash or a frozen computer loses at most the block in progress;

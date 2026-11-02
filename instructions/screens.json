@@ -36,21 +36,19 @@
   ],
 
   "localizer_intro_after_main": [
-    {"text": "Fin de la première partie.\n\nDans la seconde partie, des mots et des images vont apparaître au centre de l'écran, l'un après l'autre.\n\nMots et images alternent, au rythme d'un par seconde."}
+    {"text": "Fin de la première partie.\n\nDans la seconde partie, des mots et des images vont défiler rapidement au centre de l'écran."}
   ],
 
   "localizer_intro_alone": [
-    {"text": "Bienvenue !\n\nDes mots et des images vont apparaître au centre de l'écran, l'un après l'autre.\n\nMots et images alternent, au rythme d'un par seconde."}
+    {"text": "Bienvenue !\n\nDes mots et des images vont défiler rapidement au centre de l'écran."}
   ],
 
   "localizer_intro": [
-    {"text": "Votre tâche : repérer quand ce qui apparaît correspond à ce qui vient juste avant."},
-    {"text": "Cela marche dans les deux sens.\n\nUn mot suivi de son image :", "image": "example_word_picture"},
-    {"text": "Et aussi une image suivie de son mot :", "image": "example_picture_word"},
-    {"text": "Dans les deux cas, appuyez le plus vite possible sur le bouton vert de droite.", "image": "pad_localizer"},
-    {"text": "Si ce qui apparaît ne correspond pas à ce qui précède, n'appuyez pas."},
-    {"text": "Si vous avez appuyé à raison, la croix devient verte (sur un mot, un point vert apparaît).\n\nSi vous avez appuyé à tort, ou oublié d'appuyer, elle devient rouge (ou un point rouge apparaît)."},
-    {"text": "Gardez les yeux au centre de l'écran, sur les mots comme sur les images."}
+    {"text": "D'abord une série de mots, puis une série d'images, puis de nouveau des mots, et ainsi de suite."},
+    {"text": "Votre tâche : repérer les animaux.\n\nDès que vous voyez un animal, en mot ou en image, appuyez le plus vite possible sur le bouton vert de droite.", "image": "pad_localizer"},
+    {"text": "Par exemple, appuyez pour le mot « papillon » comme pour une image de papillon.\n\nPour tout le reste, n'appuyez pas."},
+    {"text": "Pendant l'entraînement, quand vous avez bien repéré un animal, la croix devient verte."},
+    {"text": "Gardez les yeux sur la croix au centre de l'écran, pendant les mots comme pendant les images."}
   ],
 
   "localizer_before_training": [
@@ -58,11 +56,11 @@
   ],
 
   "localizer_after_training": [
-    {"text": "Fin de l'entraînement.\n\nAppuyez sur le bouton vert de droite quand ce qui apparaît correspond à ce qui précède, dans un sens comme dans l'autre.", "image": "pad_localizer"}
+    {"text": "Fin de l'entraînement.\n\nAppuyez sur le bouton vert de droite dès que vous voyez un animal, en mot ou en image.", "image": "pad_localizer"}
   ],
 
   "localizer_pause": [
-    {"text": "Pause : reposez-vous quelques instants.\n\nRappel : bouton vert de droite quand un mot et une image se correspondent, dans un sens comme dans l'autre.", "image": "pad_localizer"}
+    {"text": "Pause : reposez-vous quelques instants.\n\nRappel : bouton vert de droite dès que vous voyez un animal, en mot ou en image.", "image": "pad_localizer"}
   ],
 
   "end": [

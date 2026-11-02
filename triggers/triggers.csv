@@ -234,73 +234,103 @@ main,,inter_sentence_break,fixation cross (light grey),2800,1000,,,,,,,,,,,,
 main,,response_window_opens,the adjective (presses count from its onset; RT from there),4400,"until response, at most until 7700",,,,,,,,,,,,
 main,,countdown (no code),"3, 2, 1, one second each, after the operator's SPACE",before trial 1 of every block (main and localizer),3000,,,,,,,,,,,,
 main,,inter_trial_interval,fixation cross (light grey),feedback onset + 500,2000,,,,,,,,,,,,
-localizer,1,localizer word: marin,'marin' (no fixation cross; feedback as a dot at its centre),0,1000 (until the next stimulus),,,,,,,,,,word,1,marin
-localizer,2,localizer word: facteur,'facteur' (no fixation cross; feedback as a dot at its centre),0,1000 (until the next stimulus),,,,,,,,,,word,2,facteur
-localizer,3,localizer word: bûcheron,'bûcheron' (no fixation cross; feedback as a dot at its centre),0,1000 (until the next stimulus),,,,,,,,,,word,3,bûcheron
-localizer,4,localizer word: plongeur,'plongeur' (no fixation cross; feedback as a dot at its centre),0,1000 (until the next stimulus),,,,,,,,,,word,4,plongeur
-localizer,5,localizer word: bijoutier,'bijoutier' (no fixation cross; feedback as a dot at its centre),0,1000 (until the next stimulus),,,,,,,,,,word,5,bijoutier
-localizer,6,localizer word: chauffeur,'chauffeur' (no fixation cross; feedback as a dot at its centre),0,1000 (until the next stimulus),,,,,,,,,,word,6,chauffeur
-localizer,7,localizer word: menuisier,'menuisier' (no fixation cross; feedback as a dot at its centre),0,1000 (until the next stimulus),,,,,,,,,,word,7,menuisier
-localizer,8,localizer word: mécanicien,'mécanicien' (no fixation cross; feedback as a dot at its centre),0,1000 (until the next stimulus),,,,,,,,,,word,8,mécanicien
-localizer,9,localizer word: nonne,'nonne' (no fixation cross; feedback as a dot at its centre),0,1000 (until the next stimulus),,,,,,,,,,word,9,nonne
-localizer,10,localizer word: bergère,'bergère' (no fixation cross; feedback as a dot at its centre),0,1000 (until the next stimulus),,,,,,,,,,word,10,bergère
-localizer,11,localizer word: danseuse,'danseuse' (no fixation cross; feedback as a dot at its centre),0,1000 (until the next stimulus),,,,,,,,,,word,11,danseuse
-localizer,12,localizer word: serveuse,'serveuse' (no fixation cross; feedback as a dot at its centre),0,1000 (until the next stimulus),,,,,,,,,,word,12,serveuse
-localizer,13,localizer word: caissière,'caissière' (no fixation cross; feedback as a dot at its centre),0,1000 (until the next stimulus),,,,,,,,,,word,13,caissière
-localizer,14,localizer word: chanteuse,'chanteuse' (no fixation cross; feedback as a dot at its centre),0,1000 (until the next stimulus),,,,,,,,,,word,14,chanteuse
-localizer,15,localizer word: coiffeuse,'coiffeuse' (no fixation cross; feedback as a dot at its centre),0,1000 (until the next stimulus),,,,,,,,,,word,15,coiffeuse
-localizer,16,localizer word: couturière,'couturière' (no fixation cross; feedback as a dot at its centre),0,1000 (until the next stimulus),,,,,,,,,,word,16,couturière
-localizer,17,localizer word: musée,'musée' (no fixation cross; feedback as a dot at its centre),0,1000 (until the next stimulus),,,,,,,,,,word,17,musée
-localizer,18,localizer word: dortoir,'dortoir' (no fixation cross; feedback as a dot at its centre),0,1000 (until the next stimulus),,,,,,,,,,word,18,dortoir
-localizer,19,localizer word: tribunal,'tribunal' (no fixation cross; feedback as a dot at its centre),0,1000 (until the next stimulus),,,,,,,,,,word,19,tribunal
-localizer,20,localizer word: pressing,'pressing' (no fixation cross; feedback as a dot at its centre),0,1000 (until the next stimulus),,,,,,,,,,word,20,pressing
-localizer,21,localizer word: parlement,'parlement' (no fixation cross; feedback as a dot at its centre),0,1000 (until the next stimulus),,,,,,,,,,word,21,parlement
-localizer,22,localizer word: vestiaire,'vestiaire' (no fixation cross; feedback as a dot at its centre),0,1000 (until the next stimulus),,,,,,,,,,word,22,vestiaire
-localizer,23,localizer word: chapiteau,'chapiteau' (no fixation cross; feedback as a dot at its centre),0,1000 (until the next stimulus),,,,,,,,,,word,23,chapiteau
-localizer,24,localizer word: réfectoire,'réfectoire' (no fixation cross; feedback as a dot at its centre),0,1000 (until the next stimulus),,,,,,,,,,word,24,réfectoire
-localizer,25,localizer word: serre,'serre' (no fixation cross; feedback as a dot at its centre),0,1000 (until the next stimulus),,,,,,,,,,word,25,serre
-localizer,26,localizer word: piscine,'piscine' (no fixation cross; feedback as a dot at its centre),0,1000 (until the next stimulus),,,,,,,,,,word,26,piscine
-localizer,27,localizer word: garderie,'garderie' (no fixation cross; feedback as a dot at its centre),0,1000 (until the next stimulus),,,,,,,,,,word,27,garderie
-localizer,28,localizer word: clinique,'clinique' (no fixation cross; feedback as a dot at its centre),0,1000 (until the next stimulus),,,,,,,,,,word,28,clinique
-localizer,29,localizer word: brasserie,'brasserie' (no fixation cross; feedback as a dot at its centre),0,1000 (until the next stimulus),,,,,,,,,,word,29,brasserie
-localizer,30,localizer word: librairie,'librairie' (no fixation cross; feedback as a dot at its centre),0,1000 (until the next stimulus),,,,,,,,,,word,30,librairie
-localizer,31,localizer word: boucherie,'boucherie' (no fixation cross; feedback as a dot at its centre),0,1000 (until the next stimulus),,,,,,,,,,word,31,boucherie
-localizer,32,localizer word: cathédrale,'cathédrale' (no fixation cross; feedback as a dot at its centre),0,1000 (until the next stimulus),,,,,,,,,,word,32,cathédrale
-localizer,33,localizer image: marin,picture of 'marin' with the fixation cross on it,0,1000 (until the next stimulus),,,,,,,,,,image,1,marin
-localizer,34,localizer image: facteur,picture of 'facteur' with the fixation cross on it,0,1000 (until the next stimulus),,,,,,,,,,image,2,facteur
-localizer,35,localizer image: bûcheron,picture of 'bûcheron' with the fixation cross on it,0,1000 (until the next stimulus),,,,,,,,,,image,3,bûcheron
-localizer,36,localizer image: plongeur,picture of 'plongeur' with the fixation cross on it,0,1000 (until the next stimulus),,,,,,,,,,image,4,plongeur
-localizer,37,localizer image: bijoutier,picture of 'bijoutier' with the fixation cross on it,0,1000 (until the next stimulus),,,,,,,,,,image,5,bijoutier
-localizer,38,localizer image: chauffeur,picture of 'chauffeur' with the fixation cross on it,0,1000 (until the next stimulus),,,,,,,,,,image,6,chauffeur
-localizer,39,localizer image: menuisier,picture of 'menuisier' with the fixation cross on it,0,1000 (until the next stimulus),,,,,,,,,,image,7,menuisier
-localizer,40,localizer image: mécanicien,picture of 'mécanicien' with the fixation cross on it,0,1000 (until the next stimulus),,,,,,,,,,image,8,mécanicien
-localizer,41,localizer image: nonne,picture of 'nonne' with the fixation cross on it,0,1000 (until the next stimulus),,,,,,,,,,image,9,nonne
-localizer,42,localizer image: bergère,picture of 'bergère' with the fixation cross on it,0,1000 (until the next stimulus),,,,,,,,,,image,10,bergère
-localizer,43,localizer image: danseuse,picture of 'danseuse' with the fixation cross on it,0,1000 (until the next stimulus),,,,,,,,,,image,11,danseuse
-localizer,44,localizer image: serveuse,picture of 'serveuse' with the fixation cross on it,0,1000 (until the next stimulus),,,,,,,,,,image,12,serveuse
-localizer,45,localizer image: caissière,picture of 'caissière' with the fixation cross on it,0,1000 (until the next stimulus),,,,,,,,,,image,13,caissière
-localizer,46,localizer image: chanteuse,picture of 'chanteuse' with the fixation cross on it,0,1000 (until the next stimulus),,,,,,,,,,image,14,chanteuse
-localizer,47,localizer image: coiffeuse,picture of 'coiffeuse' with the fixation cross on it,0,1000 (until the next stimulus),,,,,,,,,,image,15,coiffeuse
-localizer,48,localizer image: couturière,picture of 'couturière' with the fixation cross on it,0,1000 (until the next stimulus),,,,,,,,,,image,16,couturière
-localizer,49,localizer image: musée,picture of 'musée' with the fixation cross on it,0,1000 (until the next stimulus),,,,,,,,,,image,17,musée
-localizer,50,localizer image: dortoir,picture of 'dortoir' with the fixation cross on it,0,1000 (until the next stimulus),,,,,,,,,,image,18,dortoir
-localizer,51,localizer image: tribunal,picture of 'tribunal' with the fixation cross on it,0,1000 (until the next stimulus),,,,,,,,,,image,19,tribunal
-localizer,52,localizer image: pressing,picture of 'pressing' with the fixation cross on it,0,1000 (until the next stimulus),,,,,,,,,,image,20,pressing
-localizer,53,localizer image: parlement,picture of 'parlement' with the fixation cross on it,0,1000 (until the next stimulus),,,,,,,,,,image,21,parlement
-localizer,54,localizer image: vestiaire,picture of 'vestiaire' with the fixation cross on it,0,1000 (until the next stimulus),,,,,,,,,,image,22,vestiaire
-localizer,55,localizer image: chapiteau,picture of 'chapiteau' with the fixation cross on it,0,1000 (until the next stimulus),,,,,,,,,,image,23,chapiteau
-localizer,56,localizer image: réfectoire,picture of 'réfectoire' with the fixation cross on it,0,1000 (until the next stimulus),,,,,,,,,,image,24,réfectoire
-localizer,57,localizer image: serre,picture of 'serre' with the fixation cross on it,0,1000 (until the next stimulus),,,,,,,,,,image,25,serre
-localizer,58,localizer image: piscine,picture of 'piscine' with the fixation cross on it,0,1000 (until the next stimulus),,,,,,,,,,image,26,piscine
-localizer,59,localizer image: garderie,picture of 'garderie' with the fixation cross on it,0,1000 (until the next stimulus),,,,,,,,,,image,27,garderie
-localizer,60,localizer image: clinique,picture of 'clinique' with the fixation cross on it,0,1000 (until the next stimulus),,,,,,,,,,image,28,clinique
-localizer,61,localizer image: brasserie,picture of 'brasserie' with the fixation cross on it,0,1000 (until the next stimulus),,,,,,,,,,image,29,brasserie
-localizer,62,localizer image: librairie,picture of 'librairie' with the fixation cross on it,0,1000 (until the next stimulus),,,,,,,,,,image,30,librairie
-localizer,63,localizer image: boucherie,picture of 'boucherie' with the fixation cross on it,0,1000 (until the next stimulus),,,,,,,,,,image,31,boucherie
-localizer,64,localizer image: cathédrale,picture of 'cathédrale' with the fixation cross on it,0,1000 (until the next stimulus),,,,,,,,,,image,32,cathédrale
+localizer,1,localizer word: marin,'marin' on the small fixation cross,0,"300, then 500 of fixation",,,,,,,,,,word,1,marin
+localizer,2,localizer word: facteur,'facteur' on the small fixation cross,0,"300, then 500 of fixation",,,,,,,,,,word,2,facteur
+localizer,3,localizer word: bûcheron,'bûcheron' on the small fixation cross,0,"300, then 500 of fixation",,,,,,,,,,word,3,bûcheron
+localizer,4,localizer word: plongeur,'plongeur' on the small fixation cross,0,"300, then 500 of fixation",,,,,,,,,,word,4,plongeur
+localizer,5,localizer word: bijoutier,'bijoutier' on the small fixation cross,0,"300, then 500 of fixation",,,,,,,,,,word,5,bijoutier
+localizer,6,localizer word: chauffeur,'chauffeur' on the small fixation cross,0,"300, then 500 of fixation",,,,,,,,,,word,6,chauffeur
+localizer,7,localizer word: menuisier,'menuisier' on the small fixation cross,0,"300, then 500 of fixation",,,,,,,,,,word,7,menuisier
+localizer,8,localizer word: mécanicien,'mécanicien' on the small fixation cross,0,"300, then 500 of fixation",,,,,,,,,,word,8,mécanicien
+localizer,9,localizer word: nonne,'nonne' on the small fixation cross,0,"300, then 500 of fixation",,,,,,,,,,word,9,nonne
+localizer,10,localizer word: bergère,'bergère' on the small fixation cross,0,"300, then 500 of fixation",,,,,,,,,,word,10,bergère
+localizer,11,localizer word: danseuse,'danseuse' on the small fixation cross,0,"300, then 500 of fixation",,,,,,,,,,word,11,danseuse
+localizer,12,localizer word: serveuse,'serveuse' on the small fixation cross,0,"300, then 500 of fixation",,,,,,,,,,word,12,serveuse
+localizer,13,localizer word: caissière,'caissière' on the small fixation cross,0,"300, then 500 of fixation",,,,,,,,,,word,13,caissière
+localizer,14,localizer word: chanteuse,'chanteuse' on the small fixation cross,0,"300, then 500 of fixation",,,,,,,,,,word,14,chanteuse
+localizer,15,localizer word: coiffeuse,'coiffeuse' on the small fixation cross,0,"300, then 500 of fixation",,,,,,,,,,word,15,coiffeuse
+localizer,16,localizer word: couturière,'couturière' on the small fixation cross,0,"300, then 500 of fixation",,,,,,,,,,word,16,couturière
+localizer,17,localizer word: musée,'musée' on the small fixation cross,0,"300, then 500 of fixation",,,,,,,,,,word,17,musée
+localizer,18,localizer word: dortoir,'dortoir' on the small fixation cross,0,"300, then 500 of fixation",,,,,,,,,,word,18,dortoir
+localizer,19,localizer word: tribunal,'tribunal' on the small fixation cross,0,"300, then 500 of fixation",,,,,,,,,,word,19,tribunal
+localizer,20,localizer word: pressing,'pressing' on the small fixation cross,0,"300, then 500 of fixation",,,,,,,,,,word,20,pressing
+localizer,21,localizer word: parlement,'parlement' on the small fixation cross,0,"300, then 500 of fixation",,,,,,,,,,word,21,parlement
+localizer,22,localizer word: vestiaire,'vestiaire' on the small fixation cross,0,"300, then 500 of fixation",,,,,,,,,,word,22,vestiaire
+localizer,23,localizer word: chapiteau,'chapiteau' on the small fixation cross,0,"300, then 500 of fixation",,,,,,,,,,word,23,chapiteau
+localizer,24,localizer word: réfectoire,'réfectoire' on the small fixation cross,0,"300, then 500 of fixation",,,,,,,,,,word,24,réfectoire
+localizer,25,localizer word: serre,'serre' on the small fixation cross,0,"300, then 500 of fixation",,,,,,,,,,word,25,serre
+localizer,26,localizer word: piscine,'piscine' on the small fixation cross,0,"300, then 500 of fixation",,,,,,,,,,word,26,piscine
+localizer,27,localizer word: garderie,'garderie' on the small fixation cross,0,"300, then 500 of fixation",,,,,,,,,,word,27,garderie
+localizer,28,localizer word: clinique,'clinique' on the small fixation cross,0,"300, then 500 of fixation",,,,,,,,,,word,28,clinique
+localizer,29,localizer word: brasserie,'brasserie' on the small fixation cross,0,"300, then 500 of fixation",,,,,,,,,,word,29,brasserie
+localizer,30,localizer word: librairie,'librairie' on the small fixation cross,0,"300, then 500 of fixation",,,,,,,,,,word,30,librairie
+localizer,31,localizer word: boucherie,'boucherie' on the small fixation cross,0,"300, then 500 of fixation",,,,,,,,,,word,31,boucherie
+localizer,32,localizer word: cathédrale,'cathédrale' on the small fixation cross,0,"300, then 500 of fixation",,,,,,,,,,word,32,cathédrale
+localizer,33,localizer image: marin,"picture of 'marin', the large fixation cross on top",0,"300, then 500 of fixation",,,,,,,,,,image,1,marin
+localizer,34,localizer image: facteur,"picture of 'facteur', the large fixation cross on top",0,"300, then 500 of fixation",,,,,,,,,,image,2,facteur
+localizer,35,localizer image: bûcheron,"picture of 'bûcheron', the large fixation cross on top",0,"300, then 500 of fixation",,,,,,,,,,image,3,bûcheron
+localizer,36,localizer image: plongeur,"picture of 'plongeur', the large fixation cross on top",0,"300, then 500 of fixation",,,,,,,,,,image,4,plongeur
+localizer,37,localizer image: bijoutier,"picture of 'bijoutier', the large fixation cross on top",0,"300, then 500 of fixation",,,,,,,,,,image,5,bijoutier
+localizer,38,localizer image: chauffeur,"picture of 'chauffeur', the large fixation cross on top",0,"300, then 500 of fixation",,,,,,,,,,image,6,chauffeur
+localizer,39,localizer image: menuisier,"picture of 'menuisier', the large fixation cross on top",0,"300, then 500 of fixation",,,,,,,,,,image,7,menuisier
+localizer,40,localizer image: mécanicien,"picture of 'mécanicien', the large fixation cross on top",0,"300, then 500 of fixation",,,,,,,,,,image,8,mécanicien
+localizer,41,localizer image: nonne,"picture of 'nonne', the large fixation cross on top",0,"300, then 500 of fixation",,,,,,,,,,image,9,nonne
+localizer,42,localizer image: bergère,"picture of 'bergère', the large fixation cross on top",0,"300, then 500 of fixation",,,,,,,,,,image,10,bergère
+localizer,43,localizer image: danseuse,"picture of 'danseuse', the large fixation cross on top",0,"300, then 500 of fixation",,,,,,,,,,image,11,danseuse
+localizer,44,localizer image: serveuse,"picture of 'serveuse', the large fixation cross on top",0,"300, then 500 of fixation",,,,,,,,,,image,12,serveuse
+localizer,45,localizer image: caissière,"picture of 'caissière', the large fixation cross on top",0,"300, then 500 of fixation",,,,,,,,,,image,13,caissière
+localizer,46,localizer image: chanteuse,"picture of 'chanteuse', the large fixation cross on top",0,"300, then 500 of fixation",,,,,,,,,,image,14,chanteuse
+localizer,47,localizer image: coiffeuse,"picture of 'coiffeuse', the large fixation cross on top",0,"300, then 500 of fixation",,,,,,,,,,image,15,coiffeuse
+localizer,48,localizer image: couturière,"picture of 'couturière', the large fixation cross on top",0,"300, then 500 of fixation",,,,,,,,,,image,16,couturière
+localizer,49,localizer image: musée,"picture of 'musée', the large fixation cross on top",0,"300, then 500 of fixation",,,,,,,,,,image,17,musée
+localizer,50,localizer image: dortoir,"picture of 'dortoir', the large fixation cross on top",0,"300, then 500 of fixation",,,,,,,,,,image,18,dortoir
+localizer,51,localizer image: tribunal,"picture of 'tribunal', the large fixation cross on top",0,"300, then 500 of fixation",,,,,,,,,,image,19,tribunal
+localizer,52,localizer image: pressing,"picture of 'pressing', the large fixation cross on top",0,"300, then 500 of fixation",,,,,,,,,,image,20,pressing
+localizer,53,localizer image: parlement,"picture of 'parlement', the large fixation cross on top",0,"300, then 500 of fixation",,,,,,,,,,image,21,parlement
+localizer,54,localizer image: vestiaire,"picture of 'vestiaire', the large fixation cross on top",0,"300, then 500 of fixation",,,,,,,,,,image,22,vestiaire
+localizer,55,localizer image: chapiteau,"picture of 'chapiteau', the large fixation cross on top",0,"300, then 500 of fixation",,,,,,,,,,image,23,chapiteau
+localizer,56,localizer image: réfectoire,"picture of 'réfectoire', the large fixation cross on top",0,"300, then 500 of fixation",,,,,,,,,,image,24,réfectoire
+localizer,57,localizer image: serre,"picture of 'serre', the large fixation cross on top",0,"300, then 500 of fixation",,,,,,,,,,image,25,serre
+localizer,58,localizer image: piscine,"picture of 'piscine', the large fixation cross on top",0,"300, then 500 of fixation",,,,,,,,,,image,26,piscine
+localizer,59,localizer image: garderie,"picture of 'garderie', the large fixation cross on top",0,"300, then 500 of fixation",,,,,,,,,,image,27,garderie
+localizer,60,localizer image: clinique,"picture of 'clinique', the large fixation cross on top",0,"300, then 500 of fixation",,,,,,,,,,image,28,clinique
+localizer,61,localizer image: brasserie,"picture of 'brasserie', the large fixation cross on top",0,"300, then 500 of fixation",,,,,,,,,,image,29,brasserie
+localizer,62,localizer image: librairie,"picture of 'librairie', the large fixation cross on top",0,"300, then 500 of fixation",,,,,,,,,,image,30,librairie
+localizer,63,localizer image: boucherie,"picture of 'boucherie', the large fixation cross on top",0,"300, then 500 of fixation",,,,,,,,,,image,31,boucherie
+localizer,64,localizer image: cathédrale,"picture of 'cathédrale', the large fixation cross on top",0,"300, then 500 of fixation",,,,,,,,,,image,32,cathédrale
+localizer,65,localizer word: canard (animal: target),'canard' on the small fixation cross,0,"300, then 500 of fixation",,,,,,,,,,word,33,canard
+localizer,66,localizer word: lézard (animal: target),'lézard' on the small fixation cross,0,"300, then 500 of fixation",,,,,,,,,,word,34,lézard
+localizer,67,localizer word: serpent (animal: target),'serpent' on the small fixation cross,0,"300, then 500 of fixation",,,,,,,,,,word,35,serpent
+localizer,68,localizer word: taureau (animal: target),'taureau' on the small fixation cross,0,"300, then 500 of fixation",,,,,,,,,,word,36,taureau
+localizer,69,localizer word: papillon (animal: target),'papillon' on the small fixation cross,0,"300, then 500 of fixation",,,,,,,,,,word,37,papillon
+localizer,70,localizer word: sanglier (animal: target),'sanglier' on the small fixation cross,0,"300, then 500 of fixation",,,,,,,,,,word,38,sanglier
+localizer,71,localizer word: écureuil (animal: target),'écureuil' on the small fixation cross,0,"300, then 500 of fixation",,,,,,,,,,word,39,écureuil
+localizer,72,localizer word: perroquet (animal: target),'perroquet' on the small fixation cross,0,"300, then 500 of fixation",,,,,,,,,,word,40,perroquet
+localizer,73,localizer word: chèvre (animal: target),'chèvre' on the small fixation cross,0,"300, then 500 of fixation",,,,,,,,,,word,41,chèvre
+localizer,74,localizer word: araignée (animal: target),'araignée' on the small fixation cross,0,"300, then 500 of fixation",,,,,,,,,,word,42,araignée
+localizer,75,localizer word: panthère (animal: target),'panthère' on the small fixation cross,0,"300, then 500 of fixation",,,,,,,,,,word,43,panthère
+localizer,76,localizer word: langouste (animal: target),'langouste' on the small fixation cross,0,"300, then 500 of fixation",,,,,,,,,,word,44,langouste
+localizer,77,localizer word: grenouille (animal: target),'grenouille' on the small fixation cross,0,"300, then 500 of fixation",,,,,,,,,,word,45,grenouille
+localizer,78,localizer word: hirondelle (animal: target),'hirondelle' on the small fixation cross,0,"300, then 500 of fixation",,,,,,,,,,word,46,hirondelle
+localizer,79,localizer word: coccinelle (animal: target),'coccinelle' on the small fixation cross,0,"300, then 500 of fixation",,,,,,,,,,word,47,coccinelle
+localizer,80,localizer word: sauterelle (animal: target),'sauterelle' on the small fixation cross,0,"300, then 500 of fixation",,,,,,,,,,word,48,sauterelle
+localizer,81,localizer image: canard (animal: target),"picture of 'canard', the large fixation cross on top",0,"300, then 500 of fixation",,,,,,,,,,image,33,canard
+localizer,82,localizer image: lézard (animal: target),"picture of 'lézard', the large fixation cross on top",0,"300, then 500 of fixation",,,,,,,,,,image,34,lézard
+localizer,83,localizer image: serpent (animal: target),"picture of 'serpent', the large fixation cross on top",0,"300, then 500 of fixation",,,,,,,,,,image,35,serpent
+localizer,84,localizer image: taureau (animal: target),"picture of 'taureau', the large fixation cross on top",0,"300, then 500 of fixation",,,,,,,,,,image,36,taureau
+localizer,85,localizer image: papillon (animal: target),"picture of 'papillon', the large fixation cross on top",0,"300, then 500 of fixation",,,,,,,,,,image,37,papillon
+localizer,86,localizer image: sanglier (animal: target),"picture of 'sanglier', the large fixation cross on top",0,"300, then 500 of fixation",,,,,,,,,,image,38,sanglier
+localizer,87,localizer image: écureuil (animal: target),"picture of 'écureuil', the large fixation cross on top",0,"300, then 500 of fixation",,,,,,,,,,image,39,écureuil
+localizer,88,localizer image: perroquet (animal: target),"picture of 'perroquet', the large fixation cross on top",0,"300, then 500 of fixation",,,,,,,,,,image,40,perroquet
+localizer,89,localizer image: chèvre (animal: target),"picture of 'chèvre', the large fixation cross on top",0,"300, then 500 of fixation",,,,,,,,,,image,41,chèvre
+localizer,90,localizer image: araignée (animal: target),"picture of 'araignée', the large fixation cross on top",0,"300, then 500 of fixation",,,,,,,,,,image,42,araignée
+localizer,91,localizer image: panthère (animal: target),"picture of 'panthère', the large fixation cross on top",0,"300, then 500 of fixation",,,,,,,,,,image,43,panthère
+localizer,92,localizer image: langouste (animal: target),"picture of 'langouste', the large fixation cross on top",0,"300, then 500 of fixation",,,,,,,,,,image,44,langouste
+localizer,93,localizer image: grenouille (animal: target),"picture of 'grenouille', the large fixation cross on top",0,"300, then 500 of fixation",,,,,,,,,,image,45,grenouille
+localizer,94,localizer image: hirondelle (animal: target),"picture of 'hirondelle', the large fixation cross on top",0,"300, then 500 of fixation",,,,,,,,,,image,46,hirondelle
+localizer,95,localizer image: coccinelle (animal: target),"picture of 'coccinelle', the large fixation cross on top",0,"300, then 500 of fixation",,,,,,,,,,image,47,coccinelle
+localizer,96,localizer image: sauterelle (animal: target),"picture of 'sauterelle', the large fixation cross on top",0,"300, then 500 of fixation",,,,,,,,,,image,48,sauterelle
 localizer,207,localizer: instruction/pause screen before training,text; the operator's SPACE starts the block,,until SPACE,,,,,,,,,,,,
 localizer,208,localizer: instruction/pause screen before block 1,text; the operator's SPACE starts the block,,until SPACE,,,,,,,,,,,,
 localizer,209,localizer: instruction/pause screen before block 2,text; the operator's SPACE starts the block,,until SPACE,,,,,,,,,,,,
-localizer,211,localizer feedback: hit,"cross on a picture, or dot on a word, turns green (press on a match)",RT,until the next stimulus,,,,,,,,,,,,
-localizer,212,localizer feedback: false alarm,"cross on a picture, or dot on a word, turns red (press on a non-match)",RT,until the next stimulus,,,,,,,,,,,,
-localizer,213,localizer feedback: miss,"cross on a picture, or dot on a word, turns red (no press on a match)",800,200,,,,,,,,,,,,
+localizer,211,localizer feedback: hit (training block only),the fixation cross turns green (press 200-1200 ms after an animal's onset),animal onset + RT,500,,,,,,,,,,,,

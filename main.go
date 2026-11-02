@@ -1,8 +1,9 @@
 // Pronouns — MEG experiment on pronoun resolution (French).
 //
-// The session opens with the main task, then a localizer (localizer.go): a
-// one-back task on words and pictures of the 32 nouns, a 64-trial training
-// block and two blocks of 512. The main task:
+// The session opens with the main task, then a localizer (localizer.go): an
+// animal-detection task on words and pictures of the 32 nouns and 16 animals,
+// in mini-blocks of words and of pictures, a 72-trial training block and two
+// blocks of 576. The main task:
 //
 // Each trial: fixation (1000 ms), sentence 1 word by word (6 words, each
 // 300 ms on, no blank in between), a 1000 ms break, sentence 2 (3 words, same
@@ -20,14 +21,15 @@
 //
 // Trigger codes (see triggers/make_trigger_table.py, triggers/triggers.csv):
 //
-//	1-64            localizer: word (1-32) or picture (33-64) of concept 1-32
+//	1-96            localizer: word (1-32) or picture (33-64) of person/place
+//	                1-32, word (65-80) or picture (81-96) of animal 1-16
 //	16*role + cell  word onsets (role 1-9, cell = condition bits, 16-159)
 //	160 + trial     trial start, fixation onset (161-200)
 //	200 + block     pause / instruction screen before block (201-206)
 //	207 + block     localizer: pause / instruction screen (207 training, 208-209)
 //	210             instruction screen before the main task's training block
 //	211 / 212 / 213 feedback onset: correct / incorrect / timeout (localizer:
-//	                hit / false alarm / miss)
+//	                211 only, a hit on an animal, training block only)
 //	214 + 4*(role-1) + 2*canonical + natural
 //	                filler word onsets (214-249)
 //	255             end screen
@@ -108,7 +110,7 @@ var (
 	backgroundColor = control.Black
 	textColor       = control.White
 	fixColor        = control.RGB(192, 192, 192) // light grey
-	locFixColor     = control.RGB(128, 128, 128) // the localizer's large cross (mid grey, so white words stay readable over it)
+	locFixColor     = control.RGB(128, 128, 128) // the localizer's large cross, on the pictures (mid grey)
 	correctColor    = control.RGB(153, 229, 153)
 	incorrectColor  = control.RGB(240, 128, 128)
 	timeoutColor    = control.RGB(96, 96, 96) // dark grey
@@ -692,9 +694,8 @@ func main() {
 	locCrossOutline := max(1, locCrossThick/2) // black, around the lines
 	locFix := newCross(locCrossPx, locCrossThick, locCrossOutline, locFixColor)
 	locFixCorrect := newCross(locCrossPx, locCrossThick, locCrossOutline, correctColor)
-	locFixIncorrect := newCross(locCrossPx, locCrossThick, locCrossOutline, incorrectColor)
 	for _, v := range []stimuli.VisualStimulus{fix, fixCorrect, fixIncorrect, fixTimeout,
-		locFix, locFixCorrect, locFixIncorrect} {
+		locFix, locFixCorrect} {
 		if err := stimuli.PreloadVisualOnScreen(exp.Screen, v); err != nil {
 			exp.Fatal("preloading the fixation cross: %v", err)
 		}
@@ -778,7 +779,7 @@ func main() {
 		"response", "correct_key", "correct", "rt_ms",
 		"trial_type", "judgment",
 		"cell", "congruent", "canonical_order", "pronoun_gender", "agent_gender", "pronoun_referent", "stimulus",
-		"task", "modality", "match",
+		"task", "modality", "miniblock", "category", "target",
 	})
 
 	var t0 uint64
@@ -813,22 +814,22 @@ func main() {
 		}
 		exp.Data.Add(block, number, event, sentence, position, role, text, code,
 			ms(ts), trialTime, intended, duration, response, ck, correct, rt,
-			ttype, judgment, cell, cong, canon, pg, ag, ref, stim, "main", "NA", "NA")
+			ttype, judgment, cell, cong, canon, pg, ag, ref, stim, "main", "NA", "NA", "NA", "NA")
 	}
 	// Localizer rows use the same columns: block_number 0 (training), 1 or 2,
 	// the item in "word", times relative to the stimulus onset.
 	addLocRow := func(t *locTrial, event string, code int, ts uint64, trialTime, duration, response, correct, rt string) {
-		block, number, item, modality, match, ck := "NA", "NA", "NA", "NA", "NA", "NA"
+		block, number, item, modality, mini, category, target, ck := "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA"
 		if t != nil {
 			block, number, item, modality = strconv.Itoa(t.block), strconv.Itoa(t.number), t.item, t.modality
-			match = t.fields["match"]
-			if t.match {
+			mini, category, target = strconv.Itoa(t.miniblock), t.fields["category"], t.fields["target"]
+			if t.target {
 				ck = "right"
 			}
 		}
 		exp.Data.Add(block, number, event, "NA", "NA", "NA", item, code,
 			ms(ts), trialTime, "NA", duration, response, ck, correct, rt,
-			"NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "localizer", modality, match)
+			"NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "localizer", modality, mini, category, target)
 	}
 
 	// saveBlock writes the rows so far to disk at the end of every block, so
@@ -1184,33 +1185,36 @@ func main() {
 				return err
 			}
 
-			timing, outcome, runErr := runLocalizerBlock(exp, block, resp, *auto, locRNG, locFix, locFixCorrect, locFixIncorrect)
-			// Log what was presented, also after ESC.
+			timing, outcome, presses, runErr := runLocalizerBlock(exp, block, resp, *auto, locRNG,
+				locCrosses{word: fix, wordHit: fixCorrect, image: locFix, imageHit: locFixCorrect})
+			// Log what was presented, also after ESC. An animal's row says
+			// whether it was hit (correct 1) or missed (0), with the RT. Each
+			// press follows the trial it answers: the animal it hit, or the
+			// trial on screen (a false alarm, correct 0).
+			byTrial := map[int][]locPress{}
+			for _, p := range presses {
+				byTrial[p.trial] = append(byTrial[p.trial], p)
+			}
 			for i, tl := range timing {
 				t, o := block[i], outcome[i]
-				// With no blank after a stimulus the stream does not measure its
-				// offset (OffsetNS is onset + the nominal duration): its measured
-				// duration is the time to the next onset (NA for the last one).
-				onDur := "NA"
-				if i+1 < len(timing) {
-					onDur = dur(tl.OnsetNS, timing[i+1].OnsetNS)
-				}
-				addLocRow(t, "loc_stimulus", t.code, tl.OnsetNS, "0.0", onDur, "NA", "NA", "NA")
 				rel := func(ns uint64) string { return dur(tl.OnsetNS, ns) }
-				if o.pressNS != 0 {
+				response, correct, rt := "NA", "NA", "NA"
+				if t.target {
+					correct = "0"
+					if o.hitNS != 0 {
+						response, correct, rt = "right", "1", rel(o.hitNS)
+					}
+				}
+				addLocRow(t, "loc_stimulus", t.code, tl.OnsetNS, "0.0", rel(tl.OffsetNS), response, correct, rt)
+				for _, p := range byTrial[i] {
 					correct := "0"
-					if t.match && !o.late {
+					if p.hit {
 						correct = "1"
 					}
-					event := "loc_response"
-					if o.late {
-						event = "loc_response_late"
-					}
-					addLocRow(t, event, 0, o.pressNS, rel(o.pressNS), "NA", "right", correct, rel(o.pressNS))
+					addLocRow(t, "loc_response", 0, p.ns, rel(p.ns), "NA", "right", correct, rel(p.ns))
 				}
-				if o.feedback != 0 {
-					event := map[int]string{codeLocHit: "loc_feedback_hit", codeLocFalseAlarm: "loc_feedback_false_alarm", codeLocMiss: "loc_feedback_miss"}[o.feedback]
-					addLocRow(t, event, o.feedback, o.fbNS, rel(o.fbNS), "NA", "NA", "NA", "NA")
+				if o.fbNS != 0 {
+					addLocRow(t, "loc_feedback_hit", codeLocHit, o.fbNS, rel(o.fbNS), "NA", "NA", "NA", "NA")
 				}
 			}
 			if runErr != nil {

@@ -1,6 +1,6 @@
-"""Render the example pictures of the instructions and preview.html, which
-shows every instruction screen of screens.json as the MEG program will (black
-screen, Inconsolata text, picture under the text), in the order of the session.
+"""Render preview.html, which shows every instruction screen of screens.json
+as the MEG program will (black screen, Inconsolata text, picture under the
+text), in the order of the session.
 
 Usage: python3 make_preview.py
 """
@@ -9,38 +9,11 @@ import json
 import subprocess
 from pathlib import Path
 
-from PIL import Image, ImageDraw, ImageFont
-
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parent
 FONT = Path(subprocess.run(["go", "list", "-m", "-f", "{{.Dir}}", "github.com/chrplr/goxpyriment"],
                            cwd=ROOT, capture_output=True, text=True, check=True).stdout.strip()) \
     / "assets_embed" / "Inconsolata.ttf"
-
-
-def example(first, second, name):
-    """word -> picture or picture -> word, on black, as one image."""
-    font = ImageFont.truetype(str(FONT), 110)
-    pic = 380
-    im = Image.new("RGB", (1300, pic), "black")
-    d = ImageDraw.Draw(im)
-    x = 0
-    for part in (first, "→", second):
-        if part.startswith("pic:"):
-            p = Image.open(ROOT / "localizer" / "images" / (part[4:] + ".png")).convert("RGB").resize((pic, pic))
-            im.paste(p, (x, 0))
-            x += pic
-        elif part == "→":  # drawn: Inconsolata has no arrow glyph
-            y, grey = pic / 2, (138, 138, 138)
-            d.line((x, y, x + 100, y), fill=grey, width=8)
-            d.polygon([(x + 112, y), (x + 80, y - 22), (x + 80, y + 22)], fill=grey)
-            x += 112
-        else:
-            w = d.textlength(part, font=font)
-            d.text((x, pic / 2), part, font=font, fill="white" if part != "→" else (138, 138, 138), anchor="lm")
-            x += int(w)
-        x += 70
-    im.crop((0, 0, x - 70, pic)).save(HERE / f"{name}.png", optimize=True)
 
 
 def data_url(path):
@@ -77,8 +50,6 @@ def fill(text, mapping):
 
 
 def main():
-    example("marin", "pic:marin", "example_word_picture")
-    example("pic:nonne", "nonne", "example_picture_word")
     screens = json.loads((HERE / "screens.json").read_text(encoding="utf-8"))
 
     def screen(s, mapping):
@@ -88,8 +59,7 @@ def main():
         if img:
             if img == "pad_congruent":
                 img = f"pad_congruent_{mapping}"
-            cls = "pad" if img.startswith("pad") else "ex"
-            body += f'<img class="{cls}" src="{data_url(HERE / (img + ".png"))}">'
+            body += f'<img class="pad" src="{data_url(HERE / (img + ".png"))}">'
         return f'<div class="screen">{body}</div>'
 
     font = data_url(FONT).replace("image/png", "font/ttf")
@@ -118,7 +88,6 @@ figure {{ margin: 0; }} figcaption {{ font-size: 12px; color: #888; }}
 .screen .txt {{ max-width: 55%; text-align: left; }}  /* lines left-aligned, block centred */
 .screen p {{ margin: 0 0 8px; }}
 .screen img.pad {{ height: 140px; margin-top: 6px; }}
-.screen img.ex {{ height: 95px; margin-top: 8px; }}
 </style></head><body>
 <h1>Instruction screens of the MEG session</h1>
 <p class="note">Each black box is one full screen, scaled down (text in the program's font, Inconsolata;

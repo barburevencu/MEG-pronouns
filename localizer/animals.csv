@@ -1,0 +1,17 @@
+animals,gender,num_letters,log_freq_films,log_freq_books
+canard,m,6,1.189,1.208
+lézard,m,6,0.690,0.875
+serpent,m,7,1.320,1.122
+taureau,m,7,0.923,1.000
+papillon,m,8,0.910,1.029
+sanglier,m,8,0.662,0.728
+écureuil,m,8,0.757,0.947
+perroquet,m,9,0.642,0.867
+chèvre,f,6,0.917,1.006
+araignée,f,8,1.087,1.092
+panthère,f,8,0.265,0.562
+langouste,f,9,0.299,0.320
+grenouille,f,10,0.759,0.662
+hirondelle,f,10,0.272,0.511
+coccinelle,f,10,0.061,0.130
+sauterelle,f,10,0.212,0.210

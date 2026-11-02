@@ -1,5 +1,5 @@
 // Instruction screens: one or two sentences each, with a picture under the
-// text on some (the response pad, or a localizer example). The texts are in
+// text on some (the response pad). The texts are in
 // instructions/screens.json; instructions/preview.html shows them all.
 
 package main
@@ -21,7 +21,7 @@ import (
 	"github.com/chrplr/goxpyriment/stimuli"
 )
 
-//go:embed instructions/screens.json instructions/pad_*.png instructions/example_*.png
+//go:embed instructions/screens.json instructions/pad_*.png
 var instructionFiles embed.FS
 
 // Proportions of the screen, as in instructions/preview.html.
