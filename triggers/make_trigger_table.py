@@ -7,7 +7,7 @@ Times are ms from the trial's fixation onset (code 160 + trial_number).
 
 The localizer (task "localizer", after the main task) reuses codes 1-64 for its
 stimuli: word of concept k = k, picture = 32 + k, concepts numbered as in
-stimuli.csv (people 1-16, places 17-32). Its blocks open with codes 206-208, so
+stimuli.csv (people 1-16, places 17-32). Its blocks open with codes 207-209, so
 the two tasks are separate segments of the recording.
 """
 import csv
@@ -58,7 +58,7 @@ def add(code, event, on_screen, onset, duration, task="main", **cond):
                  "onset_ms": onset, "duration_ms": duration, **cond})
 
 
-for t in range(1, 33):
+for t in range(1, 41):  # 32 main trials + 8 fillers per block
     add(160 + t, f"trial_start (trial_number={t})", "fixation cross (light grey)", 0, FIX)
 
 for role, (name, sentence, pos_can, pos_non) in ROLES.items():
@@ -73,6 +73,18 @@ for role, (name, sentence, pos_can, pos_non) in ROLES.items():
             congruent=congruent, canonical_order=canonical,
             pronoun_gender="f" if pron_f else "m", agent_gender="f" if agent_f else "m")
 
+# Fillers (trial_type "filler"): the pronoun refers to the person; the
+# adjective fits ("natural") or clashes with the verb ("odd").
+for role, (name, sentence, pos_can, pos_non) in ROLES.items():
+    for canonical in (0, 1):
+        for natural in (0, 1):
+            pos = pos_can if canonical else pos_non
+            add(214 + 4 * (role - 1) + 2 * canonical + natural, f"filler word: {name}",
+                f"'{EXAMPLE[name][0 if canonical else 1]}' (on the fixation cross)",
+                word_onset(sentence, pos), WORD_ON,
+                role=name, sentence=sentence, position=pos, canonical_order=canonical,
+                judgment="natural" if natural else "odd")
+
 add(None, "inter_sentence_break", "fixation cross (light grey)", FIX + 6 * WORD_SOA,
     FIX)
 add(None, "response_window_opens", "the adjective (presses count from its onset; RT from there)", RESP_OPEN,
@@ -86,7 +98,7 @@ add(213, "feedback: timeout (no response)", "fixation cross turns dark grey",
 add(None, "countdown (no code)", "3, 2, 1, one second each, after the operator's SPACE",
     "before trial 1 of every block (main and localizer)", 3000)
 add(None, "inter_trial_interval", "fixation cross (light grey)", f"feedback onset + {FEEDBACK}", ITI)
-for b in range(1, 6):
+for b in range(1, 7):
     add(200 + b, f"pause/instruction screen before block {b}",
         ("instructions" if b == 1 else "pause text") + "; the operator's SPACE starts the block",
         "", "until SPACE")
@@ -103,7 +115,7 @@ for k, noun in enumerate(nouns, 1):
             f"{LOC_ON} (until the next stimulus)", task="localizer",
             modality=modality, concept=k, item=noun)
 for b, what in ((0, "training"), (1, "block 1"), (2, "block 2")):
-    add(206 + b, f"localizer: instruction/pause screen before {what}",
+    add(207 + b, f"localizer: instruction/pause screen before {what}",
         "text; the operator's SPACE starts the block", "", "until SPACE", task="localizer")
 add(211, "localizer feedback: hit", "cross on a picture, or dot on a word, turns green (press on a match)", "RT",
     "until the next stimulus", task="localizer")
@@ -114,7 +126,7 @@ add(213, "localizer feedback: miss", "cross on a picture, or dot on a word, turn
 
 rows.sort(key=lambda r: (r["task"] != "main", r["code"] is None, r["code"] or 0))
 fields = ["task", "code", "event", "on_screen", "onset_ms", "duration_ms", "role", "sentence",
-          "position", "cell", "congruent", "canonical_order", "pronoun_gender", "agent_gender",
+          "position", "cell", "congruent", "judgment", "canonical_order", "pronoun_gender", "agent_gender",
           "modality", "concept", "item"]
 with open(HERE / "triggers.csv", "w", encoding="utf-8", newline="") as f:
     w = csv.DictWriter(f, fieldnames=fields)

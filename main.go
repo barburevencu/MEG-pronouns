@@ -11,8 +11,9 @@
 // onset), 500 ms of feedback on the fixation cross, shown once the word is
 // gone (green correct, red incorrect, dark grey timeout), and a 2000 ms
 // inter-trial interval on the plain cross. The cross stays on for the whole
-// trial, the words drawn on top of it. 160 trials per subject
-// in 5 blocks of 32, with a pause before each block that the operator ends with SPACE,
+// trial, the words drawn on top of it. 240 trials per subject in 6 blocks of
+// 40: 32 main trials and 8 fillers (the adjective fits or clashes with the
+// verb; the pronoun always refers to the person), never two fillers in a row, with a pause before each block that the operator ends with SPACE,
 // then a 3, 2, 1 countdown. Trials come
 // from counterbalancing/counterbalancing.csv (make_counterbalancing.py), embedded in the binary.
 //
@@ -20,11 +21,13 @@
 //
 //	1-64            localizer: word (1-32) or picture (33-64) of concept 1-32
 //	16*role + cell  word onsets (role 1-9, cell = condition bits, 16-159)
-//	160 + trial     trial start, fixation onset (161-192)
-//	200 + block     pause / instruction screen before block (201-205)
-//	206 + block     localizer: pause / instruction screen (206 training, 207-208)
+//	160 + trial     trial start, fixation onset (161-200)
+//	200 + block     pause / instruction screen before block (201-206)
+//	207 + block     localizer: pause / instruction screen (207 training, 208-209)
 //	211 / 212 / 213 feedback onset: correct / incorrect / timeout (localizer:
 //	                hit / false alarm / miss)
+//	214 + 4*(role-1) + 2*canonical + natural
+//	                filler word onsets (214-249)
 //	255             end screen
 //
 // Every code is written right after the flip that shows the event, together
@@ -87,7 +90,8 @@ const (
 	advanceLockMs    = 500  // instruction screens ignore presses this long
 	countdownMs      = 1000 // each of 3, 2, 1 before a block
 	endScreenMs      = 5000
-	nBlocks          = 5
+	nBlocks          = 6
+	trialsPerBlock   = 40 // 32 main + 8 fillers
 )
 
 // dataDir is where the data files go, relative to the project folder (the
@@ -148,6 +152,7 @@ const (
 	codeCorrect    = 211
 	codeIncorrect  = 212
 	codeTimeout    = 213
+	codeFillerWord = 214 // + 4*(role-1) + 2*canonical + natural
 	codeEnd        = 255
 )
 
@@ -230,7 +235,7 @@ func loadTrials(raw []byte, subject int) ([]*trial, error) {
 		return nil, fmt.Errorf("no trials for subject %d", subject)
 	}
 	for i, t := range trials {
-		if want := (i/32+1)*1000 + i%32 + 1; t.block*1000+t.number != want {
+		if want := (i/trialsPerBlock+1)*1000 + i%trialsPerBlock + 1; t.block*1000+t.number != want {
 			return nil, fmt.Errorf("trial %d is block %d trial %d: rows not in presentation order", i+1, t.block, t.number)
 		}
 	}
@@ -250,8 +255,11 @@ func newTrial(f map[string]string) (*trial, error) {
 		return nil, fmt.Errorf("correct_key %q", t.correctKey)
 	}
 
+	// Fillers use the cell's bit 0 for "natural" (their judgment), main trials
+	// for "congruent"; the two coincide with the correct answer.
+	filler := f["trial_type"] == "filler"
 	canonical := f["canonical_order"] == "1"
-	if f["congruent"] == "1" {
+	if f["congruent"] == "1" || filler && f["judgment"] == "natural" {
 		t.cell |= 1
 	}
 	if canonical {
@@ -278,9 +286,12 @@ func newTrial(f map[string]string) (*trial, error) {
 		}
 		for i, txt := range texts {
 			role := spec.roles[i]
+			code := 16*role + t.cell
+			if filler {
+				code = codeFillerWord + 4*(role-1) + t.cell&3
+			}
 			t.words = append(t.words, word{
-				text: txt, role: role, sentence: s + 1, position: i + 1,
-				code: byte(16*role + t.cell),
+				text: txt, role: role, sentence: s + 1, position: i + 1, code: byte(code),
 			})
 		}
 	}
@@ -752,6 +763,7 @@ func main() {
 		"block_number", "trial_number", "event", "sentence", "position", "role", "word", "code",
 		"time_ms", "trial_time_ms", "intended_trial_time_ms", "duration_ms",
 		"response", "correct_key", "correct", "rt_ms",
+		"trial_type", "judgment",
 		"cell", "congruent", "canonical_order", "pronoun_gender", "agent_gender", "pronoun_referent", "stimulus",
 		"task", "modality", "match",
 	})
@@ -773,8 +785,10 @@ func main() {
 		response, correct, rt string) {
 		block, number, sentence, position, role, text := "NA", "NA", "NA", "NA", "NA", "NA"
 		cell, cong, canon, pg, ag, ref, stim, ck := "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA"
+		ttype, judgment := "NA", "NA"
 		if t != nil {
 			block, number = strconv.Itoa(t.block), strconv.Itoa(t.number)
+			ttype, judgment = t.fields["trial_type"], t.fields["judgment"]
 			cell, ck = strconv.Itoa(t.cell), t.correctKey
 			cong, canon = t.fields["congruent"], t.fields["canonical_order"]
 			pg, ag, ref = t.fields["pronoun_gender"], t.fields["agent_gender"], t.fields["pronoun_referent"]
@@ -786,7 +800,7 @@ func main() {
 		}
 		exp.Data.Add(block, number, event, sentence, position, role, text, code,
 			ms(ts), trialTime, intended, duration, response, ck, correct, rt,
-			cell, cong, canon, pg, ag, ref, stim, "main", "NA", "NA")
+			ttype, judgment, cell, cong, canon, pg, ag, ref, stim, "main", "NA", "NA")
 	}
 	// Localizer rows use the same columns: block_number 0 (training), 1 or 2,
 	// the item in "word", times relative to the stimulus onset.
@@ -801,7 +815,7 @@ func main() {
 		}
 		exp.Data.Add(block, number, event, "NA", "NA", "NA", item, code,
 			ms(ts), trialTime, "NA", duration, response, ck, correct, rt,
-			"NA", "NA", "NA", "NA", "NA", "NA", "NA", "localizer", modality, match)
+			"NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "localizer", modality, match)
 	}
 
 	// saveBlock writes the rows so far to disk at the end of every block, so
@@ -1104,7 +1118,7 @@ func main() {
 			if err := exp.Wait(itiMs - int((control.TicksNS()-itiNS)/1_000_000)); err != nil {
 				return err
 			}
-			if t.number == 32 {
+			if t.number == trialsPerBlock {
 				saveBlock(fmt.Sprintf("block %d", t.block))
 			}
 		}

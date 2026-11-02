@@ -37,7 +37,7 @@ func TestTrialsMatchTriggerTable(t *testing.T) {
 		if err != nil {
 			t.Fatalf("subject %d: %v", s, err)
 		}
-		if len(trials) != 160 {
+		if len(trials) != nBlocks*trialsPerBlock {
 			t.Fatalf("subject %d: %d trials", s, len(trials))
 		}
 		for _, tr := range trials {

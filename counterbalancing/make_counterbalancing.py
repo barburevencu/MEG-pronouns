@@ -1,8 +1,21 @@
 """Generate the counterbalancing sheet for all subjects.
 
-Per subject: 160 trials = 10 sets x 16 cells, then shuffled and cut into
-blocks of 32 trials (5 blocks). Every subject answers "congruent" with the
-right button and "incongruent" with the left one (no counterbalancing).
+Per subject: 192 main trials = 12 sets x 16 cells. Each block's 32 main trials
+are two consecutive sets, shuffled within the block (6 blocks), so every block
+has each cell twice and each adjective once.
+
+Fillers (fillers.csv): 48 verb + adjective items, 12 person-adjectives each
+natural after 2 verbs and odd after 2 others; the pronoun always refers to the
+person, and only the verb makes the adjective fit or clash. Each block gets 8,
+one per judgment x person's gender x word order, at random positions among the
+main trials, never two in a row (40 trials per block). Which items go in which
+block, and with which gender and word order, rotates over subjects (a cycle of
+24). Each person and each place is used 3 times, with every person (and place)
+once in each pair of blocks; a person never gets an adjective in EXCLUDE, and
+no filler repeats the first sentence of a main trial or of another filler.
+
+Every subject answers "congruent" / "natural" with the right button and
+"incongruent" / "odd" with the left one (no counterbalancing).
 
 Usage: python3 make_counterbalancing.py [N_SUBJECTS]
 """
@@ -13,8 +26,9 @@ import sys
 from pathlib import Path
 
 SEED = 2026
-N_SETS = 10
-BLOCK_SIZE = 32
+N_SETS = 12
+BLOCK_SIZE = 32          # main trials per block
+FILLERS_PER_BLOCK = 8
 HERE = Path(__file__).resolve().parent
 N_SUBJECTS = int(sys.argv[1]) if len(sys.argv) > 1 else 30
 
@@ -66,6 +80,27 @@ EN = {
     "saccagé": "ransacked", "spacieux": "spacious", "restauré": "restored",
     "vétuste": "run-down", "climatisé": "air-conditioned", "insalubre": "unsanitary",
 }
+# Filler adjectives in English (fillers.csv gives the French forms).
+FILLER_EN = {
+    "endormi": "asleep", "illettré": "illiterate", "muet": "mute", "aphone": "voiceless",
+    "allongé": "lying down", "assis": "sitting", "immobile": "motionless",
+    "attentif": "attentive", "vigilant": "watchful", "calme": "calm",
+    "furieux": "furious", "enjoué": "cheerful",
+}
+# Person + filler adjective pairs never drawn: odd from world knowledge alone.
+EXCLUDE = {("chanteuse", "muet"), ("chanteuse", "aphone"), ("facteur", "illettré"),
+           ("caissière", "illettré")}
+# Verb + person-adjective pairs that clash (e.g. crying but happy): never in a
+# congruent main trial whose pronoun refers to the person, which would then
+# look odd for the same reason as an odd filler.
+CLASH = {
+    ("riait", "déçu"), ("riait", "fâché"), ("pleurait", "content"),
+    ("riait", "inquiet"), ("riait", "jaloux"), ("riait", "peureux"),
+    ("dormait", "fâché"), ("dormait", "inquiet"), ("dormait", "nerveux"),
+    ("dormait", "méfiant"), ("dormait", "jaloux"),
+    ("courait", "paresseux"), ("tremblait", "courageux"),
+    ("hésitait", "têtu"), ("hésitait", "courageux"),
+}
 # English pronoun follows the French pronoun's referent (place -> "It").
 EN_PRON = {"m": "He", "f": "She"}
 
@@ -97,13 +132,93 @@ cells = list(itertools.product(["m", "f"], ["m", "f"], [True, False], [True, Fal
 
 def adjective_pools(rng):
     """Each set uses 8 people- and 8 place-adjectives; consecutive set pairs
-    exhaust the 16 of each, so every adjective appears 5 times over 10 sets."""
+    exhaust the 16 of each, so every adjective appears 6 times over 12 sets."""
     while True:
         p, q = adj_people[:], adj_places[:]
         rng.shuffle(p)
         rng.shuffle(q)
         yield p[:8], q[:8]
         yield p[8:], q[8:]
+
+
+with open(HERE / "fillers.csv", encoding="utf-8") as f:
+    filler_items = list(csv.DictReader(f))
+if sorted({r["adjective_m"] for r in filler_items}) != sorted(FILLER_EN):
+    sys.exit("fillers.csv and FILLER_EN list different adjectives")
+# Natural items in the order adjective 1-12 (first verb), then adjective 1-12
+# (second verb); odd items likewise. Items i and i + 12 (same adjective) are
+# then 12 rotation steps, i.e. 3 blocks, apart.
+NATURAL, ODD = ([r for k in range(2) for r in
+                 [x for x in filler_items if x["judgment"] == j][k::2]] for j in ("natural", "odd"))
+assert len(NATURAL) == len(ODD) == 24
+
+
+def make_fillers(subject_id, main_trials, rng):
+    """The subject's 48 fillers, with block_number set, in block order."""
+    # Rotation (see the README, "How the filler rotation works"): 24 slots of
+    # (block, version) per judgment; subject n moves every item n - 1 slots
+    # on, so over 24 subjects each item takes every slot once.
+    k = (subject_id - 1) % 24
+    slots = []  # (item, block, agent gender, canonical)
+    for items, shift in ((NATURAL, 0), (ODD, 8)):  # odd items 2 blocks after natural
+        for i, item in enumerate(items):
+            s = (i + k + shift) % 24
+            block, cell = s // 4 + 1, (s + s // 4) % 4  # each block: all 4 cells
+            slots.append((item, block, "mf"[cell & 1], cell < 2))
+    slots.sort(key=lambda x: x[1])
+    main_s1 = {(t["subject"], t["verb"], t["place"]) for t in main_trials}
+
+    # Nouns: three shuffles of each gender's 8 people (and places), one per
+    # pair of blocks, so each block's 4 people of a gender are all different.
+    for _ in range(10000):
+        ppl = {g: [x for _ in range(3) for x in rng.sample(people[g], 8)] for g in "mf"}
+        plc = {g: [x for _ in range(3) for x in rng.sample(places[g], 8)] for g in "mf"}
+        fillers, seen = [], set()
+        for item, block, agent_g, canonical in slots:
+            place_g = "f" if agent_g == "m" else "m"
+            subj, place = ppl[agent_g].pop(0), plc[place_g].pop(0)
+            fillers.append((item, block, agent_g, place_g, canonical, subj, place))
+            seen.add((subj, item["verb"], place))
+        if (len(seen) == len(fillers) and not seen & main_s1
+                and not any((f[5], f[0]["adjective_m"]) in EXCLUDE for f in fillers)):
+            break
+    else:
+        sys.exit(f"subject {subject_id}: no filler nouns satisfy the constraints")
+
+    out = []
+    for item, block, agent_g, place_g, canonical, subj, place in fillers:
+        verb, adj_m = item["verb"], item["adjective_m"]
+        adj = adj_m if agent_g == "m" else item["adjective_f"]
+        np_subj, np_place = f"{ART[agent_g]} {subj}", f"{ART[place_g]} {place}"
+        s1 = f"{np_subj} {verb} dans {np_place}." if canonical else f"dans {np_place} {np_subj} {verb}."
+        s1 = s1[0].upper() + s1[1:]
+        s2 = f"{PRON[agent_g]} était {adj}."
+        en1 = (f"the {EN[subj]} {EN[verb]} in {EN[place]}." if canonical
+               else f"in {EN[place]} the {EN[subj]} {EN[verb]}.")
+        en1 = en1[0].upper() + en1[1:]
+        out.append({
+            "subject_id": subject_id,
+            "block_number": block,
+            "trial_type": "filler",
+            "judgment": item["judgment"],
+            "cb_set": "NA",
+            "agent_gender": agent_g,
+            "place_gender": place_g,
+            "pronoun_gender": agent_g,
+            "pronoun_referent": "agent",
+            "canonical_order": int(canonical),
+            "congruent": "NA",
+            "adjective_type": "people",
+            "subject": subj,
+            "verb": verb,
+            "place": place,
+            "adjective": adj,
+            "sentence1": s1,
+            "sentence2": s2,
+            "stimulus": f"{s1} {s2}",
+            "translation": f"{en1} {EN_PRON[agent_g]} was {FILLER_EN[adj_m]}.",
+        })
+    return out
 
 
 def make_subject(subject_id):
@@ -113,19 +228,25 @@ def make_subject(subject_id):
     for cb_set in range(1, N_SETS + 1):
         ppl = {g: rng.sample(people[g], len(people[g])) for g in "mf"}
         plc = {g: rng.sample(places[g], len(places[g])) for g in "mf"}
-        vbs = rng.sample(verbs, len(verbs))
         a_ppl, a_plc = (list(x) for x in next(pools))
-
+        draws = []
         for agent_g, pron_g, canonical, congruent in cells:
             place_g = "f" if agent_g == "m" else "m"
-            subj = ppl[agent_g].pop()
-            place = plc[place_g].pop()
-            verb = vbs.pop()
-
             referent = "agent" if pron_g == agent_g else "place"
             # Congruent: adjective fits the pronoun's referent; incongruent: fits the other noun.
             adj_type = referent if congruent else ("place" if referent == "agent" else "agent")
             adj_m = a_ppl.pop() if adj_type == "agent" else a_plc.pop()
+            draws.append((agent_g, pron_g, canonical, congruent, place_g, referent, adj_type, adj_m,
+                          ppl[agent_g].pop(), plc[place_g].pop()))
+        # Verbs: reshuffled until no congruent person-referent trial clashes.
+        while True:
+            vbs = rng.sample(verbs, len(verbs))
+            if not any(c and r == "agent" and (v, a) in CLASH
+                       for (_, _, _, c, _, r, _, a, _, _), v in zip(draws, vbs)):
+                break
+
+        for (agent_g, pron_g, canonical, congruent, place_g, referent, adj_type, adj_m, subj, place), verb \
+                in zip(draws, vbs):
             adj = adj_m if pron_g == "m" else FEM[adj_m]
 
             np_subj = f"{ART[agent_g]} {subj}"
@@ -147,6 +268,8 @@ def make_subject(subject_id):
 
             trials.append({
                 "subject_id": subject_id,
+                "trial_type": "main",
+                "judgment": "natural" if congruent else "odd",
                 "cb_set": cb_set,
                 "agent_gender": agent_g,
                 "place_gender": place_g,
@@ -165,16 +288,38 @@ def make_subject(subject_id):
                 "translation": f"{en1} {en2}",
             })
 
-    # Same response mapping for everyone: right = congruent.
+    # Same response mapping for everyone: right = congruent / natural.
     congruent_key, incongruent_key = "right", "left"
 
-    rng.shuffle(trials)
-    for i, t in enumerate(trials):
-        t["block_number"] = i // BLOCK_SIZE + 1
-        t["trial_number"] = i % BLOCK_SIZE + 1
+    # Trials are in set order: block b is sets 2b-1 and 2b, shuffled.
+    blocks = [trials[i:i + BLOCK_SIZE] for i in range(0, len(trials), BLOCK_SIZE)]
+    for block in blocks:
+        rng.shuffle(block)
+
+    # Fillers, from their own generator so the main trials stay as they were.
+    frng = random.Random(SEED * 1000 + subject_id)
+    fillers = make_fillers(subject_id, trials, frng)
+    out = []
+    for b, block in enumerate(blocks, 1):
+        fb = [t for t in fillers if t["block_number"] == b]
+        assert len(fb) == FILLERS_PER_BLOCK
+        frng.shuffle(fb)
+        # One filler at most in each of the 33 gaps around the main trials,
+        # so no two fillers are adjacent.
+        gaps = set(frng.sample(range(len(block) + 1), len(fb)))
+        merged = []
+        for g in range(len(block) + 1):
+            if g in gaps:
+                merged.append(fb.pop())
+            if g < len(block):
+                merged.append(block[g])
+        for i, t in enumerate(merged, 1):
+            t["block_number"], t["trial_number"] = b, i
+        out += merged
+    for t in out:
         t["congruent_key"] = congruent_key
-        t["correct_key"] = congruent_key if t["congruent"] else incongruent_key
-    return trials
+        t["correct_key"] = congruent_key if t["judgment"] == "natural" else incongruent_key
+    return out
 
 
 trials = [t for s in range(1, N_SUBJECTS + 1) for t in make_subject(s)]

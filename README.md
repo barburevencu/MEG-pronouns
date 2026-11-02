@@ -24,7 +24,8 @@ localizer's cross is 1.92 cm, about 57 px.
 | File | What it is |
 |---|---|
 | `counterbalancing/stimuli.csv` | the word lists |
-| `counterbalancing/make_counterbalancing.py` | writes `counterbalancing/counterbalancing.csv` (all subjects, 160 trials each, 5 blocks of 32) from `counterbalancing/stimuli.csv` |
+| `counterbalancing/make_counterbalancing.py` | writes `counterbalancing/counterbalancing.csv` (all subjects, 6 blocks of 40: 32 main trials + 8 fillers) from `counterbalancing/stimuli.csv` and `counterbalancing/fillers.csv` |
+| `counterbalancing/fillers.csv` | the 48 filler items: 12 person-adjectives, each natural after 2 verbs and odd after 2 others, with an example sentence |
 | `triggers/make_trigger_table.py` | writes `triggers/triggers.csv`, every trigger code and what is on screen when it fires |
 | `pictures/` | the image prompts (`faces_prompts.md` people, `places_prompts.md` places); the full-size PNGs are not committed |
 | `localizer/make_localizer.py` | writes `localizer/localizer.csv` (all subjects' localizer sequences) and `localizer/images/` (the pictures shrunk to 512 px) from `pictures/` |
@@ -81,7 +82,7 @@ GitHub. `buttontest-linux` is in the same release.
 ./pronouns -s 1 -meg -block 3      # resume the main task at block 3 after a crash, then the localizer
 ./pronouns -s 1 -meg -localizer none          # main task only
 ./pronouns -s 1 -meg -main=false -localizer 2 # localizer block 2 only (crash during the localizer)
-./pronouns -w -s 1 -auto -block 5 -localizer none  # unattended timing check, random answers
+./pronouns -w -s 1 -auto -block 6 -localizer none  # unattended timing check, random answers
 ```
 
 | Flag | Meaning |
@@ -139,8 +140,8 @@ the item in `word`, `modality` and `match`; events `loc_stimulus`,
 `loc_response` (RT from the stimulus onset; `loc_response_late` after a missed
 deadline), `loc_feedback_hit`, `loc_feedback_false_alarm`, `loc_feedback_miss`.
 Localizer trigger codes: word of concept k = k (1-32), picture = 32 + k, pause
-screens 206-208, feedback 211-213; they overlap main-task codes, so split the
-recording at the localizer's first pause code (206-208).
+screens 207-209, feedback 211-213; they overlap main-task codes, so split the
+recording at the localizer's first pause code (207-209).
 
 The data are written to disk at the end of every block (localizer and main
 task), so a crash or a frozen computer loses at most the block in progress;
@@ -151,5 +152,25 @@ on ESC or a program error, everything presented is saved.
 the code sent, the time on the SDL clock (ms from the start of the run), the
 time within the trial and its intended value, word on-durations, the answer,
 its correctness and RT (from the adjective's onset: presses count as soon as it appears, until 3 s after it goes off), and the trial's
-condition columns. The `-info.txt` beside it has the session metadata and the
+condition columns: `trial_type` (`main` or `filler`), `judgment` (`natural` or `odd`, the correct answer), and for main trials
+`congruent`, `pronoun_referent` and the rest.
+
+**Fillers.** Each block has 8 fillers among its 32 main trials, at random positions,
+never two in a row. They look like main trials, but the pronoun always refers to the person,
+and the judgment depends on whether the adjective fits the verb ("Le marin courait… Il était
+assis" is odd). Each block has one filler per judgment × person's gender × word order; items rotate over
+blocks and versions across subjects (a cycle of 24), and every person and place is used 3 times.
+Filler words have their own trigger codes: 214 + 4 × (role − 1) + 2 × canonical + natural (214–249),
+so they can be left out of main-trial analyses by code or by `trial_type`.
+
+*How the filler rotation works.* In each block the 4 natural fillers take the 4 versions
+(Il/Elle × two word orders), so 6 blocks give 24 slots for the 24 natural items; the 24 odd
+items have 24 slots of their own. Subject 1 puts item *i* in slot *i*; every next subject moves
+every item one slot on (subject *n*: slot *i + n − 1*, wrapping after 24). Over 24 subjects each
+item fills every slot once: every block 4 times, every version 6 times. The order of versions
+shifts by one from block to block, so items do not keep the same version; an adjective's two
+natural (or two odd) items are 12 slots, i.e. 3 blocks, apart; and odd items run 2 blocks ahead
+of natural ones, so an adjective's 4 uses fall in 4 different blocks. Subject 25 starts the cycle
+again: the design is exactly balanced for 24 or 48 subjects; with 30, subjects 25–30 repeat
+subjects 1–6. The `-info.txt` beside it has the session metadata and the
 marker statistics (codes sent, write errors).

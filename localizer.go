@@ -35,7 +35,7 @@ const (
 	locOnMs       = 1000 // each stimulus stays on until the next
 	locDeadlineMs = 800  // a match not answered by then is a miss
 	locBlocks     = 3    // 0 = training, 1 and 2
-	codeLocBlock  = 206  // + block, instruction / pause screen
+	codeLocBlock  = 207  // + block, instruction / pause screen
 )
 
 // The localizer reuses the main task's feedback codes.

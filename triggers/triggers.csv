@@ -1,260 +1,305 @@
-task,code,event,on_screen,onset_ms,duration_ms,role,sentence,position,cell,congruent,canonical_order,pronoun_gender,agent_gender,modality,concept,item
-main,16,word: det_subj,'le' (on the fixation cross),1900,300,det_subj,1,4,0,0,0,m,m,,,
-main,17,word: det_subj,'le' (on the fixation cross),1900,300,det_subj,1,4,1,1,0,m,m,,,
-main,18,word: det_subj,'Le' (on the fixation cross),1000,300,det_subj,1,1,2,0,1,m,m,,,
-main,19,word: det_subj,'Le' (on the fixation cross),1000,300,det_subj,1,1,3,1,1,m,m,,,
-main,20,word: det_subj,'le' (on the fixation cross),1900,300,det_subj,1,4,4,0,0,f,m,,,
-main,21,word: det_subj,'le' (on the fixation cross),1900,300,det_subj,1,4,5,1,0,f,m,,,
-main,22,word: det_subj,'Le' (on the fixation cross),1000,300,det_subj,1,1,6,0,1,f,m,,,
-main,23,word: det_subj,'Le' (on the fixation cross),1000,300,det_subj,1,1,7,1,1,f,m,,,
-main,24,word: det_subj,'le' (on the fixation cross),1900,300,det_subj,1,4,8,0,0,m,f,,,
-main,25,word: det_subj,'le' (on the fixation cross),1900,300,det_subj,1,4,9,1,0,m,f,,,
-main,26,word: det_subj,'Le' (on the fixation cross),1000,300,det_subj,1,1,10,0,1,m,f,,,
-main,27,word: det_subj,'Le' (on the fixation cross),1000,300,det_subj,1,1,11,1,1,m,f,,,
-main,28,word: det_subj,'le' (on the fixation cross),1900,300,det_subj,1,4,12,0,0,f,f,,,
-main,29,word: det_subj,'le' (on the fixation cross),1900,300,det_subj,1,4,13,1,0,f,f,,,
-main,30,word: det_subj,'Le' (on the fixation cross),1000,300,det_subj,1,1,14,0,1,f,f,,,
-main,31,word: det_subj,'Le' (on the fixation cross),1000,300,det_subj,1,1,15,1,1,f,f,,,
-main,32,word: noun_subj,'mécanicien' (on the fixation cross),2200,300,noun_subj,1,5,0,0,0,m,m,,,
-main,33,word: noun_subj,'mécanicien' (on the fixation cross),2200,300,noun_subj,1,5,1,1,0,m,m,,,
-main,34,word: noun_subj,'mécanicien' (on the fixation cross),1300,300,noun_subj,1,2,2,0,1,m,m,,,
-main,35,word: noun_subj,'mécanicien' (on the fixation cross),1300,300,noun_subj,1,2,3,1,1,m,m,,,
-main,36,word: noun_subj,'mécanicien' (on the fixation cross),2200,300,noun_subj,1,5,4,0,0,f,m,,,
-main,37,word: noun_subj,'mécanicien' (on the fixation cross),2200,300,noun_subj,1,5,5,1,0,f,m,,,
-main,38,word: noun_subj,'mécanicien' (on the fixation cross),1300,300,noun_subj,1,2,6,0,1,f,m,,,
-main,39,word: noun_subj,'mécanicien' (on the fixation cross),1300,300,noun_subj,1,2,7,1,1,f,m,,,
-main,40,word: noun_subj,'mécanicien' (on the fixation cross),2200,300,noun_subj,1,5,8,0,0,m,f,,,
-main,41,word: noun_subj,'mécanicien' (on the fixation cross),2200,300,noun_subj,1,5,9,1,0,m,f,,,
-main,42,word: noun_subj,'mécanicien' (on the fixation cross),1300,300,noun_subj,1,2,10,0,1,m,f,,,
-main,43,word: noun_subj,'mécanicien' (on the fixation cross),1300,300,noun_subj,1,2,11,1,1,m,f,,,
-main,44,word: noun_subj,'mécanicien' (on the fixation cross),2200,300,noun_subj,1,5,12,0,0,f,f,,,
-main,45,word: noun_subj,'mécanicien' (on the fixation cross),2200,300,noun_subj,1,5,13,1,0,f,f,,,
-main,46,word: noun_subj,'mécanicien' (on the fixation cross),1300,300,noun_subj,1,2,14,0,1,f,f,,,
-main,47,word: noun_subj,'mécanicien' (on the fixation cross),1300,300,noun_subj,1,2,15,1,1,f,f,,,
-main,48,word: verb,'rêvait' (on the fixation cross),2500,300,verb,1,6,0,0,0,m,m,,,
-main,49,word: verb,'rêvait' (on the fixation cross),2500,300,verb,1,6,1,1,0,m,m,,,
-main,50,word: verb,'rêvait' (on the fixation cross),1600,300,verb,1,3,2,0,1,m,m,,,
-main,51,word: verb,'rêvait' (on the fixation cross),1600,300,verb,1,3,3,1,1,m,m,,,
-main,52,word: verb,'rêvait' (on the fixation cross),2500,300,verb,1,6,4,0,0,f,m,,,
-main,53,word: verb,'rêvait' (on the fixation cross),2500,300,verb,1,6,5,1,0,f,m,,,
-main,54,word: verb,'rêvait' (on the fixation cross),1600,300,verb,1,3,6,0,1,f,m,,,
-main,55,word: verb,'rêvait' (on the fixation cross),1600,300,verb,1,3,7,1,1,f,m,,,
-main,56,word: verb,'rêvait' (on the fixation cross),2500,300,verb,1,6,8,0,0,m,f,,,
-main,57,word: verb,'rêvait' (on the fixation cross),2500,300,verb,1,6,9,1,0,m,f,,,
-main,58,word: verb,'rêvait' (on the fixation cross),1600,300,verb,1,3,10,0,1,m,f,,,
-main,59,word: verb,'rêvait' (on the fixation cross),1600,300,verb,1,3,11,1,1,m,f,,,
-main,60,word: verb,'rêvait' (on the fixation cross),2500,300,verb,1,6,12,0,0,f,f,,,
-main,61,word: verb,'rêvait' (on the fixation cross),2500,300,verb,1,6,13,1,0,f,f,,,
-main,62,word: verb,'rêvait' (on the fixation cross),1600,300,verb,1,3,14,0,1,f,f,,,
-main,63,word: verb,'rêvait' (on the fixation cross),1600,300,verb,1,3,15,1,1,f,f,,,
-main,64,word: dans,'Dans' (on the fixation cross),1000,300,dans,1,1,0,0,0,m,m,,,
-main,65,word: dans,'Dans' (on the fixation cross),1000,300,dans,1,1,1,1,0,m,m,,,
-main,66,word: dans,'dans' (on the fixation cross),1900,300,dans,1,4,2,0,1,m,m,,,
-main,67,word: dans,'dans' (on the fixation cross),1900,300,dans,1,4,3,1,1,m,m,,,
-main,68,word: dans,'Dans' (on the fixation cross),1000,300,dans,1,1,4,0,0,f,m,,,
-main,69,word: dans,'Dans' (on the fixation cross),1000,300,dans,1,1,5,1,0,f,m,,,
-main,70,word: dans,'dans' (on the fixation cross),1900,300,dans,1,4,6,0,1,f,m,,,
-main,71,word: dans,'dans' (on the fixation cross),1900,300,dans,1,4,7,1,1,f,m,,,
-main,72,word: dans,'Dans' (on the fixation cross),1000,300,dans,1,1,8,0,0,m,f,,,
-main,73,word: dans,'Dans' (on the fixation cross),1000,300,dans,1,1,9,1,0,m,f,,,
-main,74,word: dans,'dans' (on the fixation cross),1900,300,dans,1,4,10,0,1,m,f,,,
-main,75,word: dans,'dans' (on the fixation cross),1900,300,dans,1,4,11,1,1,m,f,,,
-main,76,word: dans,'Dans' (on the fixation cross),1000,300,dans,1,1,12,0,0,f,f,,,
-main,77,word: dans,'Dans' (on the fixation cross),1000,300,dans,1,1,13,1,0,f,f,,,
-main,78,word: dans,'dans' (on the fixation cross),1900,300,dans,1,4,14,0,1,f,f,,,
-main,79,word: dans,'dans' (on the fixation cross),1900,300,dans,1,4,15,1,1,f,f,,,
-main,80,word: det_place,'la' (on the fixation cross),1300,300,det_place,1,2,0,0,0,m,m,,,
-main,81,word: det_place,'la' (on the fixation cross),1300,300,det_place,1,2,1,1,0,m,m,,,
-main,82,word: det_place,'la' (on the fixation cross),2200,300,det_place,1,5,2,0,1,m,m,,,
-main,83,word: det_place,'la' (on the fixation cross),2200,300,det_place,1,5,3,1,1,m,m,,,
-main,84,word: det_place,'la' (on the fixation cross),1300,300,det_place,1,2,4,0,0,f,m,,,
-main,85,word: det_place,'la' (on the fixation cross),1300,300,det_place,1,2,5,1,0,f,m,,,
-main,86,word: det_place,'la' (on the fixation cross),2200,300,det_place,1,5,6,0,1,f,m,,,
-main,87,word: det_place,'la' (on the fixation cross),2200,300,det_place,1,5,7,1,1,f,m,,,
-main,88,word: det_place,'la' (on the fixation cross),1300,300,det_place,1,2,8,0,0,m,f,,,
-main,89,word: det_place,'la' (on the fixation cross),1300,300,det_place,1,2,9,1,0,m,f,,,
-main,90,word: det_place,'la' (on the fixation cross),2200,300,det_place,1,5,10,0,1,m,f,,,
-main,91,word: det_place,'la' (on the fixation cross),2200,300,det_place,1,5,11,1,1,m,f,,,
-main,92,word: det_place,'la' (on the fixation cross),1300,300,det_place,1,2,12,0,0,f,f,,,
-main,93,word: det_place,'la' (on the fixation cross),1300,300,det_place,1,2,13,1,0,f,f,,,
-main,94,word: det_place,'la' (on the fixation cross),2200,300,det_place,1,5,14,0,1,f,f,,,
-main,95,word: det_place,'la' (on the fixation cross),2200,300,det_place,1,5,15,1,1,f,f,,,
-main,96,word: noun_place,'classe' (on the fixation cross),1600,300,noun_place,1,3,0,0,0,m,m,,,
-main,97,word: noun_place,'classe' (on the fixation cross),1600,300,noun_place,1,3,1,1,0,m,m,,,
-main,98,word: noun_place,'classe' (on the fixation cross),2500,300,noun_place,1,6,2,0,1,m,m,,,
-main,99,word: noun_place,'classe' (on the fixation cross),2500,300,noun_place,1,6,3,1,1,m,m,,,
-main,100,word: noun_place,'classe' (on the fixation cross),1600,300,noun_place,1,3,4,0,0,f,m,,,
-main,101,word: noun_place,'classe' (on the fixation cross),1600,300,noun_place,1,3,5,1,0,f,m,,,
-main,102,word: noun_place,'classe' (on the fixation cross),2500,300,noun_place,1,6,6,0,1,f,m,,,
-main,103,word: noun_place,'classe' (on the fixation cross),2500,300,noun_place,1,6,7,1,1,f,m,,,
-main,104,word: noun_place,'classe' (on the fixation cross),1600,300,noun_place,1,3,8,0,0,m,f,,,
-main,105,word: noun_place,'classe' (on the fixation cross),1600,300,noun_place,1,3,9,1,0,m,f,,,
-main,106,word: noun_place,'classe' (on the fixation cross),2500,300,noun_place,1,6,10,0,1,m,f,,,
-main,107,word: noun_place,'classe' (on the fixation cross),2500,300,noun_place,1,6,11,1,1,m,f,,,
-main,108,word: noun_place,'classe' (on the fixation cross),1600,300,noun_place,1,3,12,0,0,f,f,,,
-main,109,word: noun_place,'classe' (on the fixation cross),1600,300,noun_place,1,3,13,1,0,f,f,,,
-main,110,word: noun_place,'classe' (on the fixation cross),2500,300,noun_place,1,6,14,0,1,f,f,,,
-main,111,word: noun_place,'classe' (on the fixation cross),2500,300,noun_place,1,6,15,1,1,f,f,,,
-main,112,word: pronoun,'Il/Elle' (on the fixation cross),3800,300,pronoun,2,1,0,0,0,m,m,,,
-main,113,word: pronoun,'Il/Elle' (on the fixation cross),3800,300,pronoun,2,1,1,1,0,m,m,,,
-main,114,word: pronoun,'Il/Elle' (on the fixation cross),3800,300,pronoun,2,1,2,0,1,m,m,,,
-main,115,word: pronoun,'Il/Elle' (on the fixation cross),3800,300,pronoun,2,1,3,1,1,m,m,,,
-main,116,word: pronoun,'Il/Elle' (on the fixation cross),3800,300,pronoun,2,1,4,0,0,f,m,,,
-main,117,word: pronoun,'Il/Elle' (on the fixation cross),3800,300,pronoun,2,1,5,1,0,f,m,,,
-main,118,word: pronoun,'Il/Elle' (on the fixation cross),3800,300,pronoun,2,1,6,0,1,f,m,,,
-main,119,word: pronoun,'Il/Elle' (on the fixation cross),3800,300,pronoun,2,1,7,1,1,f,m,,,
-main,120,word: pronoun,'Il/Elle' (on the fixation cross),3800,300,pronoun,2,1,8,0,0,m,f,,,
-main,121,word: pronoun,'Il/Elle' (on the fixation cross),3800,300,pronoun,2,1,9,1,0,m,f,,,
-main,122,word: pronoun,'Il/Elle' (on the fixation cross),3800,300,pronoun,2,1,10,0,1,m,f,,,
-main,123,word: pronoun,'Il/Elle' (on the fixation cross),3800,300,pronoun,2,1,11,1,1,m,f,,,
-main,124,word: pronoun,'Il/Elle' (on the fixation cross),3800,300,pronoun,2,1,12,0,0,f,f,,,
-main,125,word: pronoun,'Il/Elle' (on the fixation cross),3800,300,pronoun,2,1,13,1,0,f,f,,,
-main,126,word: pronoun,'Il/Elle' (on the fixation cross),3800,300,pronoun,2,1,14,0,1,f,f,,,
-main,127,word: pronoun,'Il/Elle' (on the fixation cross),3800,300,pronoun,2,1,15,1,1,f,f,,,
-main,128,word: etait,'était' (on the fixation cross),4100,300,etait,2,2,0,0,0,m,m,,,
-main,129,word: etait,'était' (on the fixation cross),4100,300,etait,2,2,1,1,0,m,m,,,
-main,130,word: etait,'était' (on the fixation cross),4100,300,etait,2,2,2,0,1,m,m,,,
-main,131,word: etait,'était' (on the fixation cross),4100,300,etait,2,2,3,1,1,m,m,,,
-main,132,word: etait,'était' (on the fixation cross),4100,300,etait,2,2,4,0,0,f,m,,,
-main,133,word: etait,'était' (on the fixation cross),4100,300,etait,2,2,5,1,0,f,m,,,
-main,134,word: etait,'était' (on the fixation cross),4100,300,etait,2,2,6,0,1,f,m,,,
-main,135,word: etait,'était' (on the fixation cross),4100,300,etait,2,2,7,1,1,f,m,,,
-main,136,word: etait,'était' (on the fixation cross),4100,300,etait,2,2,8,0,0,m,f,,,
-main,137,word: etait,'était' (on the fixation cross),4100,300,etait,2,2,9,1,0,m,f,,,
-main,138,word: etait,'était' (on the fixation cross),4100,300,etait,2,2,10,0,1,m,f,,,
-main,139,word: etait,'était' (on the fixation cross),4100,300,etait,2,2,11,1,1,m,f,,,
-main,140,word: etait,'était' (on the fixation cross),4100,300,etait,2,2,12,0,0,f,f,,,
-main,141,word: etait,'était' (on the fixation cross),4100,300,etait,2,2,13,1,0,f,f,,,
-main,142,word: etait,'était' (on the fixation cross),4100,300,etait,2,2,14,0,1,f,f,,,
-main,143,word: etait,'était' (on the fixation cross),4100,300,etait,2,2,15,1,1,f,f,,,
-main,144,word: adjective,'<adjective>' (on the fixation cross),4400,300,adjective,2,3,0,0,0,m,m,,,
-main,145,word: adjective,'<adjective>' (on the fixation cross),4400,300,adjective,2,3,1,1,0,m,m,,,
-main,146,word: adjective,'<adjective>' (on the fixation cross),4400,300,adjective,2,3,2,0,1,m,m,,,
-main,147,word: adjective,'<adjective>' (on the fixation cross),4400,300,adjective,2,3,3,1,1,m,m,,,
-main,148,word: adjective,'<adjective>' (on the fixation cross),4400,300,adjective,2,3,4,0,0,f,m,,,
-main,149,word: adjective,'<adjective>' (on the fixation cross),4400,300,adjective,2,3,5,1,0,f,m,,,
-main,150,word: adjective,'<adjective>' (on the fixation cross),4400,300,adjective,2,3,6,0,1,f,m,,,
-main,151,word: adjective,'<adjective>' (on the fixation cross),4400,300,adjective,2,3,7,1,1,f,m,,,
-main,152,word: adjective,'<adjective>' (on the fixation cross),4400,300,adjective,2,3,8,0,0,m,f,,,
-main,153,word: adjective,'<adjective>' (on the fixation cross),4400,300,adjective,2,3,9,1,0,m,f,,,
-main,154,word: adjective,'<adjective>' (on the fixation cross),4400,300,adjective,2,3,10,0,1,m,f,,,
-main,155,word: adjective,'<adjective>' (on the fixation cross),4400,300,adjective,2,3,11,1,1,m,f,,,
-main,156,word: adjective,'<adjective>' (on the fixation cross),4400,300,adjective,2,3,12,0,0,f,f,,,
-main,157,word: adjective,'<adjective>' (on the fixation cross),4400,300,adjective,2,3,13,1,0,f,f,,,
-main,158,word: adjective,'<adjective>' (on the fixation cross),4400,300,adjective,2,3,14,0,1,f,f,,,
-main,159,word: adjective,'<adjective>' (on the fixation cross),4400,300,adjective,2,3,15,1,1,f,f,,,
-main,161,trial_start (trial_number=1),fixation cross (light grey),0,1000,,,,,,,,,,,
-main,162,trial_start (trial_number=2),fixation cross (light grey),0,1000,,,,,,,,,,,
-main,163,trial_start (trial_number=3),fixation cross (light grey),0,1000,,,,,,,,,,,
-main,164,trial_start (trial_number=4),fixation cross (light grey),0,1000,,,,,,,,,,,
-main,165,trial_start (trial_number=5),fixation cross (light grey),0,1000,,,,,,,,,,,
-main,166,trial_start (trial_number=6),fixation cross (light grey),0,1000,,,,,,,,,,,
-main,167,trial_start (trial_number=7),fixation cross (light grey),0,1000,,,,,,,,,,,
-main,168,trial_start (trial_number=8),fixation cross (light grey),0,1000,,,,,,,,,,,
-main,169,trial_start (trial_number=9),fixation cross (light grey),0,1000,,,,,,,,,,,
-main,170,trial_start (trial_number=10),fixation cross (light grey),0,1000,,,,,,,,,,,
-main,171,trial_start (trial_number=11),fixation cross (light grey),0,1000,,,,,,,,,,,
-main,172,trial_start (trial_number=12),fixation cross (light grey),0,1000,,,,,,,,,,,
-main,173,trial_start (trial_number=13),fixation cross (light grey),0,1000,,,,,,,,,,,
-main,174,trial_start (trial_number=14),fixation cross (light grey),0,1000,,,,,,,,,,,
-main,175,trial_start (trial_number=15),fixation cross (light grey),0,1000,,,,,,,,,,,
-main,176,trial_start (trial_number=16),fixation cross (light grey),0,1000,,,,,,,,,,,
-main,177,trial_start (trial_number=17),fixation cross (light grey),0,1000,,,,,,,,,,,
-main,178,trial_start (trial_number=18),fixation cross (light grey),0,1000,,,,,,,,,,,
-main,179,trial_start (trial_number=19),fixation cross (light grey),0,1000,,,,,,,,,,,
-main,180,trial_start (trial_number=20),fixation cross (light grey),0,1000,,,,,,,,,,,
-main,181,trial_start (trial_number=21),fixation cross (light grey),0,1000,,,,,,,,,,,
-main,182,trial_start (trial_number=22),fixation cross (light grey),0,1000,,,,,,,,,,,
-main,183,trial_start (trial_number=23),fixation cross (light grey),0,1000,,,,,,,,,,,
-main,184,trial_start (trial_number=24),fixation cross (light grey),0,1000,,,,,,,,,,,
-main,185,trial_start (trial_number=25),fixation cross (light grey),0,1000,,,,,,,,,,,
-main,186,trial_start (trial_number=26),fixation cross (light grey),0,1000,,,,,,,,,,,
-main,187,trial_start (trial_number=27),fixation cross (light grey),0,1000,,,,,,,,,,,
-main,188,trial_start (trial_number=28),fixation cross (light grey),0,1000,,,,,,,,,,,
-main,189,trial_start (trial_number=29),fixation cross (light grey),0,1000,,,,,,,,,,,
-main,190,trial_start (trial_number=30),fixation cross (light grey),0,1000,,,,,,,,,,,
-main,191,trial_start (trial_number=31),fixation cross (light grey),0,1000,,,,,,,,,,,
-main,192,trial_start (trial_number=32),fixation cross (light grey),0,1000,,,,,,,,,,,
-main,201,pause/instruction screen before block 1,instructions; the operator's SPACE starts the block,,until SPACE,,,,,,,,,,,
-main,202,pause/instruction screen before block 2,pause text; the operator's SPACE starts the block,,until SPACE,,,,,,,,,,,
-main,203,pause/instruction screen before block 3,pause text; the operator's SPACE starts the block,,until SPACE,,,,,,,,,,,
-main,204,pause/instruction screen before block 4,pause text; the operator's SPACE starts the block,,until SPACE,,,,,,,,,,,
-main,205,pause/instruction screen before block 5,pause text; the operator's SPACE starts the block,,until SPACE,,,,,,,,,,,
-main,211,feedback: correct,fixation cross turns green,"4400 + RT, at the earliest 4700",500,,,,,,,,,,,
-main,212,feedback: incorrect,fixation cross turns red,"4400 + RT, at the earliest 4700",500,,,,,,,,,,,
-main,213,feedback: timeout (no response),fixation cross turns dark grey,7700,500,,,,,,,,,,,
-main,255,end of experiment,end screen,,5000,,,,,,,,,,,
-main,,inter_sentence_break,fixation cross (light grey),2800,1000,,,,,,,,,,,
-main,,response_window_opens,the adjective (presses count from its onset; RT from there),4400,"until response, at most until 7700",,,,,,,,,,,
-main,,countdown (no code),"3, 2, 1, one second each, after the operator's SPACE",before trial 1 of every block (main and localizer),3000,,,,,,,,,,,
-main,,inter_trial_interval,fixation cross (light grey),feedback onset + 500,2000,,,,,,,,,,,
-localizer,1,localizer word: marin,'marin' (no fixation cross; feedback as a dot at its centre),0,1000 (until the next stimulus),,,,,,,,,word,1,marin
-localizer,2,localizer word: facteur,'facteur' (no fixation cross; feedback as a dot at its centre),0,1000 (until the next stimulus),,,,,,,,,word,2,facteur
-localizer,3,localizer word: bûcheron,'bûcheron' (no fixation cross; feedback as a dot at its centre),0,1000 (until the next stimulus),,,,,,,,,word,3,bûcheron
-localizer,4,localizer word: plongeur,'plongeur' (no fixation cross; feedback as a dot at its centre),0,1000 (until the next stimulus),,,,,,,,,word,4,plongeur
-localizer,5,localizer word: bijoutier,'bijoutier' (no fixation cross; feedback as a dot at its centre),0,1000 (until the next stimulus),,,,,,,,,word,5,bijoutier
-localizer,6,localizer word: chauffeur,'chauffeur' (no fixation cross; feedback as a dot at its centre),0,1000 (until the next stimulus),,,,,,,,,word,6,chauffeur
-localizer,7,localizer word: menuisier,'menuisier' (no fixation cross; feedback as a dot at its centre),0,1000 (until the next stimulus),,,,,,,,,word,7,menuisier
-localizer,8,localizer word: mécanicien,'mécanicien' (no fixation cross; feedback as a dot at its centre),0,1000 (until the next stimulus),,,,,,,,,word,8,mécanicien
-localizer,9,localizer word: nonne,'nonne' (no fixation cross; feedback as a dot at its centre),0,1000 (until the next stimulus),,,,,,,,,word,9,nonne
-localizer,10,localizer word: bergère,'bergère' (no fixation cross; feedback as a dot at its centre),0,1000 (until the next stimulus),,,,,,,,,word,10,bergère
-localizer,11,localizer word: danseuse,'danseuse' (no fixation cross; feedback as a dot at its centre),0,1000 (until the next stimulus),,,,,,,,,word,11,danseuse
-localizer,12,localizer word: serveuse,'serveuse' (no fixation cross; feedback as a dot at its centre),0,1000 (until the next stimulus),,,,,,,,,word,12,serveuse
-localizer,13,localizer word: caissière,'caissière' (no fixation cross; feedback as a dot at its centre),0,1000 (until the next stimulus),,,,,,,,,word,13,caissière
-localizer,14,localizer word: chanteuse,'chanteuse' (no fixation cross; feedback as a dot at its centre),0,1000 (until the next stimulus),,,,,,,,,word,14,chanteuse
-localizer,15,localizer word: coiffeuse,'coiffeuse' (no fixation cross; feedback as a dot at its centre),0,1000 (until the next stimulus),,,,,,,,,word,15,coiffeuse
-localizer,16,localizer word: couturière,'couturière' (no fixation cross; feedback as a dot at its centre),0,1000 (until the next stimulus),,,,,,,,,word,16,couturière
-localizer,17,localizer word: musée,'musée' (no fixation cross; feedback as a dot at its centre),0,1000 (until the next stimulus),,,,,,,,,word,17,musée
-localizer,18,localizer word: dortoir,'dortoir' (no fixation cross; feedback as a dot at its centre),0,1000 (until the next stimulus),,,,,,,,,word,18,dortoir
-localizer,19,localizer word: tribunal,'tribunal' (no fixation cross; feedback as a dot at its centre),0,1000 (until the next stimulus),,,,,,,,,word,19,tribunal
-localizer,20,localizer word: pressing,'pressing' (no fixation cross; feedback as a dot at its centre),0,1000 (until the next stimulus),,,,,,,,,word,20,pressing
-localizer,21,localizer word: parlement,'parlement' (no fixation cross; feedback as a dot at its centre),0,1000 (until the next stimulus),,,,,,,,,word,21,parlement
-localizer,22,localizer word: vestiaire,'vestiaire' (no fixation cross; feedback as a dot at its centre),0,1000 (until the next stimulus),,,,,,,,,word,22,vestiaire
-localizer,23,localizer word: chapiteau,'chapiteau' (no fixation cross; feedback as a dot at its centre),0,1000 (until the next stimulus),,,,,,,,,word,23,chapiteau
-localizer,24,localizer word: réfectoire,'réfectoire' (no fixation cross; feedback as a dot at its centre),0,1000 (until the next stimulus),,,,,,,,,word,24,réfectoire
-localizer,25,localizer word: serre,'serre' (no fixation cross; feedback as a dot at its centre),0,1000 (until the next stimulus),,,,,,,,,word,25,serre
-localizer,26,localizer word: piscine,'piscine' (no fixation cross; feedback as a dot at its centre),0,1000 (until the next stimulus),,,,,,,,,word,26,piscine
-localizer,27,localizer word: garderie,'garderie' (no fixation cross; feedback as a dot at its centre),0,1000 (until the next stimulus),,,,,,,,,word,27,garderie
-localizer,28,localizer word: clinique,'clinique' (no fixation cross; feedback as a dot at its centre),0,1000 (until the next stimulus),,,,,,,,,word,28,clinique
-localizer,29,localizer word: brasserie,'brasserie' (no fixation cross; feedback as a dot at its centre),0,1000 (until the next stimulus),,,,,,,,,word,29,brasserie
-localizer,30,localizer word: librairie,'librairie' (no fixation cross; feedback as a dot at its centre),0,1000 (until the next stimulus),,,,,,,,,word,30,librairie
-localizer,31,localizer word: boucherie,'boucherie' (no fixation cross; feedback as a dot at its centre),0,1000 (until the next stimulus),,,,,,,,,word,31,boucherie
-localizer,32,localizer word: cathédrale,'cathédrale' (no fixation cross; feedback as a dot at its centre),0,1000 (until the next stimulus),,,,,,,,,word,32,cathédrale
-localizer,33,localizer image: marin,picture of 'marin' with the fixation cross on it,0,1000 (until the next stimulus),,,,,,,,,image,1,marin
-localizer,34,localizer image: facteur,picture of 'facteur' with the fixation cross on it,0,1000 (until the next stimulus),,,,,,,,,image,2,facteur
-localizer,35,localizer image: bûcheron,picture of 'bûcheron' with the fixation cross on it,0,1000 (until the next stimulus),,,,,,,,,image,3,bûcheron
-localizer,36,localizer image: plongeur,picture of 'plongeur' with the fixation cross on it,0,1000 (until the next stimulus),,,,,,,,,image,4,plongeur
-localizer,37,localizer image: bijoutier,picture of 'bijoutier' with the fixation cross on it,0,1000 (until the next stimulus),,,,,,,,,image,5,bijoutier
-localizer,38,localizer image: chauffeur,picture of 'chauffeur' with the fixation cross on it,0,1000 (until the next stimulus),,,,,,,,,image,6,chauffeur
-localizer,39,localizer image: menuisier,picture of 'menuisier' with the fixation cross on it,0,1000 (until the next stimulus),,,,,,,,,image,7,menuisier
-localizer,40,localizer image: mécanicien,picture of 'mécanicien' with the fixation cross on it,0,1000 (until the next stimulus),,,,,,,,,image,8,mécanicien
-localizer,41,localizer image: nonne,picture of 'nonne' with the fixation cross on it,0,1000 (until the next stimulus),,,,,,,,,image,9,nonne
-localizer,42,localizer image: bergère,picture of 'bergère' with the fixation cross on it,0,1000 (until the next stimulus),,,,,,,,,image,10,bergère
-localizer,43,localizer image: danseuse,picture of 'danseuse' with the fixation cross on it,0,1000 (until the next stimulus),,,,,,,,,image,11,danseuse
-localizer,44,localizer image: serveuse,picture of 'serveuse' with the fixation cross on it,0,1000 (until the next stimulus),,,,,,,,,image,12,serveuse
-localizer,45,localizer image: caissière,picture of 'caissière' with the fixation cross on it,0,1000 (until the next stimulus),,,,,,,,,image,13,caissière
-localizer,46,localizer image: chanteuse,picture of 'chanteuse' with the fixation cross on it,0,1000 (until the next stimulus),,,,,,,,,image,14,chanteuse
-localizer,47,localizer image: coiffeuse,picture of 'coiffeuse' with the fixation cross on it,0,1000 (until the next stimulus),,,,,,,,,image,15,coiffeuse
-localizer,48,localizer image: couturière,picture of 'couturière' with the fixation cross on it,0,1000 (until the next stimulus),,,,,,,,,image,16,couturière
-localizer,49,localizer image: musée,picture of 'musée' with the fixation cross on it,0,1000 (until the next stimulus),,,,,,,,,image,17,musée
-localizer,50,localizer image: dortoir,picture of 'dortoir' with the fixation cross on it,0,1000 (until the next stimulus),,,,,,,,,image,18,dortoir
-localizer,51,localizer image: tribunal,picture of 'tribunal' with the fixation cross on it,0,1000 (until the next stimulus),,,,,,,,,image,19,tribunal
-localizer,52,localizer image: pressing,picture of 'pressing' with the fixation cross on it,0,1000 (until the next stimulus),,,,,,,,,image,20,pressing
-localizer,53,localizer image: parlement,picture of 'parlement' with the fixation cross on it,0,1000 (until the next stimulus),,,,,,,,,image,21,parlement
-localizer,54,localizer image: vestiaire,picture of 'vestiaire' with the fixation cross on it,0,1000 (until the next stimulus),,,,,,,,,image,22,vestiaire
-localizer,55,localizer image: chapiteau,picture of 'chapiteau' with the fixation cross on it,0,1000 (until the next stimulus),,,,,,,,,image,23,chapiteau
-localizer,56,localizer image: réfectoire,picture of 'réfectoire' with the fixation cross on it,0,1000 (until the next stimulus),,,,,,,,,image,24,réfectoire
-localizer,57,localizer image: serre,picture of 'serre' with the fixation cross on it,0,1000 (until the next stimulus),,,,,,,,,image,25,serre
-localizer,58,localizer image: piscine,picture of 'piscine' with the fixation cross on it,0,1000 (until the next stimulus),,,,,,,,,image,26,piscine
-localizer,59,localizer image: garderie,picture of 'garderie' with the fixation cross on it,0,1000 (until the next stimulus),,,,,,,,,image,27,garderie
-localizer,60,localizer image: clinique,picture of 'clinique' with the fixation cross on it,0,1000 (until the next stimulus),,,,,,,,,image,28,clinique
-localizer,61,localizer image: brasserie,picture of 'brasserie' with the fixation cross on it,0,1000 (until the next stimulus),,,,,,,,,image,29,brasserie
-localizer,62,localizer image: librairie,picture of 'librairie' with the fixation cross on it,0,1000 (until the next stimulus),,,,,,,,,image,30,librairie
-localizer,63,localizer image: boucherie,picture of 'boucherie' with the fixation cross on it,0,1000 (until the next stimulus),,,,,,,,,image,31,boucherie
-localizer,64,localizer image: cathédrale,picture of 'cathédrale' with the fixation cross on it,0,1000 (until the next stimulus),,,,,,,,,image,32,cathédrale
-localizer,206,localizer: instruction/pause screen before training,text; the operator's SPACE starts the block,,until SPACE,,,,,,,,,,,
-localizer,207,localizer: instruction/pause screen before block 1,text; the operator's SPACE starts the block,,until SPACE,,,,,,,,,,,
-localizer,208,localizer: instruction/pause screen before block 2,text; the operator's SPACE starts the block,,until SPACE,,,,,,,,,,,
-localizer,211,localizer feedback: hit,"cross on a picture, or dot on a word, turns green (press on a match)",RT,until the next stimulus,,,,,,,,,,,
-localizer,212,localizer feedback: false alarm,"cross on a picture, or dot on a word, turns red (press on a non-match)",RT,until the next stimulus,,,,,,,,,,,
-localizer,213,localizer feedback: miss,"cross on a picture, or dot on a word, turns red (no press on a match)",800,200,,,,,,,,,,,
+task,code,event,on_screen,onset_ms,duration_ms,role,sentence,position,cell,congruent,judgment,canonical_order,pronoun_gender,agent_gender,modality,concept,item
+main,16,word: det_subj,'le' (on the fixation cross),1900,300,det_subj,1,4,0,0,,0,m,m,,,
+main,17,word: det_subj,'le' (on the fixation cross),1900,300,det_subj,1,4,1,1,,0,m,m,,,
+main,18,word: det_subj,'Le' (on the fixation cross),1000,300,det_subj,1,1,2,0,,1,m,m,,,
+main,19,word: det_subj,'Le' (on the fixation cross),1000,300,det_subj,1,1,3,1,,1,m,m,,,
+main,20,word: det_subj,'le' (on the fixation cross),1900,300,det_subj,1,4,4,0,,0,f,m,,,
+main,21,word: det_subj,'le' (on the fixation cross),1900,300,det_subj,1,4,5,1,,0,f,m,,,
+main,22,word: det_subj,'Le' (on the fixation cross),1000,300,det_subj,1,1,6,0,,1,f,m,,,
+main,23,word: det_subj,'Le' (on the fixation cross),1000,300,det_subj,1,1,7,1,,1,f,m,,,
+main,24,word: det_subj,'le' (on the fixation cross),1900,300,det_subj,1,4,8,0,,0,m,f,,,
+main,25,word: det_subj,'le' (on the fixation cross),1900,300,det_subj,1,4,9,1,,0,m,f,,,
+main,26,word: det_subj,'Le' (on the fixation cross),1000,300,det_subj,1,1,10,0,,1,m,f,,,
+main,27,word: det_subj,'Le' (on the fixation cross),1000,300,det_subj,1,1,11,1,,1,m,f,,,
+main,28,word: det_subj,'le' (on the fixation cross),1900,300,det_subj,1,4,12,0,,0,f,f,,,
+main,29,word: det_subj,'le' (on the fixation cross),1900,300,det_subj,1,4,13,1,,0,f,f,,,
+main,30,word: det_subj,'Le' (on the fixation cross),1000,300,det_subj,1,1,14,0,,1,f,f,,,
+main,31,word: det_subj,'Le' (on the fixation cross),1000,300,det_subj,1,1,15,1,,1,f,f,,,
+main,32,word: noun_subj,'mécanicien' (on the fixation cross),2200,300,noun_subj,1,5,0,0,,0,m,m,,,
+main,33,word: noun_subj,'mécanicien' (on the fixation cross),2200,300,noun_subj,1,5,1,1,,0,m,m,,,
+main,34,word: noun_subj,'mécanicien' (on the fixation cross),1300,300,noun_subj,1,2,2,0,,1,m,m,,,
+main,35,word: noun_subj,'mécanicien' (on the fixation cross),1300,300,noun_subj,1,2,3,1,,1,m,m,,,
+main,36,word: noun_subj,'mécanicien' (on the fixation cross),2200,300,noun_subj,1,5,4,0,,0,f,m,,,
+main,37,word: noun_subj,'mécanicien' (on the fixation cross),2200,300,noun_subj,1,5,5,1,,0,f,m,,,
+main,38,word: noun_subj,'mécanicien' (on the fixation cross),1300,300,noun_subj,1,2,6,0,,1,f,m,,,
+main,39,word: noun_subj,'mécanicien' (on the fixation cross),1300,300,noun_subj,1,2,7,1,,1,f,m,,,
+main,40,word: noun_subj,'mécanicien' (on the fixation cross),2200,300,noun_subj,1,5,8,0,,0,m,f,,,
+main,41,word: noun_subj,'mécanicien' (on the fixation cross),2200,300,noun_subj,1,5,9,1,,0,m,f,,,
+main,42,word: noun_subj,'mécanicien' (on the fixation cross),1300,300,noun_subj,1,2,10,0,,1,m,f,,,
+main,43,word: noun_subj,'mécanicien' (on the fixation cross),1300,300,noun_subj,1,2,11,1,,1,m,f,,,
+main,44,word: noun_subj,'mécanicien' (on the fixation cross),2200,300,noun_subj,1,5,12,0,,0,f,f,,,
+main,45,word: noun_subj,'mécanicien' (on the fixation cross),2200,300,noun_subj,1,5,13,1,,0,f,f,,,
+main,46,word: noun_subj,'mécanicien' (on the fixation cross),1300,300,noun_subj,1,2,14,0,,1,f,f,,,
+main,47,word: noun_subj,'mécanicien' (on the fixation cross),1300,300,noun_subj,1,2,15,1,,1,f,f,,,
+main,48,word: verb,'rêvait' (on the fixation cross),2500,300,verb,1,6,0,0,,0,m,m,,,
+main,49,word: verb,'rêvait' (on the fixation cross),2500,300,verb,1,6,1,1,,0,m,m,,,
+main,50,word: verb,'rêvait' (on the fixation cross),1600,300,verb,1,3,2,0,,1,m,m,,,
+main,51,word: verb,'rêvait' (on the fixation cross),1600,300,verb,1,3,3,1,,1,m,m,,,
+main,52,word: verb,'rêvait' (on the fixation cross),2500,300,verb,1,6,4,0,,0,f,m,,,
+main,53,word: verb,'rêvait' (on the fixation cross),2500,300,verb,1,6,5,1,,0,f,m,,,
+main,54,word: verb,'rêvait' (on the fixation cross),1600,300,verb,1,3,6,0,,1,f,m,,,
+main,55,word: verb,'rêvait' (on the fixation cross),1600,300,verb,1,3,7,1,,1,f,m,,,
+main,56,word: verb,'rêvait' (on the fixation cross),2500,300,verb,1,6,8,0,,0,m,f,,,
+main,57,word: verb,'rêvait' (on the fixation cross),2500,300,verb,1,6,9,1,,0,m,f,,,
+main,58,word: verb,'rêvait' (on the fixation cross),1600,300,verb,1,3,10,0,,1,m,f,,,
+main,59,word: verb,'rêvait' (on the fixation cross),1600,300,verb,1,3,11,1,,1,m,f,,,
+main,60,word: verb,'rêvait' (on the fixation cross),2500,300,verb,1,6,12,0,,0,f,f,,,
+main,61,word: verb,'rêvait' (on the fixation cross),2500,300,verb,1,6,13,1,,0,f,f,,,
+main,62,word: verb,'rêvait' (on the fixation cross),1600,300,verb,1,3,14,0,,1,f,f,,,
+main,63,word: verb,'rêvait' (on the fixation cross),1600,300,verb,1,3,15,1,,1,f,f,,,
+main,64,word: dans,'Dans' (on the fixation cross),1000,300,dans,1,1,0,0,,0,m,m,,,
+main,65,word: dans,'Dans' (on the fixation cross),1000,300,dans,1,1,1,1,,0,m,m,,,
+main,66,word: dans,'dans' (on the fixation cross),1900,300,dans,1,4,2,0,,1,m,m,,,
+main,67,word: dans,'dans' (on the fixation cross),1900,300,dans,1,4,3,1,,1,m,m,,,
+main,68,word: dans,'Dans' (on the fixation cross),1000,300,dans,1,1,4,0,,0,f,m,,,
+main,69,word: dans,'Dans' (on the fixation cross),1000,300,dans,1,1,5,1,,0,f,m,,,
+main,70,word: dans,'dans' (on the fixation cross),1900,300,dans,1,4,6,0,,1,f,m,,,
+main,71,word: dans,'dans' (on the fixation cross),1900,300,dans,1,4,7,1,,1,f,m,,,
+main,72,word: dans,'Dans' (on the fixation cross),1000,300,dans,1,1,8,0,,0,m,f,,,
+main,73,word: dans,'Dans' (on the fixation cross),1000,300,dans,1,1,9,1,,0,m,f,,,
+main,74,word: dans,'dans' (on the fixation cross),1900,300,dans,1,4,10,0,,1,m,f,,,
+main,75,word: dans,'dans' (on the fixation cross),1900,300,dans,1,4,11,1,,1,m,f,,,
+main,76,word: dans,'Dans' (on the fixation cross),1000,300,dans,1,1,12,0,,0,f,f,,,
+main,77,word: dans,'Dans' (on the fixation cross),1000,300,dans,1,1,13,1,,0,f,f,,,
+main,78,word: dans,'dans' (on the fixation cross),1900,300,dans,1,4,14,0,,1,f,f,,,
+main,79,word: dans,'dans' (on the fixation cross),1900,300,dans,1,4,15,1,,1,f,f,,,
+main,80,word: det_place,'la' (on the fixation cross),1300,300,det_place,1,2,0,0,,0,m,m,,,
+main,81,word: det_place,'la' (on the fixation cross),1300,300,det_place,1,2,1,1,,0,m,m,,,
+main,82,word: det_place,'la' (on the fixation cross),2200,300,det_place,1,5,2,0,,1,m,m,,,
+main,83,word: det_place,'la' (on the fixation cross),2200,300,det_place,1,5,3,1,,1,m,m,,,
+main,84,word: det_place,'la' (on the fixation cross),1300,300,det_place,1,2,4,0,,0,f,m,,,
+main,85,word: det_place,'la' (on the fixation cross),1300,300,det_place,1,2,5,1,,0,f,m,,,
+main,86,word: det_place,'la' (on the fixation cross),2200,300,det_place,1,5,6,0,,1,f,m,,,
+main,87,word: det_place,'la' (on the fixation cross),2200,300,det_place,1,5,7,1,,1,f,m,,,
+main,88,word: det_place,'la' (on the fixation cross),1300,300,det_place,1,2,8,0,,0,m,f,,,
+main,89,word: det_place,'la' (on the fixation cross),1300,300,det_place,1,2,9,1,,0,m,f,,,
+main,90,word: det_place,'la' (on the fixation cross),2200,300,det_place,1,5,10,0,,1,m,f,,,
+main,91,word: det_place,'la' (on the fixation cross),2200,300,det_place,1,5,11,1,,1,m,f,,,
+main,92,word: det_place,'la' (on the fixation cross),1300,300,det_place,1,2,12,0,,0,f,f,,,
+main,93,word: det_place,'la' (on the fixation cross),1300,300,det_place,1,2,13,1,,0,f,f,,,
+main,94,word: det_place,'la' (on the fixation cross),2200,300,det_place,1,5,14,0,,1,f,f,,,
+main,95,word: det_place,'la' (on the fixation cross),2200,300,det_place,1,5,15,1,,1,f,f,,,
+main,96,word: noun_place,'classe' (on the fixation cross),1600,300,noun_place,1,3,0,0,,0,m,m,,,
+main,97,word: noun_place,'classe' (on the fixation cross),1600,300,noun_place,1,3,1,1,,0,m,m,,,
+main,98,word: noun_place,'classe' (on the fixation cross),2500,300,noun_place,1,6,2,0,,1,m,m,,,
+main,99,word: noun_place,'classe' (on the fixation cross),2500,300,noun_place,1,6,3,1,,1,m,m,,,
+main,100,word: noun_place,'classe' (on the fixation cross),1600,300,noun_place,1,3,4,0,,0,f,m,,,
+main,101,word: noun_place,'classe' (on the fixation cross),1600,300,noun_place,1,3,5,1,,0,f,m,,,
+main,102,word: noun_place,'classe' (on the fixation cross),2500,300,noun_place,1,6,6,0,,1,f,m,,,
+main,103,word: noun_place,'classe' (on the fixation cross),2500,300,noun_place,1,6,7,1,,1,f,m,,,
+main,104,word: noun_place,'classe' (on the fixation cross),1600,300,noun_place,1,3,8,0,,0,m,f,,,
+main,105,word: noun_place,'classe' (on the fixation cross),1600,300,noun_place,1,3,9,1,,0,m,f,,,
+main,106,word: noun_place,'classe' (on the fixation cross),2500,300,noun_place,1,6,10,0,,1,m,f,,,
+main,107,word: noun_place,'classe' (on the fixation cross),2500,300,noun_place,1,6,11,1,,1,m,f,,,
+main,108,word: noun_place,'classe' (on the fixation cross),1600,300,noun_place,1,3,12,0,,0,f,f,,,
+main,109,word: noun_place,'classe' (on the fixation cross),1600,300,noun_place,1,3,13,1,,0,f,f,,,
+main,110,word: noun_place,'classe' (on the fixation cross),2500,300,noun_place,1,6,14,0,,1,f,f,,,
+main,111,word: noun_place,'classe' (on the fixation cross),2500,300,noun_place,1,6,15,1,,1,f,f,,,
+main,112,word: pronoun,'Il/Elle' (on the fixation cross),3800,300,pronoun,2,1,0,0,,0,m,m,,,
+main,113,word: pronoun,'Il/Elle' (on the fixation cross),3800,300,pronoun,2,1,1,1,,0,m,m,,,
+main,114,word: pronoun,'Il/Elle' (on the fixation cross),3800,300,pronoun,2,1,2,0,,1,m,m,,,
+main,115,word: pronoun,'Il/Elle' (on the fixation cross),3800,300,pronoun,2,1,3,1,,1,m,m,,,
+main,116,word: pronoun,'Il/Elle' (on the fixation cross),3800,300,pronoun,2,1,4,0,,0,f,m,,,
+main,117,word: pronoun,'Il/Elle' (on the fixation cross),3800,300,pronoun,2,1,5,1,,0,f,m,,,
+main,118,word: pronoun,'Il/Elle' (on the fixation cross),3800,300,pronoun,2,1,6,0,,1,f,m,,,
+main,119,word: pronoun,'Il/Elle' (on the fixation cross),3800,300,pronoun,2,1,7,1,,1,f,m,,,
+main,120,word: pronoun,'Il/Elle' (on the fixation cross),3800,300,pronoun,2,1,8,0,,0,m,f,,,
+main,121,word: pronoun,'Il/Elle' (on the fixation cross),3800,300,pronoun,2,1,9,1,,0,m,f,,,
+main,122,word: pronoun,'Il/Elle' (on the fixation cross),3800,300,pronoun,2,1,10,0,,1,m,f,,,
+main,123,word: pronoun,'Il/Elle' (on the fixation cross),3800,300,pronoun,2,1,11,1,,1,m,f,,,
+main,124,word: pronoun,'Il/Elle' (on the fixation cross),3800,300,pronoun,2,1,12,0,,0,f,f,,,
+main,125,word: pronoun,'Il/Elle' (on the fixation cross),3800,300,pronoun,2,1,13,1,,0,f,f,,,
+main,126,word: pronoun,'Il/Elle' (on the fixation cross),3800,300,pronoun,2,1,14,0,,1,f,f,,,
+main,127,word: pronoun,'Il/Elle' (on the fixation cross),3800,300,pronoun,2,1,15,1,,1,f,f,,,
+main,128,word: etait,'était' (on the fixation cross),4100,300,etait,2,2,0,0,,0,m,m,,,
+main,129,word: etait,'était' (on the fixation cross),4100,300,etait,2,2,1,1,,0,m,m,,,
+main,130,word: etait,'était' (on the fixation cross),4100,300,etait,2,2,2,0,,1,m,m,,,
+main,131,word: etait,'était' (on the fixation cross),4100,300,etait,2,2,3,1,,1,m,m,,,
+main,132,word: etait,'était' (on the fixation cross),4100,300,etait,2,2,4,0,,0,f,m,,,
+main,133,word: etait,'était' (on the fixation cross),4100,300,etait,2,2,5,1,,0,f,m,,,
+main,134,word: etait,'était' (on the fixation cross),4100,300,etait,2,2,6,0,,1,f,m,,,
+main,135,word: etait,'était' (on the fixation cross),4100,300,etait,2,2,7,1,,1,f,m,,,
+main,136,word: etait,'était' (on the fixation cross),4100,300,etait,2,2,8,0,,0,m,f,,,
+main,137,word: etait,'était' (on the fixation cross),4100,300,etait,2,2,9,1,,0,m,f,,,
+main,138,word: etait,'était' (on the fixation cross),4100,300,etait,2,2,10,0,,1,m,f,,,
+main,139,word: etait,'était' (on the fixation cross),4100,300,etait,2,2,11,1,,1,m,f,,,
+main,140,word: etait,'était' (on the fixation cross),4100,300,etait,2,2,12,0,,0,f,f,,,
+main,141,word: etait,'était' (on the fixation cross),4100,300,etait,2,2,13,1,,0,f,f,,,
+main,142,word: etait,'était' (on the fixation cross),4100,300,etait,2,2,14,0,,1,f,f,,,
+main,143,word: etait,'était' (on the fixation cross),4100,300,etait,2,2,15,1,,1,f,f,,,
+main,144,word: adjective,'<adjective>' (on the fixation cross),4400,300,adjective,2,3,0,0,,0,m,m,,,
+main,145,word: adjective,'<adjective>' (on the fixation cross),4400,300,adjective,2,3,1,1,,0,m,m,,,
+main,146,word: adjective,'<adjective>' (on the fixation cross),4400,300,adjective,2,3,2,0,,1,m,m,,,
+main,147,word: adjective,'<adjective>' (on the fixation cross),4400,300,adjective,2,3,3,1,,1,m,m,,,
+main,148,word: adjective,'<adjective>' (on the fixation cross),4400,300,adjective,2,3,4,0,,0,f,m,,,
+main,149,word: adjective,'<adjective>' (on the fixation cross),4400,300,adjective,2,3,5,1,,0,f,m,,,
+main,150,word: adjective,'<adjective>' (on the fixation cross),4400,300,adjective,2,3,6,0,,1,f,m,,,
+main,151,word: adjective,'<adjective>' (on the fixation cross),4400,300,adjective,2,3,7,1,,1,f,m,,,
+main,152,word: adjective,'<adjective>' (on the fixation cross),4400,300,adjective,2,3,8,0,,0,m,f,,,
+main,153,word: adjective,'<adjective>' (on the fixation cross),4400,300,adjective,2,3,9,1,,0,m,f,,,
+main,154,word: adjective,'<adjective>' (on the fixation cross),4400,300,adjective,2,3,10,0,,1,m,f,,,
+main,155,word: adjective,'<adjective>' (on the fixation cross),4400,300,adjective,2,3,11,1,,1,m,f,,,
+main,156,word: adjective,'<adjective>' (on the fixation cross),4400,300,adjective,2,3,12,0,,0,f,f,,,
+main,157,word: adjective,'<adjective>' (on the fixation cross),4400,300,adjective,2,3,13,1,,0,f,f,,,
+main,158,word: adjective,'<adjective>' (on the fixation cross),4400,300,adjective,2,3,14,0,,1,f,f,,,
+main,159,word: adjective,'<adjective>' (on the fixation cross),4400,300,adjective,2,3,15,1,,1,f,f,,,
+main,161,trial_start (trial_number=1),fixation cross (light grey),0,1000,,,,,,,,,,,,
+main,162,trial_start (trial_number=2),fixation cross (light grey),0,1000,,,,,,,,,,,,
+main,163,trial_start (trial_number=3),fixation cross (light grey),0,1000,,,,,,,,,,,,
+main,164,trial_start (trial_number=4),fixation cross (light grey),0,1000,,,,,,,,,,,,
+main,165,trial_start (trial_number=5),fixation cross (light grey),0,1000,,,,,,,,,,,,
+main,166,trial_start (trial_number=6),fixation cross (light grey),0,1000,,,,,,,,,,,,
+main,167,trial_start (trial_number=7),fixation cross (light grey),0,1000,,,,,,,,,,,,
+main,168,trial_start (trial_number=8),fixation cross (light grey),0,1000,,,,,,,,,,,,
+main,169,trial_start (trial_number=9),fixation cross (light grey),0,1000,,,,,,,,,,,,
+main,170,trial_start (trial_number=10),fixation cross (light grey),0,1000,,,,,,,,,,,,
+main,171,trial_start (trial_number=11),fixation cross (light grey),0,1000,,,,,,,,,,,,
+main,172,trial_start (trial_number=12),fixation cross (light grey),0,1000,,,,,,,,,,,,
+main,173,trial_start (trial_number=13),fixation cross (light grey),0,1000,,,,,,,,,,,,
+main,174,trial_start (trial_number=14),fixation cross (light grey),0,1000,,,,,,,,,,,,
+main,175,trial_start (trial_number=15),fixation cross (light grey),0,1000,,,,,,,,,,,,
+main,176,trial_start (trial_number=16),fixation cross (light grey),0,1000,,,,,,,,,,,,
+main,177,trial_start (trial_number=17),fixation cross (light grey),0,1000,,,,,,,,,,,,
+main,178,trial_start (trial_number=18),fixation cross (light grey),0,1000,,,,,,,,,,,,
+main,179,trial_start (trial_number=19),fixation cross (light grey),0,1000,,,,,,,,,,,,
+main,180,trial_start (trial_number=20),fixation cross (light grey),0,1000,,,,,,,,,,,,
+main,181,trial_start (trial_number=21),fixation cross (light grey),0,1000,,,,,,,,,,,,
+main,182,trial_start (trial_number=22),fixation cross (light grey),0,1000,,,,,,,,,,,,
+main,183,trial_start (trial_number=23),fixation cross (light grey),0,1000,,,,,,,,,,,,
+main,184,trial_start (trial_number=24),fixation cross (light grey),0,1000,,,,,,,,,,,,
+main,185,trial_start (trial_number=25),fixation cross (light grey),0,1000,,,,,,,,,,,,
+main,186,trial_start (trial_number=26),fixation cross (light grey),0,1000,,,,,,,,,,,,
+main,187,trial_start (trial_number=27),fixation cross (light grey),0,1000,,,,,,,,,,,,
+main,188,trial_start (trial_number=28),fixation cross (light grey),0,1000,,,,,,,,,,,,
+main,189,trial_start (trial_number=29),fixation cross (light grey),0,1000,,,,,,,,,,,,
+main,190,trial_start (trial_number=30),fixation cross (light grey),0,1000,,,,,,,,,,,,
+main,191,trial_start (trial_number=31),fixation cross (light grey),0,1000,,,,,,,,,,,,
+main,192,trial_start (trial_number=32),fixation cross (light grey),0,1000,,,,,,,,,,,,
+main,193,trial_start (trial_number=33),fixation cross (light grey),0,1000,,,,,,,,,,,,
+main,194,trial_start (trial_number=34),fixation cross (light grey),0,1000,,,,,,,,,,,,
+main,195,trial_start (trial_number=35),fixation cross (light grey),0,1000,,,,,,,,,,,,
+main,196,trial_start (trial_number=36),fixation cross (light grey),0,1000,,,,,,,,,,,,
+main,197,trial_start (trial_number=37),fixation cross (light grey),0,1000,,,,,,,,,,,,
+main,198,trial_start (trial_number=38),fixation cross (light grey),0,1000,,,,,,,,,,,,
+main,199,trial_start (trial_number=39),fixation cross (light grey),0,1000,,,,,,,,,,,,
+main,200,trial_start (trial_number=40),fixation cross (light grey),0,1000,,,,,,,,,,,,
+main,201,pause/instruction screen before block 1,instructions; the operator's SPACE starts the block,,until SPACE,,,,,,,,,,,,
+main,202,pause/instruction screen before block 2,pause text; the operator's SPACE starts the block,,until SPACE,,,,,,,,,,,,
+main,203,pause/instruction screen before block 3,pause text; the operator's SPACE starts the block,,until SPACE,,,,,,,,,,,,
+main,204,pause/instruction screen before block 4,pause text; the operator's SPACE starts the block,,until SPACE,,,,,,,,,,,,
+main,205,pause/instruction screen before block 5,pause text; the operator's SPACE starts the block,,until SPACE,,,,,,,,,,,,
+main,206,pause/instruction screen before block 6,pause text; the operator's SPACE starts the block,,until SPACE,,,,,,,,,,,,
+main,211,feedback: correct,fixation cross turns green,"4400 + RT, at the earliest 4700",500,,,,,,,,,,,,
+main,212,feedback: incorrect,fixation cross turns red,"4400 + RT, at the earliest 4700",500,,,,,,,,,,,,
+main,213,feedback: timeout (no response),fixation cross turns dark grey,7700,500,,,,,,,,,,,,
+main,214,filler word: det_subj,'le' (on the fixation cross),1900,300,det_subj,1,4,,,odd,0,,,,,
+main,215,filler word: det_subj,'le' (on the fixation cross),1900,300,det_subj,1,4,,,natural,0,,,,,
+main,216,filler word: det_subj,'Le' (on the fixation cross),1000,300,det_subj,1,1,,,odd,1,,,,,
+main,217,filler word: det_subj,'Le' (on the fixation cross),1000,300,det_subj,1,1,,,natural,1,,,,,
+main,218,filler word: noun_subj,'mécanicien' (on the fixation cross),2200,300,noun_subj,1,5,,,odd,0,,,,,
+main,219,filler word: noun_subj,'mécanicien' (on the fixation cross),2200,300,noun_subj,1,5,,,natural,0,,,,,
+main,220,filler word: noun_subj,'mécanicien' (on the fixation cross),1300,300,noun_subj,1,2,,,odd,1,,,,,
+main,221,filler word: noun_subj,'mécanicien' (on the fixation cross),1300,300,noun_subj,1,2,,,natural,1,,,,,
+main,222,filler word: verb,'rêvait' (on the fixation cross),2500,300,verb,1,6,,,odd,0,,,,,
+main,223,filler word: verb,'rêvait' (on the fixation cross),2500,300,verb,1,6,,,natural,0,,,,,
+main,224,filler word: verb,'rêvait' (on the fixation cross),1600,300,verb,1,3,,,odd,1,,,,,
+main,225,filler word: verb,'rêvait' (on the fixation cross),1600,300,verb,1,3,,,natural,1,,,,,
+main,226,filler word: dans,'Dans' (on the fixation cross),1000,300,dans,1,1,,,odd,0,,,,,
+main,227,filler word: dans,'Dans' (on the fixation cross),1000,300,dans,1,1,,,natural,0,,,,,
+main,228,filler word: dans,'dans' (on the fixation cross),1900,300,dans,1,4,,,odd,1,,,,,
+main,229,filler word: dans,'dans' (on the fixation cross),1900,300,dans,1,4,,,natural,1,,,,,
+main,230,filler word: det_place,'la' (on the fixation cross),1300,300,det_place,1,2,,,odd,0,,,,,
+main,231,filler word: det_place,'la' (on the fixation cross),1300,300,det_place,1,2,,,natural,0,,,,,
+main,232,filler word: det_place,'la' (on the fixation cross),2200,300,det_place,1,5,,,odd,1,,,,,
+main,233,filler word: det_place,'la' (on the fixation cross),2200,300,det_place,1,5,,,natural,1,,,,,
+main,234,filler word: noun_place,'classe' (on the fixation cross),1600,300,noun_place,1,3,,,odd,0,,,,,
+main,235,filler word: noun_place,'classe' (on the fixation cross),1600,300,noun_place,1,3,,,natural,0,,,,,
+main,236,filler word: noun_place,'classe' (on the fixation cross),2500,300,noun_place,1,6,,,odd,1,,,,,
+main,237,filler word: noun_place,'classe' (on the fixation cross),2500,300,noun_place,1,6,,,natural,1,,,,,
+main,238,filler word: pronoun,'Il/Elle' (on the fixation cross),3800,300,pronoun,2,1,,,odd,0,,,,,
+main,239,filler word: pronoun,'Il/Elle' (on the fixation cross),3800,300,pronoun,2,1,,,natural,0,,,,,
+main,240,filler word: pronoun,'Il/Elle' (on the fixation cross),3800,300,pronoun,2,1,,,odd,1,,,,,
+main,241,filler word: pronoun,'Il/Elle' (on the fixation cross),3800,300,pronoun,2,1,,,natural,1,,,,,
+main,242,filler word: etait,'était' (on the fixation cross),4100,300,etait,2,2,,,odd,0,,,,,
+main,243,filler word: etait,'était' (on the fixation cross),4100,300,etait,2,2,,,natural,0,,,,,
+main,244,filler word: etait,'était' (on the fixation cross),4100,300,etait,2,2,,,odd,1,,,,,
+main,245,filler word: etait,'était' (on the fixation cross),4100,300,etait,2,2,,,natural,1,,,,,
+main,246,filler word: adjective,'<adjective>' (on the fixation cross),4400,300,adjective,2,3,,,odd,0,,,,,
+main,247,filler word: adjective,'<adjective>' (on the fixation cross),4400,300,adjective,2,3,,,natural,0,,,,,
+main,248,filler word: adjective,'<adjective>' (on the fixation cross),4400,300,adjective,2,3,,,odd,1,,,,,
+main,249,filler word: adjective,'<adjective>' (on the fixation cross),4400,300,adjective,2,3,,,natural,1,,,,,
+main,255,end of experiment,end screen,,5000,,,,,,,,,,,,
+main,,inter_sentence_break,fixation cross (light grey),2800,1000,,,,,,,,,,,,
+main,,response_window_opens,the adjective (presses count from its onset; RT from there),4400,"until response, at most until 7700",,,,,,,,,,,,
+main,,countdown (no code),"3, 2, 1, one second each, after the operator's SPACE",before trial 1 of every block (main and localizer),3000,,,,,,,,,,,,
+main,,inter_trial_interval,fixation cross (light grey),feedback onset + 500,2000,,,,,,,,,,,,
+localizer,1,localizer word: marin,'marin' (no fixation cross; feedback as a dot at its centre),0,1000 (until the next stimulus),,,,,,,,,,word,1,marin
+localizer,2,localizer word: facteur,'facteur' (no fixation cross; feedback as a dot at its centre),0,1000 (until the next stimulus),,,,,,,,,,word,2,facteur
+localizer,3,localizer word: bûcheron,'bûcheron' (no fixation cross; feedback as a dot at its centre),0,1000 (until the next stimulus),,,,,,,,,,word,3,bûcheron
+localizer,4,localizer word: plongeur,'plongeur' (no fixation cross; feedback as a dot at its centre),0,1000 (until the next stimulus),,,,,,,,,,word,4,plongeur
+localizer,5,localizer word: bijoutier,'bijoutier' (no fixation cross; feedback as a dot at its centre),0,1000 (until the next stimulus),,,,,,,,,,word,5,bijoutier
+localizer,6,localizer word: chauffeur,'chauffeur' (no fixation cross; feedback as a dot at its centre),0,1000 (until the next stimulus),,,,,,,,,,word,6,chauffeur
+localizer,7,localizer word: menuisier,'menuisier' (no fixation cross; feedback as a dot at its centre),0,1000 (until the next stimulus),,,,,,,,,,word,7,menuisier
+localizer,8,localizer word: mécanicien,'mécanicien' (no fixation cross; feedback as a dot at its centre),0,1000 (until the next stimulus),,,,,,,,,,word,8,mécanicien
+localizer,9,localizer word: nonne,'nonne' (no fixation cross; feedback as a dot at its centre),0,1000 (until the next stimulus),,,,,,,,,,word,9,nonne
+localizer,10,localizer word: bergère,'bergère' (no fixation cross; feedback as a dot at its centre),0,1000 (until the next stimulus),,,,,,,,,,word,10,bergère
+localizer,11,localizer word: danseuse,'danseuse' (no fixation cross; feedback as a dot at its centre),0,1000 (until the next stimulus),,,,,,,,,,word,11,danseuse
+localizer,12,localizer word: serveuse,'serveuse' (no fixation cross; feedback as a dot at its centre),0,1000 (until the next stimulus),,,,,,,,,,word,12,serveuse
+localizer,13,localizer word: caissière,'caissière' (no fixation cross; feedback as a dot at its centre),0,1000 (until the next stimulus),,,,,,,,,,word,13,caissière
+localizer,14,localizer word: chanteuse,'chanteuse' (no fixation cross; feedback as a dot at its centre),0,1000 (until the next stimulus),,,,,,,,,,word,14,chanteuse
+localizer,15,localizer word: coiffeuse,'coiffeuse' (no fixation cross; feedback as a dot at its centre),0,1000 (until the next stimulus),,,,,,,,,,word,15,coiffeuse
+localizer,16,localizer word: couturière,'couturière' (no fixation cross; feedback as a dot at its centre),0,1000 (until the next stimulus),,,,,,,,,,word,16,couturière
+localizer,17,localizer word: musée,'musée' (no fixation cross; feedback as a dot at its centre),0,1000 (until the next stimulus),,,,,,,,,,word,17,musée
+localizer,18,localizer word: dortoir,'dortoir' (no fixation cross; feedback as a dot at its centre),0,1000 (until the next stimulus),,,,,,,,,,word,18,dortoir
+localizer,19,localizer word: tribunal,'tribunal' (no fixation cross; feedback as a dot at its centre),0,1000 (until the next stimulus),,,,,,,,,,word,19,tribunal
+localizer,20,localizer word: pressing,'pressing' (no fixation cross; feedback as a dot at its centre),0,1000 (until the next stimulus),,,,,,,,,,word,20,pressing
+localizer,21,localizer word: parlement,'parlement' (no fixation cross; feedback as a dot at its centre),0,1000 (until the next stimulus),,,,,,,,,,word,21,parlement
+localizer,22,localizer word: vestiaire,'vestiaire' (no fixation cross; feedback as a dot at its centre),0,1000 (until the next stimulus),,,,,,,,,,word,22,vestiaire
+localizer,23,localizer word: chapiteau,'chapiteau' (no fixation cross; feedback as a dot at its centre),0,1000 (until the next stimulus),,,,,,,,,,word,23,chapiteau
+localizer,24,localizer word: réfectoire,'réfectoire' (no fixation cross; feedback as a dot at its centre),0,1000 (until the next stimulus),,,,,,,,,,word,24,réfectoire
+localizer,25,localizer word: serre,'serre' (no fixation cross; feedback as a dot at its centre),0,1000 (until the next stimulus),,,,,,,,,,word,25,serre
+localizer,26,localizer word: piscine,'piscine' (no fixation cross; feedback as a dot at its centre),0,1000 (until the next stimulus),,,,,,,,,,word,26,piscine
+localizer,27,localizer word: garderie,'garderie' (no fixation cross; feedback as a dot at its centre),0,1000 (until the next stimulus),,,,,,,,,,word,27,garderie
+localizer,28,localizer word: clinique,'clinique' (no fixation cross; feedback as a dot at its centre),0,1000 (until the next stimulus),,,,,,,,,,word,28,clinique
+localizer,29,localizer word: brasserie,'brasserie' (no fixation cross; feedback as a dot at its centre),0,1000 (until the next stimulus),,,,,,,,,,word,29,brasserie
+localizer,30,localizer word: librairie,'librairie' (no fixation cross; feedback as a dot at its centre),0,1000 (until the next stimulus),,,,,,,,,,word,30,librairie
+localizer,31,localizer word: boucherie,'boucherie' (no fixation cross; feedback as a dot at its centre),0,1000 (until the next stimulus),,,,,,,,,,word,31,boucherie
+localizer,32,localizer word: cathédrale,'cathédrale' (no fixation cross; feedback as a dot at its centre),0,1000 (until the next stimulus),,,,,,,,,,word,32,cathédrale
+localizer,33,localizer image: marin,picture of 'marin' with the fixation cross on it,0,1000 (until the next stimulus),,,,,,,,,,image,1,marin
+localizer,34,localizer image: facteur,picture of 'facteur' with the fixation cross on it,0,1000 (until the next stimulus),,,,,,,,,,image,2,facteur
+localizer,35,localizer image: bûcheron,picture of 'bûcheron' with the fixation cross on it,0,1000 (until the next stimulus),,,,,,,,,,image,3,bûcheron
+localizer,36,localizer image: plongeur,picture of 'plongeur' with the fixation cross on it,0,1000 (until the next stimulus),,,,,,,,,,image,4,plongeur
+localizer,37,localizer image: bijoutier,picture of 'bijoutier' with the fixation cross on it,0,1000 (until the next stimulus),,,,,,,,,,image,5,bijoutier
+localizer,38,localizer image: chauffeur,picture of 'chauffeur' with the fixation cross on it,0,1000 (until the next stimulus),,,,,,,,,,image,6,chauffeur
+localizer,39,localizer image: menuisier,picture of 'menuisier' with the fixation cross on it,0,1000 (until the next stimulus),,,,,,,,,,image,7,menuisier
+localizer,40,localizer image: mécanicien,picture of 'mécanicien' with the fixation cross on it,0,1000 (until the next stimulus),,,,,,,,,,image,8,mécanicien
+localizer,41,localizer image: nonne,picture of 'nonne' with the fixation cross on it,0,1000 (until the next stimulus),,,,,,,,,,image,9,nonne
+localizer,42,localizer image: bergère,picture of 'bergère' with the fixation cross on it,0,1000 (until the next stimulus),,,,,,,,,,image,10,bergère
+localizer,43,localizer image: danseuse,picture of 'danseuse' with the fixation cross on it,0,1000 (until the next stimulus),,,,,,,,,,image,11,danseuse
+localizer,44,localizer image: serveuse,picture of 'serveuse' with the fixation cross on it,0,1000 (until the next stimulus),,,,,,,,,,image,12,serveuse
+localizer,45,localizer image: caissière,picture of 'caissière' with the fixation cross on it,0,1000 (until the next stimulus),,,,,,,,,,image,13,caissière
+localizer,46,localizer image: chanteuse,picture of 'chanteuse' with the fixation cross on it,0,1000 (until the next stimulus),,,,,,,,,,image,14,chanteuse
+localizer,47,localizer image: coiffeuse,picture of 'coiffeuse' with the fixation cross on it,0,1000 (until the next stimulus),,,,,,,,,,image,15,coiffeuse
+localizer,48,localizer image: couturière,picture of 'couturière' with the fixation cross on it,0,1000 (until the next stimulus),,,,,,,,,,image,16,couturière
+localizer,49,localizer image: musée,picture of 'musée' with the fixation cross on it,0,1000 (until the next stimulus),,,,,,,,,,image,17,musée
+localizer,50,localizer image: dortoir,picture of 'dortoir' with the fixation cross on it,0,1000 (until the next stimulus),,,,,,,,,,image,18,dortoir
+localizer,51,localizer image: tribunal,picture of 'tribunal' with the fixation cross on it,0,1000 (until the next stimulus),,,,,,,,,,image,19,tribunal
+localizer,52,localizer image: pressing,picture of 'pressing' with the fixation cross on it,0,1000 (until the next stimulus),,,,,,,,,,image,20,pressing
+localizer,53,localizer image: parlement,picture of 'parlement' with the fixation cross on it,0,1000 (until the next stimulus),,,,,,,,,,image,21,parlement
+localizer,54,localizer image: vestiaire,picture of 'vestiaire' with the fixation cross on it,0,1000 (until the next stimulus),,,,,,,,,,image,22,vestiaire
+localizer,55,localizer image: chapiteau,picture of 'chapiteau' with the fixation cross on it,0,1000 (until the next stimulus),,,,,,,,,,image,23,chapiteau
+localizer,56,localizer image: réfectoire,picture of 'réfectoire' with the fixation cross on it,0,1000 (until the next stimulus),,,,,,,,,,image,24,réfectoire
+localizer,57,localizer image: serre,picture of 'serre' with the fixation cross on it,0,1000 (until the next stimulus),,,,,,,,,,image,25,serre
+localizer,58,localizer image: piscine,picture of 'piscine' with the fixation cross on it,0,1000 (until the next stimulus),,,,,,,,,,image,26,piscine
+localizer,59,localizer image: garderie,picture of 'garderie' with the fixation cross on it,0,1000 (until the next stimulus),,,,,,,,,,image,27,garderie
+localizer,60,localizer image: clinique,picture of 'clinique' with the fixation cross on it,0,1000 (until the next stimulus),,,,,,,,,,image,28,clinique
+localizer,61,localizer image: brasserie,picture of 'brasserie' with the fixation cross on it,0,1000 (until the next stimulus),,,,,,,,,,image,29,brasserie
+localizer,62,localizer image: librairie,picture of 'librairie' with the fixation cross on it,0,1000 (until the next stimulus),,,,,,,,,,image,30,librairie
+localizer,63,localizer image: boucherie,picture of 'boucherie' with the fixation cross on it,0,1000 (until the next stimulus),,,,,,,,,,image,31,boucherie
+localizer,64,localizer image: cathédrale,picture of 'cathédrale' with the fixation cross on it,0,1000 (until the next stimulus),,,,,,,,,,image,32,cathédrale
+localizer,207,localizer: instruction/pause screen before training,text; the operator's SPACE starts the block,,until SPACE,,,,,,,,,,,,
+localizer,208,localizer: instruction/pause screen before block 1,text; the operator's SPACE starts the block,,until SPACE,,,,,,,,,,,,
+localizer,209,localizer: instruction/pause screen before block 2,text; the operator's SPACE starts the block,,until SPACE,,,,,,,,,,,,
+localizer,211,localizer feedback: hit,"cross on a picture, or dot on a word, turns green (press on a match)",RT,until the next stimulus,,,,,,,,,,,,
+localizer,212,localizer feedback: false alarm,"cross on a picture, or dot on a word, turns red (press on a non-match)",RT,until the next stimulus,,,,,,,,,,,,
+localizer,213,localizer feedback: miss,"cross on a picture, or dot on a word, turns red (no press on a match)",800,200,,,,,,,,,,,,
