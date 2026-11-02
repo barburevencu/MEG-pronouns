@@ -3,7 +3,7 @@ response_pad_reference.png (two pads, buttons blue / yellow / green / red from
 the top): every button is faded except the green ones the task uses, which
 are highlighted and labelled.
 
-    pad_localizer.png         right green: "Même sens"
+    pad_localizer.png         right green: "Animal"
     pad_congruent_left.png    left green "Du sens", right green "Pas de sens"
     pad_congruent_right.png   left green "Pas de sens", right green "Du sens"
 
@@ -69,7 +69,7 @@ def draw(labels):
 
 def main():
     out = {
-        "pad_localizer.png": {"right": "Même\nsens"},
+        "pad_localizer.png": {"right": "Animal"},
         "pad_congruent_left.png": {"left": "Du\nsens", "right": "Pas de\nsens"},
         "pad_congruent_right.png": {"left": "Pas de\nsens", "right": "Du\nsens"},
     }
