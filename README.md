@@ -35,9 +35,9 @@ localizer's cross is 1.92 cm, about 57 px.
 | `instructions/make_button_images.py` | draws the response-pad pictures (`pad_*.png`) from `response_pad_reference.png`, green buttons highlighted and labelled |
 | `instructions/make_preview.py` | draws the localizer example pictures and `instructions/preview.html`, every screen as the program shows it (run after editing `screens.json`) |
 | `main_test.go` | checks that every subject loads, every word code matches `triggers/triggers.csv`, and every localizer sequence has the designed structure |
-| `demo/pronouns_demo.html` | standalone browser demo to share: instructions (one short screen at a time, SPACE), 32 localizer trials (→ for a match) and 10 pronoun trials of subject 1 (← / →); trials and pictures are embedded |
+| `demo/pronouns_demo.html` | standalone browser demo to share: instructions (one short screen at a time, SPACE), 32 localizer trials (→ for a match) and 10 pronoun trials of subject 1 (← / →); trials and pictures are embedded. Key 0 in its menu shows the MEG program's instruction screens, in session order (→ / ← to browse) |
 | `.github/workflows/pages.yml` | publishes the demo at https://barburevencu.github.io/MEG-pronouns/ whenever it changes on `main` |
-| `demo/make_demo.py` | refreshes the demo's localizer sequence and pictures (run after changing the stimuli or the pictures) |
+| `demo/make_demo.py` | refreshes the demo's localizer sequence and pictures, and its copy of the MEG instruction screens (run after changing the stimuli, the pictures or `instructions/screens.json`) |
 | `tools/buttontest` | prints which parallel-port pin each response-pad button moves (run on the MEG computer: `go build -o buttontest ./tools/buttontest && ./buttontest`) |
 | `data/` | session data (created by the experiment) |
 

@@ -47,24 +47,49 @@ def data_url(path):
     return "data:image/png;base64," + base64.b64encode(path.read_bytes()).decode()
 
 
+# The screen lists in session order: (name in screens.json, title, response
+# mapping filled in, or None). Also used by demo/make_demo.py.
+SECTIONS = [
+    ("main_intro_two_parts", "Main task (first part): opening screens", None),
+    ("main_intro_alone", "… or, when no localizer follows", None),
+    ("main_intro", "Main task instructions (natural = right for every subject)", "right"),
+    ("main_before_training", "Then, before the training block", "right"),
+    ("main_after_training", "Before main block 1 (after training)", "right"),
+    ("main_ready", "… or, without training (-block 1), right after the instructions", "right"),
+    ("main_pause", "Pause before main blocks 2-6", "right"),
+    ("localizer_intro_after_main", "Localizer (second part): first screen, after the main task", None),
+    ("localizer_intro_alone", "… or, when the main task was skipped", None),
+    ("localizer_intro", "Localizer instructions, before the first localizer block", None),
+    ("localizer_before_training", "Then, before the training block", None),
+    ("localizer_after_training", "Before localizer block 1 (after training)", None),
+    ("localizer_pause", "Before localizer block 2", None),
+    ("end", "End", None),
+]
+
+# Lists whose last screen is the last before a block: the operator's SPACE
+# leaves it. Every other screen shows the hint (as continueHintText in
+# instructions.go) and the participant's right green button advances it.
+ENDS_WITH_BLOCK = {"main_before_training", "main_after_training", "main_ready", "main_pause",
+                   "localizer_before_training", "localizer_after_training", "localizer_pause", "end"}
+CONTINUE_HINT = "Bouton vert de droite : continuer"
+TOTAL_BLOCKS = 6  # as main.go's nBlocks, for {total} in the pause screens
+
+
+def fill(text, mapping):
+    """The text as the program shows it, for subject mapping "left"/"right"."""
+    natural = {"left": "gauche", "right": "droite"}[mapping]
+    odd = {"left": "droite", "right": "gauche"}[mapping]
+    return text.format(done=1, total=TOTAL_BLOCKS, natural=natural, odd=odd)
+
+
 def main():
     example("marin", "pic:marin", "example_word_picture")
     example("pic:nonne", "nonne", "example_picture_word")
     screens = json.loads((HERE / "screens.json").read_text(encoding="utf-8"))
 
-    # Lists whose last screen is the last before a block: the operator's SPACE
-    # leaves it. Every other screen shows the hint (as continueHintText in
-    # instructions.go) and the participant's right green button advances it.
-    ends_with_block = {"main_before_training", "main_after_training", "main_ready", "main_pause", "localizer_before_training",
-                       "localizer_after_training", "localizer_pause", "end"}
-    hint = "Bouton vert de droite : continuer"
-
     def screen(s, mapping, with_hint):
-        text = s["text"]
-        natural = {"left": "gauche", "right": "droite"}[mapping]
-        odd = {"left": "droite", "right": "gauche"}[mapping]
-        text = text.format(done=1, total=6, natural=natural, odd=odd)  # as main.go's nBlocks
-        body = "".join(f"<p>{p}</p>" for p in text.split("\n\n"))
+        text = fill(s["text"], mapping)
+        body = '<div class="txt">' + "".join(f"<p>{p}</p>" for p in text.split("\n\n")) + "</div>"
         img = s.get("image")
         if img:
             if img == "pad_congruent":
@@ -72,33 +97,17 @@ def main():
             cls = "pad" if img.startswith("pad") else "ex"
             body += f'<img class="{cls}" src="{data_url(HERE / (img + ".png"))}">'
         if with_hint:
-            body += f'<span class="hint">{hint}</span>'
+            body += f'<span class="hint">{CONTINUE_HINT}</span>'
         return f'<div class="screen">{body}</div>'
 
-    sections = [
-        ("main_intro_two_parts", "Main task (first part): opening screens", None),
-        ("main_intro_alone", "… or, when no localizer follows", None),
-        ("main_intro", "Main task instructions (natural = right for every subject)", "right"),
-        ("main_before_training", "Then, before the training block", "right"),
-        ("main_after_training", "Before main block 1 (after training)", "right"),
-        ("main_ready", "… or, without training (-block 1), right after the instructions", "right"),
-        ("main_pause", "Pause before main blocks 2-5", "right"),
-        ("localizer_intro_after_main", "Localizer (second part): first screen, after the main task", None),
-        ("localizer_intro_alone", "… or, when the main task was skipped", None),
-        ("localizer_intro", "Localizer instructions, before the first localizer block", None),
-        ("localizer_before_training", "Then, before the training block", None),
-        ("localizer_after_training", "Before localizer block 1 (after training)", None),
-        ("localizer_pause", "Before localizer block 2", None),
-        ("end", "End", None),
-    ]
     font = data_url(FONT).replace("image/png", "font/ttf")
     parts = []
     n = 0
-    for key, title, mapping in sections:
+    for key, title, mapping in SECTIONS:
         cards = []
         for i, s in enumerate(screens[key]):
             n += 1
-            with_hint = not (key in ends_with_block and i == len(screens[key]) - 1)
+            with_hint = not (key in ENDS_WITH_BLOCK and i == len(screens[key]) - 1)
             cards.append(f'<figure><figcaption>{n}</figcaption>{screen(s, mapping or "left", with_hint)}</figure>')
         parts.append(f"<h2>{title}</h2><div class='row'>{''.join(cards)}</div>")
 
@@ -115,7 +124,8 @@ figure {{ margin: 0; }} figcaption {{ font-size: 12px; color: #888; }}
 .screen {{ position: relative; width: 480px; height: 270px; background: #000; color: #fff; display: flex; flex-direction: column;
           align-items: center; justify-content: center; text-align: center; padding: 0 28px; box-sizing: border-box;
           font: 13px/1.35 Inconsolata, monospace; }}
-.screen p {{ margin: 0 0 8px; max-width: 55%; }}
+.screen .txt {{ max-width: 55%; text-align: left; }}  /* lines left-aligned, block centred */
+.screen p {{ margin: 0 0 8px; }}
 .screen img.pad {{ height: 140px; margin-top: 6px; }}
 .screen img.ex {{ height: 95px; margin-top: 8px; }}
 .screen .hint {{ position: absolute; left: 0; right: 0; bottom: 6px; color: #808080; }}

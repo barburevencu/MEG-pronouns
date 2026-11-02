@@ -158,7 +158,9 @@ func (in *instructions) screens(name string, done, total int) ([]*instructionScr
 
 func (in *instructions) build(text, img string) (*instructionScreen, error) {
 	w, h := in.exp.DrawArea()
+	// Lines are left-aligned; the block, as wide as its longest line, is centred.
 	box := stimuli.NewTextBox(text, int32(instrTextWidth*w), sdl.FPoint{}, textColor)
+	box.Alignment = ttf.HORIZONTAL_ALIGN_LEFT
 	box.Font = in.font
 	if err := stimuli.PreloadVisualOnScreen(in.exp.Screen, box); err != nil {
 		return nil, err

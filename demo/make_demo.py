@@ -1,5 +1,6 @@
-"""Fill pronouns_demo.html's localizer part: a 32-trial sequence and the
-pictures, embedded as JPEG data URLs so the demo stays a single file.
+"""Fill pronouns_demo.html's generated part: the localizer's 32-trial sequence
+and pictures, and the MEG program's instruction screens (key 0 in the demo's
+menu), with their pictures embedded as data URLs so the demo stays a single file.
 
 The sequence follows the localizer's rules (localizer/make_localizer.py): words
 and pictures alternate, starting with a word; 4 matches, 2 word -> picture and
@@ -19,7 +20,9 @@ from PIL import Image
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parent
 sys.path.insert(0, str(ROOT / "localizer"))
+sys.path.insert(0, str(ROOT / "instructions"))
 from make_localizer import read_concepts  # noqa: E402
+from make_preview import CONTINUE_HINT, ENDS_WITH_BLOCK, FONT, SECTIONS, fill  # noqa: E402
 
 SEED = 7
 N_TRIALS, N_MATCHES = 32, 4
@@ -67,6 +70,36 @@ def data_url(path):
     return "data:image/jpeg;base64," + base64.b64encode(buf.getvalue()).decode()
 
 
+def picture_url(path, height):
+    """An instruction picture, scaled to height px: PNG for the drawn pads,
+    JPEG for the examples (photos)."""
+    img = Image.open(path).convert("RGB")
+    img = img.resize((round(img.width * height / img.height), height), Image.LANCZOS)
+    buf = io.BytesIO()
+    if path.name.startswith("pad_"):
+        img.save(buf, "PNG", optimize=True)
+        return "data:image/png;base64," + base64.b64encode(buf.getvalue()).decode()
+    img.save(buf, "JPEG", quality=85, optimize=True)
+    return "data:image/jpeg;base64," + base64.b64encode(buf.getvalue()).decode()
+
+
+def meg_screens():
+    """Every instruction screen of the MEG program, in session order, as the
+    program shows it (subject mapping: natural = right), and their pictures."""
+    specs = json.loads((ROOT / "instructions" / "screens.json").read_text(encoding="utf-8"))
+    screens, pictures = [], {}
+    for key, title, mapping in SECTIONS:
+        for i, sc in enumerate(specs[key]):
+            img = sc.get("image")
+            if img == "pad_congruent":
+                img = f"pad_congruent_{mapping or 'right'}"
+            if img and img not in pictures:
+                pictures[img] = picture_url(ROOT / "instructions" / f"{img}.png", 540 if img.startswith("pad_") else 300)
+            screens.append({"title": title, "text": fill(sc["text"], mapping or "right"), "image": img or "",
+                            "hint": CONTINUE_HINT if not (key in ENDS_WITH_BLOCK and i == len(specs[key]) - 1) else ""})
+    return screens, pictures
+
+
 def main():
     concepts = read_concepts()
     seq, matches = sequence(random.Random(SEED))
@@ -77,19 +110,24 @@ def main():
     images = {c["item"]: data_url(ROOT / "localizer" / "images" / c["image"])
               for c in concepts if c["item"] in shown or c["item"] in examples}
     nouns = [c["item"] for c in concepts]
+    screens, pictures = meg_screens()
 
     block = "\n".join([
         BEGIN,
         "const LOC_TRIALS = " + json.dumps(trials, ensure_ascii=False) + ";",
         "const NOUNS = " + json.dumps(nouns, ensure_ascii=False) + ";",
         "const IMAGES = " + json.dumps(images) + ";",
+        "const MEG_SCREENS = " + json.dumps(screens, ensure_ascii=False) + ";",
+        "const MEG_PICTURES = " + json.dumps(pictures) + ";",
+        # The program's font (goxpyriment's Inconsolata), so text wraps as on the MEG screen.
+        'const INCONSOLATA = "data:font/ttf;base64,' + base64.b64encode(FONT.read_bytes()).decode() + '";',
         END,
     ])
     html = DEMO.read_text(encoding="utf-8")
     a, b = html.index(BEGIN), html.index(END) + len(END)
     DEMO.write_text(html[:a] + block + html[b:], encoding="utf-8")
     print(f"{DEMO.name}: {len(trials)} localizer trials, matches at {sorted(matches)}, "
-          f"{len(images)} pictures, {DEMO.stat().st_size // 1024} KB")
+          f"{len(images)} pictures, {len(screens)} instruction screens, {DEMO.stat().st_size // 1024} KB")
 
 
 if __name__ == "__main__":
