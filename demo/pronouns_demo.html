@@ -76,7 +76,7 @@
 // screens advance with SPACE; ESC ends the demo. Localizer stimuli stay on
 // for a second each, pronoun-task words for 300 ms each, with no blank. The localizer's "same"
 // answer is → (the right green button in the MEG); the pronoun task uses
-// → natural / ← odd (every subject's mapping).
+// → makes sense / ← does not (every subject's mapping).
 
 const TRIALS = [
 {
@@ -221,12 +221,14 @@ const LOC_PAGES = afterPronoun => [
 // The first page depends on whether the localizer comes after.
 const PRONOUN_PAGES = beforeLoc => [
   (beforeLoc ? `<p>Dans la première partie` : `<p>Dans cette partie`) +
-  `, vous allez lire des paires de phrases, mot par mot.</p>` + NEXT,
-  `<p>Après la seconde phrase, indiquez si elle s'enchaîne naturellement avec la première.</p>` + NEXT,
-  `<p>Flèche <kbd>→</kbd> : oui, la suite est naturelle.</p>
-   <p>Flèche <kbd>←</kbd> : non, la suite est étrange.</p>` + NEXT,
-  `<p>Vous pouvez répondre dès que le dernier mot apparaît.</p>
-   <p>Répondez le plus vite possible, en moins de 3 secondes.</p>` + NEXT,
+  `, vous allez lire des phrases, mot par mot.</p>` + NEXT,
+  `<p>Les phrases vont par deux et décrivent une petite scène.</p>
+   <p>Représentez-vous cette scène au fil de la lecture.</p>` + NEXT,
+  `<p>Puis jugez : cette scène a-t-elle du sens ?</p>` + NEXT,
+  `<p>Flèche <kbd>→</kbd> : oui, ça a du sens.</p>
+   <p>Flèche <kbd>←</kbd> : non, ça n'a pas de sens.</p>` + NEXT,
+  `<p>Ne réfléchissez pas trop : lisez le plus naturellement possible et répondez vite, en moins de 3 secondes.</p>
+   <p>Vous pouvez répondre dès que le dernier mot apparaît.</p>` + NEXT,
   `<p>La croix devient <span class="ok">verte</span> si votre réponse est correcte,
    <span class="bad">rouge</span> si elle est incorrecte.</p>
    <p>Elle devient <span class="none">gris foncé</span> si vous n'avez pas répondu à temps.</p>` + NEXT,
@@ -448,7 +450,7 @@ function finish(loc, results) {
   const n = results.filter(r => r.outcome === "correct").length;
   $("score").textContent = results.length ?
     `Première partie : ${n} réponse${n > 1 ? "s" : ""} correcte${n > 1 ? "s" : ""} sur ${results.length}.` : "";
-  const label = { left: "← étrange", right: "→ naturel", "": "—" };
+  const label = { left: "← non", right: "→ oui", "": "—" };
   document.querySelector("#end table").style.display = results.length ? "" : "none";
   $("rows").innerHTML = results.map((r, i) => `<tr>
     <td>${i + 1}</td>

@@ -4,8 +4,8 @@ the top): every button is faded except the green ones the task uses, which
 are highlighted and labelled.
 
     pad_localizer.png         right green: "Même sens"
-    pad_congruent_left.png    left green "Naturel", right green "Étrange"
-    pad_congruent_right.png   left green "Étrange", right green "Naturel"
+    pad_congruent_left.png    left green "Oui", right green "Non" (makes sense?)
+    pad_congruent_right.png   left green "Non", right green "Oui"
 
 Usage: python3 make_button_images.py [LABEL_FONT.ttf]   (default: Lato Bold)
 """
@@ -70,8 +70,8 @@ def draw(labels):
 def main():
     out = {
         "pad_localizer.png": {"right": "Même\nsens"},
-        "pad_congruent_left.png": {"left": "Naturel", "right": "Étrange"},
-        "pad_congruent_right.png": {"left": "Étrange", "right": "Naturel"},
+        "pad_congruent_left.png": {"left": "Oui", "right": "Non"},
+        "pad_congruent_right.png": {"left": "Non", "right": "Oui"},
     }
     for name, labels in out.items():
         draw(labels).save(HERE / name, optimize=True)
