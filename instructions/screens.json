@@ -44,7 +44,8 @@
   ],
 
   "localizer_intro": [
-    {"text": "D'abord une série de mots, puis une série d'images, puis de nouveau des mots, et ainsi de suite.\n\nEntre deux séries, une pause de 10 secondes vous annonce la suivante, et vous indique combien d'animaux vous avez repérés dans la précédente."},
+    {"text": "D'abord une série de mots, puis une série d'images, puis de nouveau des mots, et ainsi de suite."},
+    {"text": "Entre deux séries, une pause de 10 secondes vous annonce la suivante, et vous indique combien d'animaux vous avez repérés dans la précédente."},
     {"text": "Votre tâche : repérer les animaux.\n\nDès que vous voyez un animal, en mot ou en image, appuyez le plus vite possible sur le bouton vert de droite.", "image": "pad_localizer"},
     {"text": "Tous les animaux comptent : mammifères, oiseaux, poissons et autres animaux marins, reptiles, insectes, araignées…"},
     {"text": "Par exemple, appuyez pour le mot « papillon » comme pour une image de papillon.\n\nPour tout le reste, n'appuyez pas."},
