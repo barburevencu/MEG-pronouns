@@ -40,7 +40,7 @@ localizer's large cross is 1.92 cm, about 57 px.
 | `counterbalancing/make_counterbalancing.py` | writes `counterbalancing/counterbalancing.csv` (all subjects, 6 blocks of 40: 32 main trials + 8 fillers) from `counterbalancing/stimuli.csv` and `counterbalancing/fillers.csv` |
 | `counterbalancing/fillers.csv` | the 48 filler items: 12 person-adjectives, each natural after 2 verbs and odd after 2 others, with an example sentence |
 | `triggers/make_trigger_table.py` | writes `triggers/triggers.csv`, every trigger code and what is on screen when it fires |
-| `pictures/` | the image prompts (`faces_prompts.md` people, `places_prompts.md` places); the full-size PNGs are not committed |
+| `pictures/` | the image prompts (`faces_prompts.md` people, `places_prompts.md` places, `animals_prompts.md` the localizer's animals); the full-size PNGs are not committed |
 | `localizer/animals.csv` | the 16 animals, with gender, length and log frequencies (Lexique 3.83, as in `stimuli.csv`) |
 | `localizer/make_localizer.py` | writes `localizer/localizer.csv` (all subjects' localizer sequences) and `localizer/images/` (the pictures shrunk to 512 px, placeholders for animals without a picture) from `pictures/` |
 | `main.go` | the experiment; `counterbalancing/counterbalancing.csv` is embedded in the binary |
