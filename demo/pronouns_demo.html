@@ -225,8 +225,8 @@ const PRONOUN_PAGES = beforeLoc => [
   `<p>Les phrases vont par deux et décrivent une petite scène.</p>
    <p>Représentez-vous cette scène au fil de la lecture.</p>` + NEXT,
   `<p>Puis jugez : cette scène a-t-elle du sens ?</p>` + NEXT,
-  `<p>Flèche <kbd>→</kbd> : oui, ça a du sens.</p>
-   <p>Flèche <kbd>←</kbd> : non, ça n'a pas de sens.</p>` + NEXT,
+  `<p>Flèche <kbd>→</kbd> : ça a du sens.</p>
+   <p>Flèche <kbd>←</kbd> : ça n'a pas de sens.</p>` + NEXT,
   `<p>Ne réfléchissez pas trop : lisez le plus naturellement possible et répondez vite, en moins de 3 secondes.</p>
    <p>Vous pouvez répondre dès que le dernier mot apparaît.</p>` + NEXT,
   `<p>La croix devient <span class="ok">verte</span> si votre réponse est correcte,
@@ -450,7 +450,7 @@ function finish(loc, results) {
   const n = results.filter(r => r.outcome === "correct").length;
   $("score").textContent = results.length ?
     `Première partie : ${n} réponse${n > 1 ? "s" : ""} correcte${n > 1 ? "s" : ""} sur ${results.length}.` : "";
-  const label = { left: "← non", right: "→ oui", "": "—" };
+  const label = { left: "← pas de sens", right: "→ du sens", "": "—" };
   document.querySelector("#end table").style.display = results.length ? "" : "none";
   $("rows").innerHTML = results.map((r, i) => `<tr>
     <td>${i + 1}</td>
