@@ -73,9 +73,8 @@ def main():
         ("localizer_pause", "Before localizer block 2", None),
         ("main_intro_after_localizer", "Main task, first screen (after the localizer)", None),
         ("main_intro_alone", "… or, when the localizer was skipped", None),
-        ("main_intro", "Main task instructions: odd subjects (natural = left)", "left"),
-        ("main_intro", "Main task instructions: even subjects (natural = right)", "right"),
-        ("main_pause", "Pause before main blocks 2-5 (odd subjects; even ones get the mirrored pad)", "left"),
+        ("main_intro", "Main task instructions (natural = right for every subject)", "right"),
+        ("main_pause", "Pause before main blocks 2-5", "right"),
         ("end", "End", None),
     ]
     font = data_url(FONT).replace("image/png", "font/ttf")

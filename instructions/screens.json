@@ -42,7 +42,7 @@
   ],
 
   "main_pause": [
-    {"text": "Pause : bloc {done} sur {total} terminé.\n\nReposez-vous quelques instants.", "image": "pad_congruent"}
+    {"text": "Pause : bloc {done} sur {total} terminé.\n\nReposez-vous quelques instants.\n\nRappel : gardez les yeux sur la croix au centre de l'écran.", "image": "pad_congruent"}
   ],
 
   "end": [

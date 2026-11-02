@@ -76,7 +76,7 @@
 // screens advance with SPACE; ESC ends the demo. Localizer stimuli stay on
 // for a second each, pronoun-task words for 300 ms each, with no blank. The localizer's "same"
 // answer is → (the right green button in the MEG); the pronoun task uses
-// ← natural / → odd (subject 1's mapping).
+// → natural / ← odd (every subject's mapping).
 
 const TRIALS = [
 {
@@ -85,7 +85,7 @@ const TRIALS = [
 "congruent": "0",
 "canonical_order": "1",
 "pronoun_referent": "place",
-"correct_key": "right",
+"correct_key": "left",
 "translation": "The seamstress was dreaming in the locker room. It was talkative."
 },
 {
@@ -94,7 +94,7 @@ const TRIALS = [
 "congruent": "0",
 "canonical_order": "1",
 "pronoun_referent": "agent",
-"correct_key": "right",
+"correct_key": "left",
 "translation": "The cashier was dreaming in the dining hall. She was repainted."
 },
 {
@@ -103,7 +103,7 @@ const TRIALS = [
 "congruent": "0",
 "canonical_order": "1",
 "pronoun_referent": "place",
-"correct_key": "right",
+"correct_key": "left",
 "translation": "The shepherdess was shouting in the dining hall. It was fearful."
 },
 {
@@ -112,7 +112,7 @@ const TRIALS = [
 "congruent": "0",
 "canonical_order": "0",
 "pronoun_referent": "agent",
-"correct_key": "right",
+"correct_key": "left",
 "translation": "In the dining hall the waitress was talking. She was spacious."
 },
 {
@@ -121,7 +121,7 @@ const TRIALS = [
 "congruent": "0",
 "canonical_order": "1",
 "pronoun_referent": "agent",
-"correct_key": "right",
+"correct_key": "left",
 "translation": "The sailor was thinking in the cathedral. He was damp."
 },
 {
@@ -130,7 +130,7 @@ const TRIALS = [
 "congruent": "1",
 "canonical_order": "0",
 "pronoun_referent": "agent",
-"correct_key": "left",
+"correct_key": "right",
 "translation": "In the butcher's shop the sailor was shouting. He was lazy."
 },
 {
@@ -139,7 +139,7 @@ const TRIALS = [
 "congruent": "0",
 "canonical_order": "0",
 "pronoun_referent": "place",
-"correct_key": "right",
+"correct_key": "left",
 "translation": "In the courtroom the waitress was thinking. It was lazy."
 },
 {
@@ -148,7 +148,7 @@ const TRIALS = [
 "congruent": "1",
 "canonical_order": "0",
 "pronoun_referent": "place",
-"correct_key": "left",
+"correct_key": "right",
 "translation": "In the swimming pool the sailor was dreaming. It was air-conditioned."
 },
 {
@@ -157,7 +157,7 @@ const TRIALS = [
 "congruent": "0",
 "canonical_order": "0",
 "pronoun_referent": "place",
-"correct_key": "right",
+"correct_key": "left",
 "translation": "In the clinic the sailor was thinking. It was talkative."
 },
 {
@@ -166,7 +166,7 @@ const TRIALS = [
 "congruent": "0",
 "canonical_order": "0",
 "pronoun_referent": "agent",
-"correct_key": "right",
+"correct_key": "left",
 "translation": "In the butcher's shop the lumberjack was hesitating. He was run-down."
 }
 ];
@@ -221,8 +221,8 @@ const PRONOUN_PAGES = afterLoc => [
   (afterLoc ? `<p><b>Fin de la première partie.</b></p><p>Dans la seconde partie` : `<p>Dans cette partie`) +
   `, vous allez lire des paires de phrases, mot par mot.</p>` + NEXT,
   `<p>Après la seconde phrase, indiquez si elle s'enchaîne naturellement avec la première.</p>` + NEXT,
-  `<p>Flèche <kbd>←</kbd> : oui, la suite est naturelle.</p>
-   <p>Flèche <kbd>→</kbd> : non, la suite est étrange.</p>` + NEXT,
+  `<p>Flèche <kbd>→</kbd> : oui, la suite est naturelle.</p>
+   <p>Flèche <kbd>←</kbd> : non, la suite est étrange.</p>` + NEXT,
   `<p>Vous pouvez répondre dès que le dernier mot apparaît.</p>
    <p>Répondez le plus vite possible, en moins de 3 secondes.</p>` + NEXT,
   `<p>La croix devient <span class="ok">verte</span> si votre réponse est correcte,
@@ -444,7 +444,7 @@ function finish(loc, results) {
   const n = results.filter(r => r.outcome === "correct").length;
   $("score").textContent = results.length ?
     `Seconde partie : ${n} réponse${n > 1 ? "s" : ""} correcte${n > 1 ? "s" : ""} sur ${results.length}.` : "";
-  const label = { left: "← naturel", right: "→ étrange", "": "—" };
+  const label = { left: "← étrange", right: "→ naturel", "": "—" };
   document.querySelector("#end table").style.display = results.length ? "" : "none";
   $("rows").innerHTML = results.map((r, i) => `<tr>
     <td>${i + 1}</td>

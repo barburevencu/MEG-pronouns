@@ -1,8 +1,8 @@
 """Generate the counterbalancing sheet for all subjects.
 
 Per subject: 160 trials = 10 sets x 16 cells, then shuffled and cut into
-blocks of 32 trials (5 blocks). Odd subjects answer "congruent" with the
-left red button, even subjects with the right one.
+blocks of 32 trials (5 blocks). Every subject answers "congruent" with the
+right button and "incongruent" with the left one (no counterbalancing).
 
 Usage: python3 make_counterbalancing.py [N_SUBJECTS]
 """
@@ -165,9 +165,8 @@ def make_subject(subject_id):
                 "translation": f"{en1} {en2}",
             })
 
-    # Response mapping alternates across subjects: odd -> left red = congruent.
-    congruent_key = "left" if subject_id % 2 else "right"
-    incongruent_key = "right" if congruent_key == "left" else "left"
+    # Same response mapping for everyone: right = congruent.
+    congruent_key, incongruent_key = "right", "left"
 
     rng.shuffle(trials)
     for i, t in enumerate(trials):
