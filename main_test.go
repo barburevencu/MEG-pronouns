@@ -154,8 +154,9 @@ func TestInstructionScreens(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	for _, name := range []string{"localizer_intro", "localizer_before_training", "localizer_after_training",
-		"localizer_pause", "main_intro_after_localizer", "main_intro_alone", "main_intro", "main_pause", "end"} {
+	for _, name := range []string{"main_intro_two_parts", "main_intro_alone", "main_intro", "main_pause",
+		"localizer_intro_after_main", "localizer_intro_alone", "localizer_intro", "localizer_before_training",
+		"localizer_after_training", "localizer_pause", "end"} {
 		list := screens[name]
 		if len(list) == 0 {
 			t.Fatalf("instructions/screens.json: no %q", name)

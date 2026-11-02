@@ -60,8 +60,8 @@
 
 <div id="end" class="screen"><div class="text">
   <p><b>Fin de la démo — merci !</b></p>
-  <p id="locScore"></p>
   <p id="score"></p>
+  <p id="locScore"></p>
   <table>
     <thead><tr><th>#</th><th>Phrases</th><th>Attendu</th><th>Réponse</th><th>TR</th></tr></thead>
     <tbody id="rows"></tbody>
@@ -70,9 +70,9 @@
 </div></div>
 
 <script>
-// Demo of the MEG session: the localizer (one-back on words and pictures) and
-// the pronoun task, with the timing of main.go / localizer.go. A first screen
-// picks both parts, the localizer alone or the pronoun task alone. Instruction
+// Demo of the MEG session: the pronoun task, then the localizer (one-back on
+// words and pictures), with the timing of main.go / localizer.go. A first
+// screen picks both parts, the pronoun task alone or the localizer alone. Instruction
 // screens advance with SPACE; ESC ends the demo. Localizer stimuli stay on
 // for a second each, pronoun-task words for 300 ms each, with no blank. The localizer's "same"
 // answer is → (the right green button in the MEG); the pronoun task uses
@@ -193,16 +193,18 @@ const w = text => `<span class="w">${text}</span>`;
 const img = item => `<img src="${IMAGES[item]}" alt="${item}">`;
 
 const MENU = `<p><b>Bienvenue !</b></p><p>Cette expérience comporte deux parties.</p>
-  <p class="menu"><kbd>1</kbd> Both localizer and pronoun task<br><kbd>2</kbd> Only localizer<br><kbd>3</kbd> Only pronoun task</p>
+  <p class="menu"><kbd>1</kbd> Both pronoun task and localizer<br><kbd>2</kbd> Only pronoun task<br><kbd>3</kbd> Only localizer</p>
   <p class="next">Appuyez sur <kbd>1</kbd>, <kbd>2</kbd> ou <kbd>3</kbd>.</p>
-  <p class="en">Demo of a French MEG experiment: a one-back localizer (32 trials, about 30 s), then the
-   pronoun task (10 trials, about 2 minutes). SPACE advances the instructions; ESC stops the demo.</p>`;
+  <p class="en">Demo of a French MEG experiment: the pronoun task (10 trials, about 2 minutes), then a
+   one-back localizer (32 trials, about 30 s). SPACE advances the instructions; ESC stops the demo.</p>`;
 
 // The parts each choice of the menu runs.
-const PARTS = { 1: { loc: true, pronoun: true }, 2: { loc: true, pronoun: false }, 3: { loc: false, pronoun: true } };
+const PARTS = { 1: { pronoun: true, loc: true }, 2: { pronoun: true, loc: false }, 3: { pronoun: false, loc: true } };
 
-const LOC_PAGES = [
-  `<p>Dans la première partie, des mots et des images vont apparaître au centre de l'écran, l'un après l'autre.</p>
+// The first page depends on whether the pronoun task came before.
+const LOC_PAGES = afterPronoun => [
+  (afterPronoun ? `<p><b>Fin de la première partie.</b></p><p>Dans la seconde partie, des mots` : `<p>Dans cette partie, des mots`) +
+  ` et des images vont apparaître au centre de l'écran, l'un après l'autre.</p>
    <p>Mots et images alternent, au rythme d'un par seconde.</p>` + NEXT,
   `<p>Votre tâche : repérer quand ce qui apparaît correspond à ce qui vient juste avant.</p>` + NEXT,
   `<p>Cela marche <b>dans les deux sens</b>.</p><p>Un mot suivi de son image :</p>` +
@@ -216,9 +218,9 @@ const LOC_PAGES = [
   `<p>Gardez les yeux au centre de l'écran, sur les mots comme sur les images.</p>` + START,
 ];
 
-// The first page depends on whether the localizer came before.
-const PRONOUN_PAGES = afterLoc => [
-  (afterLoc ? `<p><b>Fin de la première partie.</b></p><p>Dans la seconde partie` : `<p>Dans cette partie`) +
+// The first page depends on whether the localizer comes after.
+const PRONOUN_PAGES = beforeLoc => [
+  (beforeLoc ? `<p>Dans la première partie` : `<p>Dans cette partie`) +
   `, vous allez lire des paires de phrases, mot par mot.</p>` + NEXT,
   `<p>Après la seconde phrase, indiquez si elle s'enchaîne naturellement avec la première.</p>` + NEXT,
   `<p>Flèche <kbd>→</kbd> : oui, la suite est naturelle.</p>
@@ -411,16 +413,14 @@ async function run() {
   const results = [];
   const parts = await menu();
   document.documentElement.requestFullscreen?.().catch(() => {});
-  if (!parts.loc || await pages(LOC_PAGES)) {
-    if (parts.loc) {
-      show("stage");
-      loc = await runLocalizer();
-    }
-    if (parts.pronoun && (loc || !parts.loc) && await pages(PRONOUN_PAGES(parts.loc))) {
+  let go = true; // false once ESC was pressed
+  if (parts.pronoun) {
+    go = await pages(PRONOUN_PAGES(parts.loc));
+    if (go) {
       show("stage");
       for (const t of TRIALS) {
         const r = await runTrial(t);
-        if (r === null) break;
+        if (r === null) { go = false; break; }
         const outcome = r.key === "" ? "timeout" : r.key === t.correct_key ? "correct" : "incorrect";
         results.push({ t, ...r, outcome });
         cross.style.setProperty("--c", COLORS[outcome]);
@@ -430,6 +430,10 @@ async function run() {
       }
     }
   }
+  if (go && parts.loc && await pages(LOC_PAGES(parts.pronoun))) {
+    show("stage");
+    loc = await runLocalizer();
+  }
   if (document.fullscreenElement) document.exitFullscreen().catch(() => {});
   finish(loc, results);
 }
@@ -438,12 +442,12 @@ function finish(loc, results) {
   if (loc) {
     const count = k => loc.filter(o => o.outcome === k).length;
     const matches = LOC_TRIALS.filter(t => t.match).length;
-    $("locScore").textContent = `Première partie : ${count("hit")} correspondance(s) repérée(s) sur ${matches}, ` +
+    $("locScore").textContent = `${results.length ? "Seconde" : "Première"} partie : ${count("hit")} correspondance(s) repérée(s) sur ${matches}, ` +
       `${count("false_alarm")} appui(s) à tort, ${count("miss") + count("late")} oubli(s).`;
   } else $("locScore").textContent = "";
   const n = results.filter(r => r.outcome === "correct").length;
   $("score").textContent = results.length ?
-    `Seconde partie : ${n} réponse${n > 1 ? "s" : ""} correcte${n > 1 ? "s" : ""} sur ${results.length}.` : "";
+    `Première partie : ${n} réponse${n > 1 ? "s" : ""} correcte${n > 1 ? "s" : ""} sur ${results.length}.` : "";
   const label = { left: "← étrange", right: "→ naturel", "": "—" };
   document.querySelector("#end table").style.display = results.length ? "" : "none";
   $("rows").innerHTML = results.map((r, i) => `<tr>

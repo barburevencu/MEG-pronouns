@@ -1,6 +1,6 @@
 """Render the example pictures of the instructions and preview.html, which
 shows every instruction screen of screens.json as the MEG program will (black
-screen, Inconsolata text, picture under the text), for both response mappings.
+screen, Inconsolata text, picture under the text), in the order of the session.
 
 Usage: python3 make_preview.py
 """
@@ -67,14 +67,16 @@ def main():
         return f'<div class="screen">{body}</div>'
 
     sections = [
-        ("localizer_intro", "Localizer: before the first localizer block", None),
+        ("main_intro_two_parts", "Main task (first part): opening screens", None),
+        ("main_intro_alone", "… or, when no localizer follows", None),
+        ("main_intro", "Main task instructions (natural = right for every subject)", "right"),
+        ("main_pause", "Pause before main blocks 2-5", "right"),
+        ("localizer_intro_after_main", "Localizer (second part): first screen, after the main task", None),
+        ("localizer_intro_alone", "… or, when the main task was skipped", None),
+        ("localizer_intro", "Localizer instructions, before the first localizer block", None),
         ("localizer_before_training", "Then, before the training block", None),
         ("localizer_after_training", "Before localizer block 1 (after training)", None),
         ("localizer_pause", "Before localizer block 2", None),
-        ("main_intro_after_localizer", "Main task, first screen (after the localizer)", None),
-        ("main_intro_alone", "… or, when the localizer was skipped", None),
-        ("main_intro", "Main task instructions (natural = right for every subject)", "right"),
-        ("main_pause", "Pause before main blocks 2-5", "right"),
         ("end", "End", None),
     ]
     font = data_url(FONT).replace("image/png", "font/ttf")

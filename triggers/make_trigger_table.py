@@ -5,7 +5,7 @@ Word codes are 16 * role + cell, where cell packs the trial's condition:
     bit 0 congruent, bit 1 canonical order, bit 2 pronoun feminine, bit 3 agent feminine.
 Times are ms from the trial's fixation onset (code 160 + trial_number).
 
-The localizer (task "localizer", before the main task) reuses codes 1-64 for its
+The localizer (task "localizer", after the main task) reuses codes 1-64 for its
 stimuli: word of concept k = k, picture = 32 + k, concepts numbered as in
 stimuli.csv (people 1-16, places 17-32). Its blocks open with codes 206-208, so
 the two tasks are separate segments of the recording.

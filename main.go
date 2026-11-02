@@ -1,8 +1,8 @@
 // Pronouns — MEG experiment on pronoun resolution (French).
 //
-// The session opens with a localizer (localizer.go): a one-back task on words
-// and pictures of the 32 nouns, a 64-trial training block and two blocks of
-// 512. Then the main task:
+// The session opens with the main task, then a localizer (localizer.go): a
+// one-back task on words and pictures of the 32 nouns, a 64-trial training
+// block and two blocks of 512. The main task:
 //
 // Each trial: fixation (1000 ms), sentence 1 word by word (6 words, each
 // 300 ms on, no blank in between), a 1000 ms break, sentence 2 (3 words, same
@@ -469,7 +469,7 @@ func main() {
 	photodiode := flag.String("photodiode", "auto", "photodiode square in the top-left corner: on, off, or auto (on with -meg)")
 	photodiodeSize := flag.Float64("photodiode-size", control.DefaultPhotodiodeSize, "side of the photodiode square, in pixels")
 	ttlMs := flag.Float64("ttl-ms", 0, "how long each trigger code stays on the lines, in ms (0 = 3 frames, 25 ms at 120 Hz)")
-	startBlock := flag.Int("block", 1, "block to start from (to resume an interrupted session); skips the localizer unless -localizer is given")
+	startBlock := flag.Int("block", 1, "main-task block to start from (to resume an interrupted session); the localizer still follows")
 	fontPath := flag.String("font", "", "TTF font file for the words (default: the bundled Inconsolata)")
 	wordDeg := flag.Float64("word-deg", defaultWordDeg, "width of the widest word (and of the localizer's pictures), in degrees of visual angle")
 	screenCm := flag.Float64("screen-cm", defaultScreenCm, "width of the projected screen image, in cm")
@@ -477,8 +477,8 @@ func main() {
 	auto := flag.Bool("auto", false, "answer automatically at random and start blocks without SPACE (timing checks)")
 	outDir := flag.String("o", dataDir, "folder for the data files; a relative path is taken from the project folder")
 	cbPath := flag.String("cb", "", "read the counterbalancing table from this file instead of the embedded copy")
-	runMain := flag.Bool("main", true, "run the main (pronoun) task after the localizer; -main=false runs the localizer only")
-	locFlag := flag.String("localizer", "train,1,2", "localizer blocks to run before the main task: none, or a comma list of train, 1, 2 (default: all, or none with -block)")
+	runMain := flag.Bool("main", true, "run the main (pronoun) task before the localizer; -main=false runs the localizer only")
+	locFlag := flag.String("localizer", "train,1,2", "localizer blocks to run after the main task: none, or a comma list of train, 1, 2 (default: all)")
 
 	// The setup dialog (shown when -s is not given) offers the same default.
 	exp := control.NewExperimentFromFlags("Pronouns", backgroundColor, textColor, 32,
@@ -519,15 +519,12 @@ func main() {
 	}
 	congruentKey := trials[0].fields["congruent_key"]
 
-	// Localizer: all blocks, unless -localizer says otherwise; -block (even
-	// -block 1) skips it unless -localizer is given.
+	// Localizer: all blocks, unless -localizer says otherwise.
 	runLoc, err := parseLocalizerBlocks(*locFlag)
 	if err != nil {
 		exp.Fatal("%v", err)
 	}
-	if flagGiven("block") && !flagGiven("localizer") {
-		runLoc = [locBlocks]bool{}
-	}
+	willRunLoc := runLoc != [locBlocks]bool{}
 	locTrials, err := loadLocalizer(localizerCSV, exp.SubjectID)
 	if err != nil {
 		exp.Fatal("localizer/localizer.csv: %v", err)
@@ -879,83 +876,7 @@ func main() {
 	err = exp.Run(func() error {
 		t0 = control.TicksNS()
 
-		// Localizer.
-		locRNG := rand.New(rand.NewPCG(uint64(exp.SubjectID), 3))
-		ranLoc, lastLoc := false, -1
-		for b := 0; b < locBlocks; b++ {
-			if !runLoc[b] {
-				continue
-			}
-			var block []*locTrial
-			for _, t := range locTrials {
-				if t.block == b {
-					block = append(block, t)
-				}
-			}
-			runtime.GC()
-			// Before the first block run: the full instructions; then, before
-			// training, its own screen; after training, a recap; otherwise a pause.
-			var names []string
-			switch {
-			case !ranLoc:
-				names = append(names, "localizer_intro")
-				if b == 0 {
-					names = append(names, "localizer_before_training")
-				}
-			case lastLoc == 0:
-				names = append(names, "localizer_after_training")
-			default:
-				names = append(names, "localizer_pause")
-			}
-			if err := showScreens(names, 0, 0, codeLocBlock+b, locLog); err != nil {
-				return err
-			}
-			ranLoc, lastLoc = true, b
-			if err := drain(resp); err != nil {
-				return err
-			}
-
-			timing, outcome, runErr := runLocalizerBlock(exp, block, resp, *auto, locRNG, locFix, locFixCorrect, locFixIncorrect)
-			// Log what was presented, also after ESC.
-			for i, tl := range timing {
-				t, o := block[i], outcome[i]
-				// With no blank after a stimulus the stream does not measure its
-				// offset (OffsetNS is onset + the nominal duration): its measured
-				// duration is the time to the next onset (NA for the last one).
-				onDur := "NA"
-				if i+1 < len(timing) {
-					onDur = dur(tl.OnsetNS, timing[i+1].OnsetNS)
-				}
-				addLocRow(t, "loc_stimulus", t.code, tl.OnsetNS, "0.0", onDur, "NA", "NA", "NA")
-				rel := func(ns uint64) string { return dur(tl.OnsetNS, ns) }
-				if o.pressNS != 0 {
-					correct := "0"
-					if t.match && !o.late {
-						correct = "1"
-					}
-					event := "loc_response"
-					if o.late {
-						event = "loc_response_late"
-					}
-					addLocRow(t, event, 0, o.pressNS, rel(o.pressNS), "NA", "right", correct, rel(o.pressNS))
-				}
-				if o.feedback != 0 {
-					event := map[int]string{codeLocHit: "loc_feedback_hit", codeLocFalseAlarm: "loc_feedback_false_alarm", codeLocMiss: "loc_feedback_miss"}[o.feedback]
-					addLocRow(t, event, o.feedback, o.fbNS, rel(o.fbNS), "NA", "NA", "NA", "NA")
-				}
-			}
-			if runErr != nil {
-				return runErr
-			}
-			saveBlock(fmt.Sprintf("localizer block %d", b))
-		}
-		// The pictures are not needed after the localizer: free their
-		// textures. (Its words stay: the main task shows them too.)
-		for _, p := range locPictures {
-			p.Unload()
-		}
-		runtime.GC()
-
+		ranMain := false
 		for _, t := range trials {
 			if !*runMain {
 				break
@@ -971,8 +892,8 @@ func main() {
 				// with -block N > 1 opens on the pause screen of block N.
 				if t.block == 1 {
 					first := "main_intro_alone"
-					if ranLoc {
-						first = "main_intro_after_localizer"
+					if willRunLoc {
+						first = "main_intro_two_parts"
 					}
 					if err := showScreens([]string{first, "main_intro"}, 0, 0, codeBlockStart+t.block, mainLog); err != nil {
 						return err
@@ -981,6 +902,7 @@ func main() {
 					return err
 				}
 			}
+			ranMain = true
 
 			// Words. The response window opens with the adjective: presses are
 			// read from its onset (earlier ones are discarded) and the RT is
@@ -1122,7 +1044,83 @@ func main() {
 				saveBlock(fmt.Sprintf("block %d", t.block))
 			}
 		}
+		runtime.GC()
 
+		// Localizer.
+		locRNG := rand.New(rand.NewPCG(uint64(exp.SubjectID), 3))
+		ranLoc, lastLoc := false, -1
+		for b := 0; b < locBlocks; b++ {
+			if !runLoc[b] {
+				continue
+			}
+			var block []*locTrial
+			for _, t := range locTrials {
+				if t.block == b {
+					block = append(block, t)
+				}
+			}
+			runtime.GC()
+			// Before the first block run: the full instructions (opening on the
+			// end of the main task if it ran); then, before training, its own
+			// screen; after training, a recap; otherwise a pause.
+			var names []string
+			switch {
+			case !ranLoc:
+				first := "localizer_intro_alone"
+				if ranMain {
+					first = "localizer_intro_after_main"
+				}
+				names = append(names, first, "localizer_intro")
+				if b == 0 {
+					names = append(names, "localizer_before_training")
+				}
+			case lastLoc == 0:
+				names = append(names, "localizer_after_training")
+			default:
+				names = append(names, "localizer_pause")
+			}
+			if err := showScreens(names, 0, 0, codeLocBlock+b, locLog); err != nil {
+				return err
+			}
+			ranLoc, lastLoc = true, b
+			if err := drain(resp); err != nil {
+				return err
+			}
+
+			timing, outcome, runErr := runLocalizerBlock(exp, block, resp, *auto, locRNG, locFix, locFixCorrect, locFixIncorrect)
+			// Log what was presented, also after ESC.
+			for i, tl := range timing {
+				t, o := block[i], outcome[i]
+				// With no blank after a stimulus the stream does not measure its
+				// offset (OffsetNS is onset + the nominal duration): its measured
+				// duration is the time to the next onset (NA for the last one).
+				onDur := "NA"
+				if i+1 < len(timing) {
+					onDur = dur(tl.OnsetNS, timing[i+1].OnsetNS)
+				}
+				addLocRow(t, "loc_stimulus", t.code, tl.OnsetNS, "0.0", onDur, "NA", "NA", "NA")
+				rel := func(ns uint64) string { return dur(tl.OnsetNS, ns) }
+				if o.pressNS != 0 {
+					correct := "0"
+					if t.match && !o.late {
+						correct = "1"
+					}
+					event := "loc_response"
+					if o.late {
+						event = "loc_response_late"
+					}
+					addLocRow(t, event, 0, o.pressNS, rel(o.pressNS), "NA", "right", correct, rel(o.pressNS))
+				}
+				if o.feedback != 0 {
+					event := map[int]string{codeLocHit: "loc_feedback_hit", codeLocFalseAlarm: "loc_feedback_false_alarm", codeLocMiss: "loc_feedback_miss"}[o.feedback]
+					addLocRow(t, event, o.feedback, o.fbNS, rel(o.fbNS), "NA", "NA", "NA", "NA")
+				}
+			}
+			if runErr != nil {
+				return runErr
+			}
+			saveBlock(fmt.Sprintf("localizer block %d", b))
+		}
 		ends, err := instr.screens("end", 0, 0)
 		if err != nil {
 			return err

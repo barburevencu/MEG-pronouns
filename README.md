@@ -3,7 +3,8 @@
 French pronoun resolution, word-by-word reading (RSVP) with a felicity judgment,
 written with [goxpyriment](https://github.com/chrplr/goxpyriment).
 
-The session opens with a **localizer**: a one-back task on the 32 nouns, words
+The session opens with the **main task** (pronoun pairs and felicity judgments),
+then a **localizer**: a one-back task on the 32 nouns, words
 and pictures alternating, each on screen for a full second with no blank in
 between (a grey 1.92 cm fixation cross with a thin black outline stays on the pictures, and the words are drawn on top of it). The
 participant presses the right green button when the stimulus is the same
@@ -77,18 +78,18 @@ GitHub. `buttontest-linux` is in the same release.
 ```bash
 ./pronouns -w -s 1                 # windowed test, answers with ← / →
 ./pronouns -s 1 -meg               # MEG session, subject 1
-./pronouns -s 1 -meg -block 3      # resume at block 3 after a crash (no localizer, no instructions)
-./pronouns -s 1 -meg -localizer 2  # localizer block 2 only, then the main task
-./pronouns -s 1 -meg -block 1     # main task only (same as -localizer none)
-./pronouns -w -s 1 -auto -block 5  # unattended timing check, random answers
+./pronouns -s 1 -meg -block 3      # resume the main task at block 3 after a crash, then the localizer
+./pronouns -s 1 -meg -localizer none          # main task only
+./pronouns -s 1 -meg -main=false -localizer 2 # localizer block 2 only (crash during the localizer)
+./pronouns -w -s 1 -auto -block 5 -localizer none  # unattended timing check, random answers
 ```
 
 | Flag | Meaning |
 |---|---|
 | `-s N` | subject (must be in the counterbalancing table) |
 | `-meg` | triggers on `/dev/parport1`, answers with the green buttons of the response pad |
-| `-block N` | start the main task at block N (after a crash): the localizer is skipped (`-block 1` = `-localizer none`); with N > 1 the instructions are skipped too, and the session opens on block N's pause screen (`-localizer` still runs localizer blocks if given) |
-| `-localizer LIST` | localizer blocks to run: `none`, or a comma list of `train`, `1`, `2` (default all, or none with `-block`) |
+| `-block N` | start the main task at block N (after a crash); with N > 1 its instructions are skipped, and the session opens on block N's pause screen. The localizer still follows (add `-localizer none` to skip it) |
+| `-localizer LIST` | localizer blocks to run after the main task: `none`, or a comma list of `train`, `1`, `2` (default all) |
 | `-main=false` | skip the main task: run only the localizer blocks chosen with `-localizer` |
 | `-photodiode on/off/auto` | white square top-left at every trigger; `auto` = on with `-meg` |
 | `-photodiode-size N` | its side, in pixels (default 100) |
@@ -136,7 +137,7 @@ the item in `word`, `modality` and `match`; events `loc_stimulus`,
 deadline), `loc_feedback_hit`, `loc_feedback_false_alarm`, `loc_feedback_miss`.
 Localizer trigger codes: word of concept k = k (1-32), picture = 32 + k, pause
 screens 206-208, feedback 211-213; they overlap main-task codes, so split the
-recording at the main task's first pause code (201-205).
+recording at the localizer's first pause code (206-208).
 
 The data are written to disk at the end of every block (localizer and main
 task), so a crash or a frozen computer loses at most the block in progress;

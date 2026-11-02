@@ -1,9 +1,36 @@
 {
   "_comment": "Instruction screens of the MEG session, one or two sentences each. The operator advances every screen with SPACE. image: a PNG of this folder shown under the text; pad_congruent is pad_congruent_left or pad_congruent_right depending on the subject's congruent_key. {done} and {total} are filled in pause screens, {natural} and {odd} with gauche / droite.",
 
-  "localizer_intro": [
+  "main_intro_two_parts": [
     {"text": "Bienvenue !\n\nCette expérience comporte deux parties."},
-    {"text": "Dans la première partie, des mots et des images vont apparaître au centre de l'écran, l'un après l'autre.\n\nMots et images alternent, au rythme d'un par seconde."},
+    {"text": "Dans la première partie, vous allez lire des paires de phrases, mot par mot."}
+  ],
+
+  "main_intro_alone": [
+    {"text": "Bienvenue !\n\nVous allez lire des paires de phrases, mot par mot."}
+  ],
+
+  "main_intro": [
+    {"text": "Après la seconde phrase, indiquez si elle s'enchaîne naturellement avec la première."},
+    {"text": "Bouton vert de {natural} : la suite est naturelle.\n\nBouton vert de {odd} : la suite est étrange.", "image": "pad_congruent"},
+    {"text": "Vous pouvez répondre dès que le dernier mot apparaît.\n\nRépondez le plus vite possible, en moins de 3 secondes."},
+    {"text": "La croix devient verte si votre réponse est correcte, rouge si elle est incorrecte.\n\nElle devient gris foncé si vous n'avez pas répondu à temps."},
+    {"text": "Gardez les yeux au centre de l'écran et évitez de cligner des yeux pendant la lecture."}
+  ],
+
+  "main_pause": [
+    {"text": "Pause : bloc {done} sur {total} terminé.\n\nReposez-vous quelques instants.\n\nRappel : gardez les yeux sur la croix au centre de l'écran.", "image": "pad_congruent"}
+  ],
+
+  "localizer_intro_after_main": [
+    {"text": "Fin de la première partie.\n\nDans la seconde partie, des mots et des images vont apparaître au centre de l'écran, l'un après l'autre.\n\nMots et images alternent, au rythme d'un par seconde."}
+  ],
+
+  "localizer_intro_alone": [
+    {"text": "Bienvenue !\n\nDes mots et des images vont apparaître au centre de l'écran, l'un après l'autre.\n\nMots et images alternent, au rythme d'un par seconde."}
+  ],
+
+  "localizer_intro": [
     {"text": "Votre tâche : repérer quand ce qui apparaît correspond à ce qui vient juste avant."},
     {"text": "Cela marche dans les deux sens.\n\nUn mot suivi de son image :", "image": "example_word_picture"},
     {"text": "Et aussi une image suivie de son mot :", "image": "example_picture_word"},
@@ -23,26 +50,6 @@
 
   "localizer_pause": [
     {"text": "Pause : reposez-vous quelques instants.\n\nRappel : bouton vert de droite quand un mot et une image se correspondent, dans un sens comme dans l'autre.", "image": "pad_localizer"}
-  ],
-
-  "main_intro_after_localizer": [
-    {"text": "Fin de la première partie.\n\nDans la seconde partie, vous allez lire des paires de phrases, mot par mot."}
-  ],
-
-  "main_intro_alone": [
-    {"text": "Bienvenue !\n\nVous allez lire des paires de phrases, mot par mot."}
-  ],
-
-  "main_intro": [
-    {"text": "Après la seconde phrase, indiquez si elle s'enchaîne naturellement avec la première."},
-    {"text": "Bouton vert de {natural} : la suite est naturelle.\n\nBouton vert de {odd} : la suite est étrange.", "image": "pad_congruent"},
-    {"text": "Vous pouvez répondre dès que le dernier mot apparaît.\n\nRépondez le plus vite possible, en moins de 3 secondes."},
-    {"text": "La croix devient verte si votre réponse est correcte, rouge si elle est incorrecte.\n\nElle devient gris foncé si vous n'avez pas répondu à temps."},
-    {"text": "Gardez les yeux au centre de l'écran et évitez de cligner des yeux pendant la lecture."}
-  ],
-
-  "main_pause": [
-    {"text": "Pause : bloc {done} sur {total} terminé.\n\nReposez-vous quelques instants.\n\nRappel : gardez les yeux sur la croix au centre de l'écran.", "image": "pad_congruent"}
   ],
 
   "end": [
