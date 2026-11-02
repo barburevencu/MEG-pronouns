@@ -87,13 +87,13 @@ EN = {
 }
 # Filler adjectives in English (fillers.csv gives the French forms).
 FILLER_EN = {
-    "endormi": "asleep", "illettré": "illiterate", "muet": "mute", "aphone": "voiceless",
+    "assoupi": "dozing", "illettré": "illiterate", "muet": "mute", "silencieux": "silent",
     "allongé": "lying down", "assis": "sitting", "immobile": "motionless",
-    "attentif": "attentive", "vigilant": "watchful", "calme": "calm",
-    "furieux": "furious", "enjoué": "cheerful",
+    "attentif": "attentive", "éveillé": "awake", "calme": "calm",
+    "furieux": "furious", "joyeux": "joyful",
 }
 # Person + filler adjective pairs never drawn: odd from world knowledge alone.
-EXCLUDE = {("chanteuse", "muet"), ("chanteuse", "aphone"), ("facteur", "illettré"),
+EXCLUDE = {("chanteuse", "muet"), ("chanteuse", "silencieux"), ("facteur", "illettré"),
            ("caissière", "illettré")}
 # Verb + person-adjective pairs that clash (e.g. crying but happy): never in a
 # congruent main trial whose pronoun refers to the person, which would then
