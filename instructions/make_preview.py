@@ -38,7 +38,8 @@ SECTIONS = [
     ("localizer_pause", "Before localizer block 2", None),
     ("localizer_next_words", "Between localizer mini-blocks, 10 s, the counter going 10 to 1: before words", None),
     ("localizer_next_images", "… or before pictures", None),
-    ("end", "End", None),
+    ("localizer_end", "End, after a localizer block", None),
+    ("end", "… or, when no localizer ran", None),
 ]
 
 TOTAL_BLOCKS = 6  # as main.go's nBlocks, for {total} in the pause screens
@@ -48,7 +49,7 @@ def fill(text, mapping):
     """The text as the program shows it, for subject mapping "left"/"right"."""
     natural = {"left": "gauche", "right": "droite"}[mapping]
     odd = {"left": "droite", "right": "gauche"}[mapping]
-    return text.format(done=1, total=TOTAL_BLOCKS, natural=natural, odd=odd, seconds=10)
+    return text.format(done=1, total=TOTAL_BLOCKS, natural=natural, odd=odd, seconds=10, percent=85)
 
 
 def main():

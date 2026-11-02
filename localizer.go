@@ -5,7 +5,8 @@
 // in mini-blocks of one modality, words and pictures alternating: the 32
 // people and places of the main task, plus animals (about 11% of the trials).
 // Between mini-blocks, a 10 s screen announces the next modality, with a
-// counter of the seconds left. The participant presses the right green button
+// counter of the seconds left, and the percentage of animals hit in the
+// mini-block just done (the screen after a block gives the block's). The participant presses the right green button
 // when they see an animal. In
 // a word mini-block the cross is the main task's (small, light grey), the
 // word drawn on top of it; in a picture mini-block it is the large grey cross,

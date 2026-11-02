@@ -193,7 +193,7 @@ func TestInstructionScreens(t *testing.T) {
 	for _, name := range []string{"main_intro_two_parts", "main_intro_alone", "main_intro",
 		"main_before_training", "main_after_training", "main_ready", "main_pause",
 		"localizer_intro_after_main", "localizer_intro_alone", "localizer_intro", "localizer_before_training",
-		"localizer_after_training", "localizer_pause", "localizer_next_words", "localizer_next_images", "end"} {
+		"localizer_after_training", "localizer_pause", "localizer_next_words", "localizer_next_images", "localizer_end", "end"} {
 		list := screens[name]
 		if len(list) == 0 {
 			t.Fatalf("instructions/screens.json: no %q", name)

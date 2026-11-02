@@ -882,11 +882,11 @@ func main() {
 	// the last screen, and starts the block after a 3, 2, 1 countdown. The
 	// first screen carries code; log writes the rows "pause" (first screen),
 	// "instruction" (later ones), "pause_end" (the SPACE that starts the
-	// block) and "countdown" (each number).
-	showScreens := func(names []string, done, total, code int, log func(event string, code int, ts uint64, duration, response string)) error {
+	// block) and "countdown" (each number). percent fills {percent}.
+	showScreens := func(names []string, done, total, percent, code int, log func(event string, code int, ts uint64, duration, response string)) error {
 		var screens []*instructionScreen
 		for _, name := range names {
-			list, err := instr.screens(name, done, total)
+			list, err := instr.screens(name, done, total, percent)
 			if err != nil {
 				return err
 			}
@@ -986,13 +986,13 @@ func main() {
 				var err error
 				switch {
 				case t.block == 0:
-					err = showScreens([]string{first, "main_intro", "main_before_training"}, 0, 0, codeTraining, mainLog)
+					err = showScreens([]string{first, "main_intro", "main_before_training"}, 0, 0, 0, codeTraining, mainLog)
 				case t.block == 1 && ranTraining:
-					err = showScreens([]string{"main_after_training"}, 0, 0, codeBlockStart+1, mainLog)
+					err = showScreens([]string{"main_after_training"}, 0, 0, 0, codeBlockStart+1, mainLog)
 				case t.block == 1:
-					err = showScreens([]string{first, "main_intro", "main_ready"}, 0, 0, codeBlockStart+1, mainLog)
+					err = showScreens([]string{first, "main_intro", "main_ready"}, 0, 0, 0, codeBlockStart+1, mainLog)
 				default:
-					err = showScreens([]string{"main_pause"}, t.block-1, nBlocks, codeBlockStart+t.block, mainLog)
+					err = showScreens([]string{"main_pause"}, t.block-1, nBlocks, 0, codeBlockStart+t.block, mainLog)
 				}
 				if err != nil {
 					return err
@@ -1147,28 +1147,31 @@ func main() {
 
 		// Localizer.
 		locRNG := rand.New(rand.NewPCG(uint64(exp.SubjectID), 3))
-		// The screen before a mini-block: its modality, and a counter of the
-		// seconds left (locBreakS down to 1), one screen per second. Its row
-		// carries the mini-block's first trial.
-		nextScreens := map[string][]*instructionScreen{}
-		if willRunLoc {
-			for modality, name := range map[string]string{"word": "localizer_next_words", "image": "localizer_next_images"} {
-				if nextScreens[modality], err = instr.countdown(name, locBreakS); err != nil {
-					return err
-				}
-			}
-		}
-		showMiniBreak := func(first *locTrial) error {
+		// The screen before a mini-block: the percentage of animals hit in the
+		// previous one, the modality, and a counter of the seconds left
+		// (locBreakS down to 1), one screen per second. Its row carries the
+		// mini-block's first trial, and the percentage as response.
+		showMiniBreak := func(first *locTrial, percent int) error {
 			code := map[string]int{"word": codeLocNextWords, "image": codeLocNextImages}[first.modality]
+			name := map[string]string{"word": "localizer_next_words", "image": "localizer_next_images"}[first.modality]
+			screens, err := instr.countdown(name, locBreakS, percent)
+			if err != nil {
+				return err
+			}
+			defer func() {
+				for _, sc := range screens {
+					sc.Unload()
+				}
+			}()
 			var start uint64
-			for k, sc := range nextScreens[first.modality] {
+			for k, sc := range screens {
 				if k == 0 {
 					onset, err := showMarked(sc, code)
 					if err != nil {
 						return err
 					}
 					start = onset
-					addLocRow(first, "loc_miniblock_screen", code, onset, "NA", "NA", "NA", "NA", "NA")
+					addLocRow(first, "loc_miniblock_screen", code, onset, "NA", "NA", fmt.Sprint(percent), "NA", "NA")
 				} else if _, err := exp.ShowTS(sc); err != nil {
 					return err
 				}
@@ -1178,7 +1181,15 @@ func main() {
 			}
 			return drain(resp)
 		}
+		// The percentage of animals hit, rounded, out of n.
+		pct := func(hits, n int) int {
+			if n == 0 {
+				return 0
+			}
+			return int(math.Round(100 * float64(hits) / float64(n)))
+		}
 		ranLoc, lastLoc := false, -1
+		lastPct := 0 // of the last localizer block run, for the screen after it
 		for b := 0; b < locBlocks; b++ {
 			if !runLoc[b] {
 				continue
@@ -1192,7 +1203,8 @@ func main() {
 			runtime.GC()
 			// Before the first block run: the full instructions (opening on the
 			// end of the main task if it ran); then, before training, its own
-			// screen; after training, a recap; otherwise a pause.
+			// screen; after training, a recap; otherwise a pause. The recap and
+			// the pause give the percentage of animals hit in the last block.
 			var names []string
 			switch {
 			case !ranLoc:
@@ -1209,7 +1221,7 @@ func main() {
 			default:
 				names = append(names, "localizer_pause")
 			}
-			if err := showScreens(names, 0, 0, codeLocBlock+b, locLog); err != nil {
+			if err := showScreens(names, 0, 0, lastPct, codeLocBlock+b, locLog); err != nil {
 				return err
 			}
 			ranLoc, lastLoc = true, b
@@ -1226,9 +1238,10 @@ func main() {
 				}
 				minis[t.miniblock-1] = append(minis[t.miniblock-1], t)
 			}
+			blockHits, blockAnimals, miniPct := 0, 0, 0
 			for m, mini := range minis {
 				if m > 0 {
-					if err := showMiniBreak(mini[0]); err != nil {
+					if err := showMiniBreak(mini[0], miniPct); err != nil {
 						return err
 					}
 				}
@@ -1267,10 +1280,28 @@ func main() {
 				if runErr != nil {
 					return runErr
 				}
+				hits, animals := 0, 0
+				for i, t := range mini {
+					if t.target {
+						animals++
+						if outcome[i].hitNS != 0 {
+							hits++
+						}
+					}
+				}
+				miniPct = pct(hits, animals)
+				blockHits, blockAnimals = blockHits+hits, blockAnimals+animals
 			}
+			lastPct = pct(blockHits, blockAnimals)
+			log.Printf("localizer block %d: %d of %d animals hit (%d%%)", b, blockHits, blockAnimals, lastPct)
 			saveBlock(fmt.Sprintf("localizer block %d", b))
 		}
-		ends, err := instr.screens("end", 0, 0)
+		// After a localizer block, the end screen gives its percentage too.
+		endName := "end"
+		if ranLoc {
+			endName = "localizer_end"
+		}
+		ends, err := instr.screens(endName, 0, 0, lastPct)
 		if err != nil {
 			return err
 		}

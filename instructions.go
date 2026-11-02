@@ -108,8 +108,8 @@ func newInstructions(exp *control.Experiment, congruentKey string) (*instruction
 }
 
 // screens returns the named list, with {natural}/{odd} set from the
-// subject's mapping and {done}/{total} from the arguments.
-func (in *instructions) screens(name string, done, total int) ([]*instructionScreen, error) {
+// subject's mapping and {done}/{total}/{percent} from the arguments.
+func (in *instructions) screens(name string, done, total, percent int) ([]*instructionScreen, error) {
 	specs, ok := in.specs[name]
 	if !ok {
 		return nil, fmt.Errorf("instructions/screens.json has no %q", name)
@@ -117,7 +117,7 @@ func (in *instructions) screens(name string, done, total int) ([]*instructionScr
 	side := map[string]string{"left": "gauche", "right": "droite"}
 	other := map[string]string{"left": "right", "right": "left"}[in.congruentKey]
 	fill := strings.NewReplacer("{natural}", side[in.congruentKey], "{odd}", side[other],
-		"{done}", fmt.Sprint(done), "{total}", fmt.Sprint(total))
+		"{done}", fmt.Sprint(done), "{total}", fmt.Sprint(total), "{percent}", fmt.Sprint(percent))
 	var out []*instructionScreen
 	for _, sp := range specs {
 		s, err := in.build(fill.Replace(sp.Text), sp.Image)
@@ -130,15 +130,17 @@ func (in *instructions) screens(name string, done, total int) ([]*instructionScr
 }
 
 // countdown returns the named screen once for each second left, from
-// seconds down to 1, with {seconds} in its text set to that number.
-func (in *instructions) countdown(name string, seconds int) ([]*instructionScreen, error) {
+// seconds down to 1, with {seconds} in its text set to that number and
+// {percent} to percent.
+func (in *instructions) countdown(name string, seconds, percent int) ([]*instructionScreen, error) {
 	specs, ok := in.specs[name]
 	if !ok || len(specs) != 1 {
 		return nil, fmt.Errorf("instructions/screens.json: %q must be one screen", name)
 	}
+	text := strings.ReplaceAll(specs[0].Text, "{percent}", fmt.Sprint(percent))
 	var out []*instructionScreen
 	for k := seconds; k >= 1; k-- {
-		s, err := in.build(strings.ReplaceAll(specs[0].Text, "{seconds}", fmt.Sprint(k)), specs[0].Image)
+		s, err := in.build(strings.ReplaceAll(text, "{seconds}", fmt.Sprint(k)), specs[0].Image)
 		if err != nil {
 			return nil, err
 		}
