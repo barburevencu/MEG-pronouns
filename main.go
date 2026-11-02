@@ -12,7 +12,8 @@
 // gone (green correct, red incorrect, dark grey timeout), and a 2000 ms
 // inter-trial interval on the plain cross. The cross stays on for the whole
 // trial, the words drawn on top of it. 160 trials per subject
-// in 5 blocks of 32, with a pause before each block that the operator ends with SPACE. Trials come
+// in 5 blocks of 32, with a pause before each block that the operator ends with SPACE,
+// then a 3, 2, 1 countdown. Trials come
 // from counterbalancing/counterbalancing.csv (make_counterbalancing.py), embedded in the binary.
 //
 // Trigger codes (see triggers/make_trigger_table.py, triggers/triggers.csv):
@@ -84,6 +85,7 @@ const (
 	feedbackMs       = 500
 	itiMs            = 2000 // plain cross after the feedback
 	advanceLockMs    = 500  // instruction screens ignore presses this long
+	countdownMs      = 1000 // each of 3, 2, 1 before a block
 	endScreenMs      = 5000
 	nBlocks          = 5
 )
@@ -694,6 +696,9 @@ func main() {
 		}
 	}
 
+	// Countdown before each block, in the words' font.
+	countdown := []*stimuli.TextLine{wordStim("3"), wordStim("2"), wordStim("1")}
+
 	// Instruction screens (instructions.go).
 	instr, err := newInstructions(exp, congruentKey)
 	if err != nil {
@@ -845,9 +850,10 @@ func main() {
 	// showScreens shows the named lists of instruction screens one by one (no
 	// waiting with -auto). The participant advances with the right green
 	// button, shown by a hint at the bottom; only the operator's SPACE leaves
-	// the last screen, and starts the block. The first screen carries code;
-	// log writes the rows "pause" (first screen), "instruction" (later ones)
-	// and "pause_end" (the SPACE that starts the block).
+	// the last screen, and starts the block after a 3, 2, 1 countdown. The
+	// first screen carries code; log writes the rows "pause" (first screen),
+	// "instruction" (later ones), "pause_end" (the SPACE that starts the
+	// block) and "countdown" (each number).
 	showScreens := func(names []string, done, total, code int, log func(event string, code int, ts uint64, duration, response string)) error {
 		var screens []*instructionScreen
 		for _, name := range names {
@@ -892,6 +898,16 @@ func main() {
 			}
 			if last {
 				log("pause_end", 0, ts, dur(onset, ts), "space")
+			}
+		}
+		for _, n := range countdown {
+			onset, err := exp.ShowTS(n)
+			if err != nil {
+				return err
+			}
+			log("countdown", 0, onset, "NA", n.Text)
+			if err := exp.Wait(countdownMs - int((control.TicksNS()-onset)/1_000_000)); err != nil {
+				return err
 			}
 		}
 		return nil

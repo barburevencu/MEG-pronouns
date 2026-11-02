@@ -107,8 +107,8 @@ block of each part, a short pause screen with the response pad otherwise),
 from `instructions/screens.json`. The participant advances them with the right
 green button (→ on the keyboard; SPACE works too), as a grey hint at the bottom
 says; presses in the first 0.5 s of a screen are ignored. The last screen
-before a block has no hint: only the operator's SPACE leaves it and starts
-the block. ESC aborts at any time; what
+before a block has no hint: only the operator's SPACE leaves it, and the
+block starts after a countdown (3, 2, 1, one second each, in the words' font). ESC aborts at any time; what
 was presented so far is saved.
 
 ## MEG rig (Linux)
@@ -147,7 +147,7 @@ task), so a crash or a frozen computer loses at most the block in progress;
 on ESC or a program error, everything presented is saved.
 
 `data/Pronouns_sub-NNN_date-….csv` in the project folder (beside the executable; `-o FOLDER` to change), one row per event (`pause`,
-`fixation`, `word`, `response_window`, `response`, `feedback_*`, `iti`, `end`), with
+`countdown`, `fixation`, `word`, `response_window`, `response`, `feedback_*`, `iti`, `end`), with
 the code sent, the time on the SDL clock (ms from the start of the run), the
 time within the trial and its intended value, word on-durations, the answer,
 its correctness and RT (from the adjective's onset: presses count as soon as it appears, until 3 s after it goes off), and the trial's

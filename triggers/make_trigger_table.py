@@ -83,6 +83,8 @@ add(211, "feedback: correct", "fixation cross turns green", f"{RESP_OPEN} + RT, 
 add(212, "feedback: incorrect", "fixation cross turns red", f"{RESP_OPEN} + RT, at the earliest {ADJ_OFF}", FEEDBACK)
 add(213, "feedback: timeout (no response)", "fixation cross turns dark grey",
     ADJ_OFF + RESPONSE_WINDOW, FEEDBACK)
+add(None, "countdown (no code)", "3, 2, 1, one second each, after the operator's SPACE",
+    "before trial 1 of every block (main and localizer)", 3000)
 add(None, "inter_trial_interval", "fixation cross (light grey)", f"feedback onset + {FEEDBACK}", ITI)
 for b in range(1, 6):
     add(200 + b, f"pause/instruction screen before block {b}",

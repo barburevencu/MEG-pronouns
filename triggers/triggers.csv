@@ -186,6 +186,7 @@ main,213,feedback: timeout (no response),fixation cross turns dark grey,7700,500
 main,255,end of experiment,end screen,,5000,,,,,,,,,,,
 main,,inter_sentence_break,fixation cross (light grey),2800,1000,,,,,,,,,,,
 main,,response_window_opens,the adjective (presses count from its onset; RT from there),4400,"until response, at most until 7700",,,,,,,,,,,
+main,,countdown (no code),"3, 2, 1, one second each, after the operator's SPACE",before trial 1 of every block (main and localizer),3000,,,,,,,,,,,
 main,,inter_trial_interval,fixation cross (light grey),feedback onset + 500,2000,,,,,,,,,,,
 localizer,1,localizer word: marin,'marin' (no fixation cross; feedback as a dot at its centre),0,1000 (until the next stimulus),,,,,,,,,word,1,marin
 localizer,2,localizer word: facteur,'facteur' (no fixation cross; feedback as a dot at its centre),0,1000 (until the next stimulus),,,,,,,,,word,2,facteur
