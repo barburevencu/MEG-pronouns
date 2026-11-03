@@ -217,3 +217,52 @@ func TestInstructionScreens(t *testing.T) {
 		}
 	}
 }
+
+// Main-task and localizer rows have one value per data column, each under
+// its own column.
+func TestDataRows(t *testing.T) {
+	trials, err := loadTrials(counterbalancingCSV, 1)
+	if err != nil {
+		t.Fatal(err)
+	}
+	loc, err := loadLocalizer(localizerCSV, 1)
+	if err != nil {
+		t.Fatal(err)
+	}
+	tr, lt := trials[0], loc[0]
+	rows := map[string][]interface{}{
+		"main word":    mainRow(tr, "word", &tr.words[0], 1, "1.0", "0.0", "0", "300.0", "NA", "NA", "NA"),
+		"main pause":   mainRow(nil, "pause", nil, 0, "1.0", "NA", "NA", "NA", "NA", "NA", "NA"),
+		"loc stimulus": locRow(lt, "loc_stimulus", lt.code, "1.0", "0.0", "600.0", "NA", "NA", "NA"),
+		"loc pause":    locRow(nil, "pause", 0, "1.0", "NA", "NA", "NA", "NA", "NA"),
+	}
+	for name, r := range rows {
+		if len(r) != len(dataColumns) {
+			t.Fatalf("%s row: %d values for %d columns", name, len(r), len(dataColumns))
+		}
+	}
+	at := func(r []interface{}, col string) interface{} {
+		for i, c := range dataColumns {
+			if c == col {
+				return r[i]
+			}
+		}
+		t.Fatalf("no column %q", col)
+		return nil
+	}
+	for col, want := range map[string]interface{}{
+		"task": "localizer", "word": lt.item, "modality": lt.modality,
+		"miniblock": strconv.Itoa(lt.miniblock), "category": lt.fields["category"], "target": lt.fields["target"],
+	} {
+		if got := at(rows["loc stimulus"], col); got != want {
+			t.Errorf("localizer row: %s = %v, want %v", col, got, want)
+		}
+	}
+	for col, want := range map[string]interface{}{
+		"task": "main", "stimulus": tr.fields["stimulus"], "trial_type": tr.fields["trial_type"],
+	} {
+		if got := at(rows["main word"], col); got != want {
+			t.Errorf("main row: %s = %v, want %v", col, got, want)
+		}
+	}
+}

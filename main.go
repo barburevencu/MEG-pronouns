@@ -773,14 +773,7 @@ func main() {
 	// Data: one row per event. Times are ms from the session start (the
 	// start of the run) on the SDL clock that also stamps flips and key
 	// presses; for words, the intended time is relative to the trial onset.
-	exp.AddDataVariableNames([]string{
-		"block_number", "trial_number", "event", "sentence", "position", "role", "word", "code",
-		"time_ms", "trial_time_ms", "intended_trial_time_ms", "duration_ms",
-		"response", "correct_key", "correct", "rt_ms",
-		"trial_type",
-		"cell", "congruent", "canonical_order", "pronoun_gender", "agent_gender", "pronoun_referent", "stimulus",
-		"task", "modality", "miniblock", "category", "target",
-	})
+	exp.AddDataVariableNames(dataColumns)
 
 	var t0 uint64
 	ms := func(ns uint64) string {
@@ -797,39 +790,10 @@ func main() {
 	}
 	addRow := func(t *trial, event string, w *word, code int, ts uint64, trialTime, intended, duration string,
 		response, correct, rt string) {
-		block, number, sentence, position, role, text := "NA", "NA", "NA", "NA", "NA", "NA"
-		cell, cong, canon, pg, ag, ref, stim, ck := "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA"
-		ttype := "NA"
-		if t != nil {
-			block, number = strconv.Itoa(t.block), strconv.Itoa(t.number)
-			ttype = t.fields["trial_type"]
-			cell, ck = strconv.Itoa(t.cell), t.correctKey
-			cong, canon = t.fields["congruent"], t.fields["canonical_order"]
-			pg, ag, ref = t.fields["pronoun_gender"], t.fields["agent_gender"], t.fields["pronoun_referent"]
-			stim = t.fields["stimulus"]
-		}
-		if w != nil {
-			sentence, position = strconv.Itoa(w.sentence), strconv.Itoa(w.position)
-			role, text = roleNames[w.role], w.text
-		}
-		exp.Data.Add(block, number, event, sentence, position, role, text, code,
-			ms(ts), trialTime, intended, duration, response, ck, correct, rt,
-			ttype, cell, cong, canon, pg, ag, ref, stim, "main", "NA", "NA", "NA", "NA")
+		exp.Data.Add(mainRow(t, event, w, code, ms(ts), trialTime, intended, duration, response, correct, rt)...)
 	}
-	// Localizer rows use the same columns: block_number 0 (training), 1 or 2,
-	// the item in "word", times relative to the stimulus onset.
 	addLocRow := func(t *locTrial, event string, code int, ts uint64, trialTime, duration, response, correct, rt string) {
-		block, number, item, modality, mini, category, target, ck := "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA"
-		if t != nil {
-			block, number, item, modality = strconv.Itoa(t.block), strconv.Itoa(t.number), t.item, t.modality
-			mini, category, target = strconv.Itoa(t.miniblock), t.fields["category"], t.fields["target"]
-			if t.target {
-				ck = "right"
-			}
-		}
-		exp.Data.Add(block, number, event, "NA", "NA", "NA", item, code,
-			ms(ts), trialTime, "NA", duration, response, ck, correct, rt,
-			"NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "localizer", modality, mini, category, target)
+		exp.Data.Add(locRow(t, event, code, ms(ts), trialTime, duration, response, correct, rt)...)
 	}
 
 	// saveBlock writes the rows so far to disk at the end of every block, so
@@ -1349,6 +1313,57 @@ type preloaded struct{ stimuli.VisualStimulus }
 
 // newCross returns a "+" of the given width and line thickness, in pixels,
 // as an image, with a black outline of the given width around it (0: none).
+// dataColumns are the data file's columns (after subject_id); mainRow and
+// locRow give one value per column.
+var dataColumns = []string{
+	"block_number", "trial_number", "event", "sentence", "position", "role", "word", "code",
+	"time_ms", "trial_time_ms", "intended_trial_time_ms", "duration_ms",
+	"response", "correct_key", "correct", "rt_ms",
+	"trial_type",
+	"cell", "congruent", "canonical_order", "pronoun_gender", "agent_gender", "pronoun_referent", "stimulus",
+	"task", "modality", "miniblock", "category", "target",
+}
+
+// mainRow is a main-task row; t and w may be nil (pauses, countdowns).
+func mainRow(t *trial, event string, w *word, code int, time, trialTime, intended, duration string,
+	response, correct, rt string) []interface{} {
+	block, number, sentence, position, role, text := "NA", "NA", "NA", "NA", "NA", "NA"
+	cell, cong, canon, pg, ag, ref, stim, ck := "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA"
+	ttype := "NA"
+	if t != nil {
+		block, number = strconv.Itoa(t.block), strconv.Itoa(t.number)
+		ttype = t.fields["trial_type"]
+		cell, ck = strconv.Itoa(t.cell), t.correctKey
+		cong, canon = t.fields["congruent"], t.fields["canonical_order"]
+		pg, ag, ref = t.fields["pronoun_gender"], t.fields["agent_gender"], t.fields["pronoun_referent"]
+		stim = t.fields["stimulus"]
+	}
+	if w != nil {
+		sentence, position = strconv.Itoa(w.sentence), strconv.Itoa(w.position)
+		role, text = roleNames[w.role], w.text
+	}
+	return []interface{}{block, number, event, sentence, position, role, text, code,
+		time, trialTime, intended, duration, response, ck, correct, rt,
+		ttype, cell, cong, canon, pg, ag, ref, stim, "main", "NA", "NA", "NA", "NA"}
+}
+
+// locRow is a localizer row, in the same columns: block_number 0 (training),
+// 1 or 2, the item in "word", times relative to the stimulus onset. t may be
+// nil (pauses, countdowns).
+func locRow(t *locTrial, event string, code int, time, trialTime, duration, response, correct, rt string) []interface{} {
+	block, number, item, modality, mini, category, target, ck := "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA"
+	if t != nil {
+		block, number, item, modality = strconv.Itoa(t.block), strconv.Itoa(t.number), t.item, t.modality
+		mini, category, target = strconv.Itoa(t.miniblock), t.fields["category"], t.fields["target"]
+		if t.target {
+			ck = "right"
+		}
+	}
+	return []interface{}{block, number, event, "NA", "NA", "NA", item, code,
+		time, trialTime, "NA", duration, response, ck, correct, rt,
+		"NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "localizer", modality, mini, category, target}
+}
+
 func newCross(size, thickness, outline int, c control.Color) *stimuli.Picture {
 	full := size + 2*outline
 	img := image.NewNRGBA(image.Rect(0, 0, full, full))
