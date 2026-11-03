@@ -2,7 +2,10 @@
 
 Per subject: 192 main trials = 12 sets x 16 cells. Each block's 32 main trials
 are two consecutive sets, shuffled within the block (6 blocks), so every block
-has each cell twice and each adjective once.
+has each cell twice and each adjective once. Over the 6 blocks each adjective
+takes 6 different cells, with each pronoun gender, word order and congruence 3
+times. No two main trials share a first sentence (person, verb and place, in
+either word order).
 
 Fillers (fillers.csv): 48 verb + adjective items, 12 person-adjectives each
 natural after 2 verbs and odd after 2 others; the pronoun always refers to the
@@ -10,7 +13,8 @@ person, and only the verb makes the adjective fit or clash. Each block gets 8,
 one per judgment x person's gender x word order, at random positions among the
 main trials, never two in a row (40 trials per block). Which items go in which
 block, and with which gender and word order, rotates over subjects (a cycle of
-24). Each person and each place is used 3 times, with every person (and place)
+24), with no verb in more than 2 of a block's fillers (FILLER_ORDER). Each
+person and each place is used 3 times, with every person (and place)
 once in each pair of blocks; a person never gets an adjective in EXCLUDE, and
 no filler repeats the first sentence of a main trial or of another filler.
 
@@ -133,17 +137,42 @@ PRON = {"m": "Il", "f": "Elle"}
 
 # 16 cells: agent gender (place gets the other), pronoun gender, canonical order, congruence
 cells = list(itertools.product(["m", "f"], ["m", "f"], [True, False], [True, False]))
+# The 8 cells of a set that take a people- (or a place-) adjective, keyed by
+# pronoun gender, canonical order and congruence (the agent's gender follows).
+ADJ_CELLS = list(itertools.product(["m", "f"], [True, False], [True, False]))
 
 
-def adjective_pools(rng):
-    """Each set uses 8 people- and 8 place-adjectives; consecutive set pairs
-    exhaust the 16 of each, so every adjective appears 6 times over 12 sets."""
-    while True:
-        p, q = adj_people[:], adj_places[:]
-        rng.shuffle(p)
-        rng.shuffle(q)
-        yield p[:8], q[:8]
-        yield p[8:], q[8:]
+def adjective_design(rng, adjectives):
+    """The 16 adjectives of one list over the 12 sets: for each set, a dict
+    ADJ_CELLS key -> adjective. Each adjective is in one set of each block
+    (sets 2b-1 and 2b), in 6 different cells: all but one cell and its
+    opposite (every factor flipped), so it has each pronoun gender, word order
+    and congruence 3 times.
+
+    Cell x (0-7, an index into ADJ_CELLS) has opposite 7 - x; pair q (0-3) is
+    cells q and 7 - q. The adjectives form 4 groups of 4, group g never taking
+    pair g. In each block every group fills one other pair, g -> g XOR s, with
+    each step s in 1-3 used in 2 blocks, so a group visits each of its pairs
+    twice: half its adjectives take cell q the first time and 7 - q the
+    second, the other half the reverse. A cell's 2 adjectives go one to each
+    set of the block."""
+    adjs = rng.sample(adjectives, len(adjectives))
+    groups = [adjs[4 * g:4 * g + 4] for g in range(4)]
+    steps = rng.sample([1, 2, 2, 3, 3, 1], 6)
+    sets = []
+    visits = {}  # (group, pair) -> times visited so far
+    for s in steps:
+        first, second = {}, {}
+        for g, members in enumerate(groups):
+            q = g ^ s
+            n = visits.get((g, q), 0)
+            visits[(g, q)] = n + 1
+            halves = (members[:2], members[2:]) if n == 0 else (members[2:], members[:2])
+            for x, half in ((q, halves[0]), (7 - q, halves[1])):
+                a, b = rng.sample(half, 2)
+                first[ADJ_CELLS[x]], second[ADJ_CELLS[x]] = a, b
+        sets += [first, second]
+    return sets
 
 
 with open(HERE / "fillers.csv", encoding="utf-8") as f:
@@ -152,10 +181,41 @@ if sorted({r["adjective_m"] for r in filler_items}) != sorted(FILLER_EN):
     sys.exit("fillers.csv and FILLER_EN list different adjectives")
 # Natural items in the order adjective 1-12 (first verb), then adjective 1-12
 # (second verb); odd items likewise. Items i and i + 12 (same adjective) are
-# then 12 rotation steps, i.e. 3 blocks, apart.
-NATURAL, ODD = ([r for k in range(2) for r in
-                 [x for x in filler_items if x["judgment"] == j][k::2]] for j in ("natural", "odd"))
+# then 12 rotation steps, i.e. 3 blocks, apart. The adjective order and which
+# verb comes first (found by search) keep every verb to at most 2 of a block's
+# fillers, and the 4 training fillers to 4 different verbs, for every subject.
+FILLER_ORDER = [  # adjective, its first natural verb, its first odd verb
+    ("allongé", "pleurait", "courait"),
+    ("attentif", "écrivait", "rêvait"),
+    ("silencieux", "marchait", "criait"),
+    ("assis", "riait", "marchait"),
+    ("éveillé", "courait", "dormait"),
+    ("assoupi", "rêvait", "courait"),
+    ("joyeux", "criait", "pleurait"),
+    ("muet", "marchait", "criait"),
+    ("immobile", "dormait", "marchait"),
+    ("illettré", "courait", "écrivait"),
+    ("calme", "marchait", "tremblait"),
+    ("furieux", "criait", "riait"),
+]
+
+
+def filler_list(judgment, col):
+    items = {(r["adjective_m"], r["verb"]): r for r in filler_items if r["judgment"] == judgment}
+    first = [items.pop((adj, row[col])) for adj, *row in FILLER_ORDER]
+    second = [items.pop(next(k for k in items if k[0] == adj)) for adj, *_ in FILLER_ORDER]
+    assert not items
+    return first + second
+
+
+NATURAL, ODD = filler_list("natural", 0), filler_list("odd", 1)
 assert len(NATURAL) == len(ODD) == 24
+# Rotation step k puts natural items k'..k'+3 and odd items k'-8..k'-5 (mod 24)
+# in one block, for every start k'.
+for j in range(24):
+    block_verbs = [NATURAL[(j + t) % 24]["verb"] for t in range(4)] + \
+                  [ODD[(j - 8 + t) % 24]["verb"] for t in range(4)]
+    assert max(block_verbs.count(v) for v in block_verbs) <= 2, f"verb cap broken at {j}"
 # Either form of a filler adjective -> its masculine form.
 FILLER_ADJ = {r[k]: r["adjective_m"] for r in filler_items for k in ("adjective_m", "adjective_f")}
 
@@ -232,9 +292,9 @@ def filler_row(subject_id, item, block, agent_g, canonical, subj, place):
 
 def make_set(rng, subject_id, cb_set, ppl, plc, a_ppl, a_plc, avoid=frozenset()):
     """16 main trials, one per cell, from shuffled people and places (by
-    gender) and 8 people- and 8 place-adjectives. Verbs are drawn so that no
-    congruent person-referent trial clashes (CLASH) and no first sentence is
-    in avoid."""
+    gender) and the people- and place-adjective of each cell (dicts keyed as
+    ADJ_CELLS). Verbs are drawn so that no congruent person-referent trial
+    clashes (CLASH) and no first sentence is in avoid."""
     out = []
     draws = []
     for agent_g, pron_g, canonical, congruent in cells:
@@ -242,7 +302,7 @@ def make_set(rng, subject_id, cb_set, ppl, plc, a_ppl, a_plc, avoid=frozenset())
         referent = "agent" if pron_g == agent_g else "place"
         # Congruent: adjective fits the pronoun's referent; incongruent: fits the other noun.
         adj_type = referent if congruent else ("place" if referent == "agent" else "agent")
-        adj_m = a_ppl.pop() if adj_type == "agent" else a_plc.pop()
+        adj_m = (a_ppl if adj_type == "agent" else a_plc)[(pron_g, canonical, congruent)]
         draws.append((agent_g, pron_g, canonical, congruent, place_g, referent, adj_type, adj_m,
                       ppl[agent_g].pop(), plc[place_g].pop()))
     # Verbs: reshuffled until no congruent person-referent trial clashes.
@@ -306,7 +366,8 @@ def make_training(subject_id, avoid, rng):
     rng.shuffle(q)
     ppl = {g: rng.sample(people[g], len(people[g])) for g in "mf"}
     plc = {g: rng.sample(places[g], len(places[g])) for g in "mf"}
-    main = make_set(rng, subject_id, "training", ppl, plc, p[:8], q[:8], avoid)
+    main = make_set(rng, subject_id, "training", ppl, plc,
+                    dict(zip(ADJ_CELLS, p[:8])), dict(zip(ADJ_CELLS, q[:8])), avoid)
     avoid = avoid | {(t["subject"], t["verb"], t["place"]) for t in main}
 
     # Fillers: 2 natural, 2 odd, of 4 different adjectives, with gender and
@@ -344,13 +405,14 @@ def make_training(subject_id, avoid, rng):
 
 def make_subject(subject_id):
     rng = random.Random(SEED + subject_id)
-    pools = adjective_pools(rng)
+    design_ppl, design_plc = adjective_design(rng, adj_people), adjective_design(rng, adj_places)
     trials = []
     for cb_set in range(1, N_SETS + 1):
         ppl = {g: rng.sample(people[g], len(people[g])) for g in "mf"}
         plc = {g: rng.sample(places[g], len(places[g])) for g in "mf"}
-        a_ppl, a_plc = (list(x) for x in next(pools))
-        trials += make_set(rng, subject_id, cb_set, ppl, plc, a_ppl, a_plc)
+        used = {(t["subject"], t["verb"], t["place"]) for t in trials}
+        trials += make_set(rng, subject_id, cb_set, ppl, plc,
+                           design_ppl[cb_set - 1], design_plc[cb_set - 1], used)
 
     # Same response mapping for everyone: right = congruent / natural.
     congruent_key, incongruent_key = "right", "left"

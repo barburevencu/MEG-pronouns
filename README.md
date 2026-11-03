@@ -183,11 +183,17 @@ rotating over subjects), with a main trial first and never two fillers in a row,
 in the real blocks. No training sentence repeats the first sentence of a trial in the real blocks.
 `-block N` skips it.
 
+**Main trials.** Each block's 32 main trials are two sets of 16 (one per condition cell),
+with every person, place and verb twice and every adjective once. Over the 6 blocks an
+adjective takes 6 different cells, with each pronoun gender, word order and congruence 3
+times, and no two trials share a first sentence (person, verb and place, in either word order).
+
 **Fillers.** Each block has 8 fillers among its 32 main trials, at random positions,
 never two in a row. They look like main trials, but the pronoun always refers to the person,
 and the judgment depends on whether the adjective fits the verb ("Le marin courait… Il était
 assis" is odd). Each block has one filler per judgment × person's gender × word order; items rotate over
-blocks and versions across subjects (a cycle of 24), and every person and place is used 3 times.
+blocks and versions across subjects (a cycle of 24), no verb is in more than 2 of a block's
+fillers (so at most 4 times in a block, with the main trials), and every person and place is used 3 times.
 Filler words have their own trigger codes: 214 + 4 × (role − 1) + 2 × canonical + natural (214–249),
 so they can be left out of main-trial analyses by code or by `trial_type`.
 
