@@ -4,9 +4,11 @@
 // Each stimulus is on for 600 ms, followed by 200 ms of fixation. Stimuli come
 // in mini-blocks of one modality, words and pictures alternating: the 32
 // people and places of the main task, plus animals (about 11% of the trials).
-// Between mini-blocks, a 10 s screen announces the next modality, with a
-// counter of the seconds left, and the percentage of animals hit in the
-// mini-block just done (the screen after a block gives the block's). The participant presses the right green button
+// Between mini-blocks, a 5 s screen announces the next modality, with a
+// counter of the seconds left at the fixation point, and the percentage of
+// animals hit in the mini-block just done (the screen after a block gives the
+// block's). Every mini-block, the first included (after the 3, 2, 1
+// countdown), opens with 1 s of its fixation cross alone. The participant presses the right green button
 // when they see an animal. In
 // a word mini-block the cross is the main task's (small, light grey), the
 // word drawn on top of it; in a picture mini-block it is the large grey cross,
@@ -46,7 +48,8 @@ const (
 	locHitUntilMs     = 1200 // ... and up to this long after it is a hit
 	locBlocks         = 3    // 0 = training, 1 and 2
 	codeLocBlock      = 207  // + block, instruction / pause screen
-	locBreakS         = 10   // screen announcing the next mini-block, in seconds
+	locBreakS         = 5    // screen announcing the next mini-block, in seconds
+	locLeadMs         = 1000 // fixation cross alone before a mini-block's first trial
 	codeLocNextWords  = 250  // onset of that screen, before a word mini-block
 	codeLocNextImages = 251  // ... before a picture mini-block
 )

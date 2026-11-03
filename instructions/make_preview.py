@@ -36,7 +36,7 @@ SECTIONS = [
     ("localizer_before_training", "Then, before the training block", None),
     ("localizer_after_training", "Before localizer block 1 (after training)", None),
     ("localizer_pause", "Before localizer block 2", None),
-    ("localizer_next_words", "Between localizer mini-blocks, 10 s, the counter going 10 to 1: before words", None),
+    ("localizer_next_words", "Between localizer mini-blocks, 5 s, the counter at the fixation point going 5 to 1: before words", None),
     ("localizer_next_images", "… or before pictures", None),
     ("localizer_end", "End, after a localizer block", None),
     ("end", "… or, when no localizer ran", None),
@@ -49,15 +49,18 @@ def fill(text, mapping):
     """The text as the program shows it, for subject mapping "left"/"right"."""
     natural = {"left": "gauche", "right": "droite"}[mapping]
     odd = {"left": "droite", "right": "gauche"}[mapping]
-    return text.format(done=1, total=TOTAL_BLOCKS, natural=natural, odd=odd, seconds=10, percent=85)
+    return text.format(done=1, total=TOTAL_BLOCKS, natural=natural, odd=odd, percent=85)
 
 
 def main():
     screens = json.loads((HERE / "screens.json").read_text(encoding="utf-8"))
 
-    def screen(s, mapping):
+    def screen(s, mapping, counter):
         text = fill(s["text"], mapping)
         body = '<div class="txt">' + "".join(f"<p>{p}</p>" for p in text.split("\n\n")) + "</div>"
+        if counter:
+            # The text above the centre, the seconds left at the fixation point.
+            return f'<div class="screen"><div class="above">{body}</div><div class="digit">5</div></div>'
         img = s.get("image")
         if img:
             if img == "pad_congruent":
@@ -72,7 +75,7 @@ def main():
         cards = []
         for s in screens[key]:
             n += 1
-            cards.append(f'<figure><figcaption>{n}</figcaption>{screen(s, mapping or "left")}</figure>')
+            cards.append(f'<figure><figcaption>{n}</figcaption>{screen(s, mapping or "left", key.startswith("localizer_next_"))}</figure>')
         parts.append(f"<h2>{title}</h2><div class='row'>{''.join(cards)}</div>")
 
     html = f"""<!doctype html>
@@ -91,6 +94,8 @@ figure {{ margin: 0; }} figcaption {{ font-size: 12px; color: #888; }}
 .screen .txt {{ max-width: 55%; text-align: left; }}  /* lines left-aligned, block centred */
 .screen p {{ margin: 0 0 8px; }}
 .screen img.pad {{ height: 140px; margin-top: 6px; }}
+.screen .above {{ position: absolute; bottom: calc(50% + 16px); left: 0; right: 0; display: flex; justify-content: center; }}
+.screen .digit {{ position: absolute; top: 50%; left: 0; right: 0; transform: translateY(-50%); font-size: 20px; }}
 </style></head><body>
 <h1>Instruction screens of the MEG session</h1>
 <p class="note">Each black box is one full screen, scaled down (text in the program's font, Inconsolata;

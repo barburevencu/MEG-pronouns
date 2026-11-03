@@ -65,13 +65,19 @@ func loadScreens() (map[string][]screenSpec, error) {
 // instructionScreen is one screen: the text, and the picture under it.
 type instructionScreen struct {
 	stimuli.BaseVisual
-	text *stimuli.TextBox
-	pic  *stimuli.Picture // nil if none
+	text  *stimuli.TextBox
+	pic   *stimuli.Picture       // nil if none
+	digit stimuli.VisualStimulus // countdown number at the centre, nil if none (not unloaded: shared)
 }
 
 func (s *instructionScreen) Draw(screen *apparatus.Screen) error {
 	if err := s.text.Draw(screen); err != nil {
 		return err
+	}
+	if s.digit != nil {
+		if err := s.digit.Draw(screen); err != nil {
+			return err
+		}
 	}
 	if s.pic != nil {
 		return s.pic.Draw(screen)
@@ -130,20 +136,25 @@ func (in *instructions) screens(name string, done, total, percent int) ([]*instr
 }
 
 // countdown returns the named screen once for each second left, from
-// seconds down to 1, with {seconds} in its text set to that number and
-// {percent} to percent.
-func (in *instructions) countdown(name string, seconds, percent int) ([]*instructionScreen, error) {
+// seconds down to 1, with {percent} in its text set to percent. The text sits
+// above the centre; at the centre, where the fixation cross is, digit(k)
+// draws the number of seconds left.
+func (in *instructions) countdown(name string, seconds, percent int, digit func(k int) *stimuli.TextLine) ([]*instructionScreen, error) {
 	specs, ok := in.specs[name]
-	if !ok || len(specs) != 1 {
-		return nil, fmt.Errorf("instructions/screens.json: %q must be one screen", name)
+	if !ok || len(specs) != 1 || specs[0].Image != "" {
+		return nil, fmt.Errorf("instructions/screens.json: %q must be one screen, without a picture", name)
 	}
 	text := strings.ReplaceAll(specs[0].Text, "{percent}", fmt.Sprint(percent))
+	_, h := in.exp.DrawArea()
 	var out []*instructionScreen
 	for k := seconds; k >= 1; k-- {
-		s, err := in.build(strings.ReplaceAll(text, "{seconds}", fmt.Sprint(k)), specs[0].Image)
+		s, err := in.build(text, "")
 		if err != nil {
 			return nil, err
 		}
+		d := digit(k)
+		s.digit = d
+		s.text.SetPosition(sdl.FPoint{Y: d.Height/2 + instrGap*h + s.text.Height/2})
 		out = append(out, s)
 	}
 	return out, nil

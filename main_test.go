@@ -198,8 +198,8 @@ func TestInstructionScreens(t *testing.T) {
 		if len(list) == 0 {
 			t.Fatalf("instructions/screens.json: no %q", name)
 		}
-		if strings.HasPrefix(name, "localizer_next_") && (len(list) != 1 || !strings.Contains(list[0].Text, "{seconds}")) {
-			t.Fatalf("instructions/screens.json: %q must be one screen with {seconds}", name)
+		if strings.HasPrefix(name, "localizer_next_") && (len(list) != 1 || list[0].Image != "") {
+			t.Fatalf("instructions/screens.json: %q must be one screen, without a picture", name)
 		}
 		for _, s := range list {
 			if s.Image == "" {

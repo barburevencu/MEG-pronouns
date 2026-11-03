@@ -1,5 +1,5 @@
 {
-  "_comment": "Instruction screens of the MEG session, one or two sentences each. The participant advances every screen with the right green button, except the last one before a block, which the operator's SPACE ends. image: a PNG of this folder shown under the text; pad_congruent is pad_congruent_left or pad_congruent_right depending on the subject's congruent_key. {done} and {total} are filled in pause screens, {percent} with the percentage of animals hit in the last localizer block (after-training, pause and localizer_end screens) or mini-block (between mini-blocks), {natural} and {odd} with gauche / droite, {seconds} with the seconds left (10 to 1) on the screens between localizer mini-blocks, which pass by themselves.",
+  "_comment": "Instruction screens of the MEG session, one or two sentences each. The participant advances every screen with the right green button, except the last one before a block, which the operator's SPACE ends. image: a PNG of this folder shown under the text; pad_congruent is pad_congruent_left or pad_congruent_right depending on the subject's congruent_key. {done} and {total} are filled in pause screens, {percent} with the percentage of animals hit in the last localizer block (after-training, pause and localizer_end screens) or mini-block (between mini-blocks), {natural} and {odd} with gauche / droite. On the screens between localizer mini-blocks, which pass by themselves, the program draws the seconds left (5 to 1) at the fixation point, under the text.",
 
   "main_intro_two_parts": [
     {"text": "Bienvenue !\n\nCette expérience comporte deux parties."},
@@ -12,8 +12,12 @@
 
   "main_intro": [
     {"text": "Les phrases vont par deux et décrivent une petite scène.\n\nReprésentez-vous cette scène au fil de la lecture."},
-    {"text": "Puis jugez : cette scène a-t-elle du sens ?"},
-    {"text": "Bouton vert de {natural} : ça a du sens.\n\nBouton vert de {odd} : ça n'a pas de sens.", "image": "pad_congruent"},
+    {"text": "Parfois, les mots sont compatibles entre eux.\n\nParfois, ils ne vont pas ensemble et décrivent une situation absurde."},
+    {"text": "Puis jugez : cette scène est-elle raisonnable ou absurde ?"},
+    {"text": "Par exemple, cette scène est raisonnable :\n\n« Le pilote mangeait dans le garage. Il était affamé. »"},
+    {"text": "Cette scène, elle, est absurde :\n\n« Le pilote mangeait dans le garage. Il était endormi. »"},
+    {"text": "Bouton vert de {natural} : raisonnable.\n\nBouton vert de {odd} : absurde.", "image": "pad_congruent"},
+    {"text": "Chaque paire de phrases est indépendante des autres.\n\nUne fois votre réponse donnée, jugez la scène suivante pour elle-même."},
     {"text": "Ne réfléchissez pas trop : lisez le plus naturellement possible et répondez vite, en moins de 3 secondes.\n\nVous pouvez répondre dès que le dernier mot apparaît."},
     {"text": "La croix devient verte si votre réponse est correcte, rouge si elle est incorrecte.\n\nElle devient gris foncé si vous n'avez pas répondu à temps."},
     {"text": "Gardez les yeux au centre de l'écran et évitez de cligner des yeux pendant la lecture."}
@@ -44,21 +48,22 @@
   ],
 
   "localizer_intro": [
-    {"text": "D'abord une série de mots, puis une série d'images, puis de nouveau des mots, et ainsi de suite."},
-    {"text": "Entre deux séries, une pause de 10 secondes vous annonce la suivante, et vous indique combien d'animaux vous avez repérés dans la précédente."},
+    {"text": "Vous verrez d'abord une série de mots, puis une série d'images, puis de nouveau des mots, et ainsi de suite."},
+    {"text": "Entre deux séries, une pause de 5 secondes vous annonce la suivante, et vous indique combien d'animaux vous avez repérés dans la précédente."},
     {"text": "Votre tâche : repérer les animaux.\n\nDès que vous voyez un animal, en mot ou en image, appuyez le plus vite possible sur le bouton vert de droite.", "image": "pad_localizer"},
     {"text": "Tous les animaux comptent : mammifères, oiseaux, poissons et autres animaux marins, reptiles, insectes, araignées…"},
-    {"text": "Par exemple, appuyez pour le mot « papillon » comme pour une image de papillon.\n\nPour tout le reste, n'appuyez pas."},
+    {"text": "Par exemple, appuyez si vous voyez le mot « papillon », ou si vous voyez l'image d'un papillon."},
+    {"text": "Il en va de même pour tous les animaux, et seulement pour eux.\n\nPour tout ce qui n'est pas un animal, n'appuyez pas."},
     {"text": "La croix ne change pas de couleur après vos réponses : vous saurez seulement à la fin de chaque série combien d'animaux vous avez repérés."},
     {"text": "Gardez les yeux sur la croix au centre de l'écran, pendant les mots comme pendant les images."}
   ],
 
   "localizer_next_words": [
-    {"text": "Série précédente : vous avez repéré {percent} % des animaux.\n\nMaintenant : des mots.\n\n{seconds}"}
+    {"text": "Série précédente : vous avez repéré {percent} % des animaux.\n\nMaintenant : des mots."}
   ],
 
   "localizer_next_images": [
-    {"text": "Série précédente : vous avez repéré {percent} % des animaux.\n\nMaintenant : des images.\n\n{seconds}"}
+    {"text": "Série précédente : vous avez repéré {percent} % des animaux.\n\nMaintenant : des images."}
   ],
 
   "localizer_before_training": [

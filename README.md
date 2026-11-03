@@ -10,8 +10,10 @@ masculine and 8 feminine, matched to the people and places in length and in
 film and book frequency: mean 8.1 letters, log frequencies 0.69 and 0.77 vs.
 0.66 and 0.77). Each stimulus is on for 600 ms, then 200 ms of fixation. The
 stimuli come in mini-blocks of one modality, words and pictures alternating,
-with a 10 s screen between two mini-blocks announcing the next modality
-(« Maintenant : des mots. » / « des images. ») and counting down the seconds;
+with a 5 s screen between two mini-blocks announcing the next modality
+(« Maintenant : des mots. » / « des images. ») and counting down the seconds
+at the fixation point, then 1 s of the next mini-block's cross alone (also
+before the first mini-block, after the 3, 2, 1 countdown);
 in word mini-blocks the main task's small cross stays on with the word drawn on
 top, in picture mini-blocks a grey 1.92 cm cross with a thin black outline sits
 on top of the picture and stays on in the blank. The participant presses the
@@ -20,7 +22,7 @@ a hit. No press gets feedback, in training either: the screen after each
 mini-block gives the percentage of animals hit. A training block of 72 trials (a word and a picture mini-block of 36:
 every person and place once, 4 animals; ~1.1 min), then two blocks of 576 (8
 mini-blocks of 72: every person and place twice, 8 animals; each animal word
-and picture twice per block; ~8.8 min each). Animals are 11% of the trials,
+and picture twice per block; ~8.4 min each). Animals are 11% of the trials,
 never in a block's first 5 trials or a mini-block's last, with at least 6 other trials
 between two of them; the same concept never comes twice in a row. Odd subjects
 start training and block 1 with words, even subjects with pictures; block 2

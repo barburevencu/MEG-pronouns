@@ -6,7 +6,7 @@ on for 600 ms with 200 ms of fixation after it; the participant presses when
 they see an animal, word or picture (about 11% of the trials).
 
 The stimuli come in mini-blocks of one modality, words and pictures
-alternating, with a 10 s screen between mini-blocks announcing the next
+alternating, with a 5 s screen between mini-blocks announcing the next
 modality. A mini-block holds every person and place of its modality the
 same number of times (in random order, each one once in each half of the
 mini-block) plus a few animals. The same concept never comes twice in a row,

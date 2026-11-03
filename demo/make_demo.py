@@ -4,7 +4,7 @@ menu), with their pictures embedded as data URLs so the demo stays a single file
 
 The sequence is a localizer training block (localizer/make_localizer.py): a
 mini-block of 36 words, then one of 36 pictures, each with the 32 people and
-places once and 4 animals, with the 10 s screen announcing pictures between them.
+places once and 4 animals, with the 5 s screen announcing pictures between them.
 
 Usage: python3 make_demo.py   (rewrites the block between the GENERATED markers)
 """

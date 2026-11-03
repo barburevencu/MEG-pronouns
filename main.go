@@ -1148,12 +1148,13 @@ func main() {
 		locRNG := rand.New(rand.NewPCG(uint64(exp.SubjectID), 3))
 		// The screen before a mini-block: the percentage of animals hit in the
 		// previous one, the modality, and a counter of the seconds left
-		// (locBreakS down to 1), one screen per second. Its row carries the
+		// (locBreakS down to 1, at the fixation point), one screen per second. Its row carries the
 		// mini-block's first trial, and the percentage as response.
 		showMiniBreak := func(first *locTrial, percent int) error {
 			code := map[string]int{"word": codeLocNextWords, "image": codeLocNextImages}[first.modality]
 			name := map[string]string{"word": "localizer_next_words", "image": "localizer_next_images"}[first.modality]
-			screens, err := instr.countdown(name, locBreakS, percent)
+			screens, err := instr.countdown(name, locBreakS, percent,
+				func(k int) *stimuli.TextLine { return wordStim(strconv.Itoa(k)) })
 			if err != nil {
 				return err
 			}
@@ -1177,6 +1178,23 @@ func main() {
 				if err := exp.Wait((k+1)*1000 - int((control.TicksNS()-start)/1_000_000)); err != nil {
 					return err
 				}
+			}
+			return drain(resp)
+		}
+		// showLead shows the mini-block's cross alone for locLeadMs before its
+		// first trial. Its row carries that trial.
+		showLead := func(first *locTrial) error {
+			cross := locFix
+			if first.modality == "word" {
+				cross = fix
+			}
+			onset, err := exp.ShowTS(cross)
+			if err != nil {
+				return err
+			}
+			addLocRow(first, "loc_fixation", 0, onset, "NA", strconv.Itoa(locLeadMs), "NA", "NA", "NA")
+			if err := exp.Wait(locLeadMs - int((control.TicksNS()-onset)/1_000_000)); err != nil {
+				return err
 			}
 			return drain(resp)
 		}
@@ -1229,7 +1247,8 @@ func main() {
 			}
 
 			// Mini-block by mini-block, each after a screen announcing its
-			// modality, with a counter (except the first, after the countdown).
+			// modality, with a counter (except the first, after the countdown),
+			// then 1 s of its cross.
 			var minis [][]*locTrial
 			for _, t := range block {
 				if len(minis) < t.miniblock {
@@ -1243,6 +1262,9 @@ func main() {
 					if err := showMiniBreak(mini[0], miniPct); err != nil {
 						return err
 					}
+				}
+				if err := showLead(mini[0]); err != nil {
+					return err
 				}
 				timing, outcome, presses, runErr := runLocalizerBlock(exp, mini, resp, *auto, locRNG,
 					locCrosses{word: fix, image: locFix})
