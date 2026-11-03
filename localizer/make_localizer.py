@@ -27,6 +27,9 @@ mini-block, and at least 6 other trials between two animals of a block (also
 across mini-blocks).
 
 Also writes images/<noun>.png: the pictures of ../pictures, shrunk to 512 px.
+The people stand full-length on a grey background; their pictures are first
+cropped to a square from just above the head to about mid-thigh, so that they
+are bigger and easier to recognize.
 An animal without a picture in ../pictures gets a placeholder: its name on a
 grey square.
 
@@ -42,13 +45,14 @@ import sys
 import unicodedata
 from pathlib import Path
 
-from PIL import Image, ImageDraw, ImageFont
+from PIL import Image, ImageChops, ImageDraw, ImageFont
 
 SEED = 2026
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parent
 N_SUBJECTS = int(sys.argv[1]) if len(sys.argv) > 1 else 30
 IMAGE_SIZE = 512
+PERSON_CROP = 0.62  # people's pictures: side of the square, of the person's height
 # block: (mini-blocks, repetitions of each person/place per mini-block, animals per mini-block)
 BLOCKS = {0: (2, 1, 4), 1: (8, 2, 8), 2: (8, 2, 8)}
 FIRST_ANIMAL = 6  # earliest trial of a block that can be an animal
@@ -168,6 +172,38 @@ def check(seq, block, first_modality):
         assert set(animal_counts.values()) == {2} and len(animal_counts) == 32
 
 
+def figure_mask(img):
+    """1 where a picture differs from its grey studio background: each row's
+    background is the mean of its outer tenths."""
+    w, h = img.size
+    edge = w // 10
+    strips = Image.new("RGB", (2 * edge, h))
+    strips.paste(img.crop((0, 0, edge, h)), (0, 0))
+    strips.paste(img.crop((w - edge, 0, w, h)), (edge, 0))
+    background = strips.resize((1, h), Image.BOX).resize((w, h))
+    return ImageChops.difference(img, background).convert("L").point(lambda v: 255 if v > 20 else 0)
+
+
+def crop_person(img):
+    """The square from just above a standing person's head to about mid-thigh,
+    centred on their body, so that every person is shown at the same scale."""
+    w, h = img.size
+    mask = figure_mask(img)
+    on = [[x for x in range(w // 10, w - w // 10) if v[x]] for v in
+          (list(mask.crop((0, y, w, y + 1)).getdata()) for y in range(h))]
+    # Body centre: the median of the figure's pixels in the torso's rows.
+    torso = sorted(x for row in on[int(0.2 * h):int(0.6 * h)] for x in row)
+    cx = torso[len(torso) // 2]
+    # Top of the head and bottom of the feet, near the centre only, so that a
+    # raised crook or tray does not count.
+    rows = [y for y, row in enumerate(on) if sum(abs(x - cx) < 0.06 * w for x in row) > 8]
+    top, bottom = rows[0], rows[-1]
+    side = round(PERSON_CROP * (bottom - top))
+    y0 = max(0, top - round(0.04 * side))
+    x0 = min(max(0, cx - side // 2), w - side)
+    return img.crop((x0, y0, x0 + side, y0 + side))
+
+
 def placeholder(name, path):
     """A grey square with the animal's name, until its picture exists."""
     img = Image.new("RGB", (IMAGE_SIZE, IMAGE_SIZE), (90, 90, 90))
@@ -189,6 +225,8 @@ def main():
         src, dst = ROOT / "pictures" / c["image"], HERE / "images" / c["image"]
         if src.exists():
             img = Image.open(src).convert("RGB")
+            if c["category"] == "person":
+                img = crop_person(img)
             img.resize((IMAGE_SIZE, IMAGE_SIZE), Image.LANCZOS).save(dst, optimize=True)
         else:
             assert c["category"] == "animal", f"no picture {src}"

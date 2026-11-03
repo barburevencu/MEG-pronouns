@@ -121,7 +121,7 @@ const (
 	megShiftX = 330 // in -meg fullscreen, everything is drawn this many pixels left of the screen center (MEG projector)
 	// Word size: the widest word of both tasks, and the localizer's pictures,
 	// span this visual angle on the MEG screen.
-	defaultWordDeg    = 8
+	defaultWordDeg    = 9
 	defaultScreenCm   = 65   // width of the projected image on the MEG screen
 	defaultDistanceCm = 104  // viewing distance in the MEG
 	fixSize           = 16   // fixation cross, width and height in pixels
