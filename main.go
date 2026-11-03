@@ -271,11 +271,11 @@ func newTrial(f map[string]string) (*trial, error) {
 		return nil, fmt.Errorf("correct_key %q", t.correctKey)
 	}
 
-	// Fillers use the cell's bit 0 for "natural" (their judgment), main trials
-	// for "congruent"; the two coincide with the correct answer.
+	// Bit 0 is "congruent", the correct answer (for fillers: the adjective
+	// fits the verb).
 	filler := f["trial_type"] == "filler"
 	canonical := f["canonical_order"] == "1"
-	if f["congruent"] == "1" || filler && f["judgment"] == "natural" {
+	if f["congruent"] == "1" {
 		t.cell |= 1
 	}
 	if canonical {
@@ -777,7 +777,7 @@ func main() {
 		"block_number", "trial_number", "event", "sentence", "position", "role", "word", "code",
 		"time_ms", "trial_time_ms", "intended_trial_time_ms", "duration_ms",
 		"response", "correct_key", "correct", "rt_ms",
-		"trial_type", "judgment",
+		"trial_type",
 		"cell", "congruent", "canonical_order", "pronoun_gender", "agent_gender", "pronoun_referent", "stimulus",
 		"task", "modality", "miniblock", "category", "target",
 	})
@@ -799,10 +799,10 @@ func main() {
 		response, correct, rt string) {
 		block, number, sentence, position, role, text := "NA", "NA", "NA", "NA", "NA", "NA"
 		cell, cong, canon, pg, ag, ref, stim, ck := "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA"
-		ttype, judgment := "NA", "NA"
+		ttype := "NA"
 		if t != nil {
 			block, number = strconv.Itoa(t.block), strconv.Itoa(t.number)
-			ttype, judgment = t.fields["trial_type"], t.fields["judgment"]
+			ttype = t.fields["trial_type"]
 			cell, ck = strconv.Itoa(t.cell), t.correctKey
 			cong, canon = t.fields["congruent"], t.fields["canonical_order"]
 			pg, ag, ref = t.fields["pronoun_gender"], t.fields["agent_gender"], t.fields["pronoun_referent"]
@@ -814,7 +814,7 @@ func main() {
 		}
 		exp.Data.Add(block, number, event, sentence, position, role, text, code,
 			ms(ts), trialTime, intended, duration, response, ck, correct, rt,
-			ttype, judgment, cell, cong, canon, pg, ag, ref, stim, "main", "NA", "NA", "NA", "NA")
+			ttype, cell, cong, canon, pg, ag, ref, stim, "main", "NA", "NA", "NA", "NA")
 	}
 	// Localizer rows use the same columns: block_number 0 (training), 1 or 2,
 	// the item in "word", times relative to the stimulus onset.

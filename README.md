@@ -171,8 +171,8 @@ on ESC or a program error, everything presented is saved.
 the code sent, the time on the SDL clock (ms from the start of the run), the
 time within the trial and its intended value, word on-durations, the answer,
 its correctness and RT (from the adjective's onset: presses count as soon as it appears, until 3 s after that onset), and the trial's
-condition columns: `trial_type` (`main` or `filler`), `judgment` (`natural` or `odd`, the correct answer), and for main trials
-`congruent`, `pronoun_referent` and the rest.
+condition columns: `trial_type` (`main` or `filler`), `congruent` (the correct answer: 1 natural, 0 odd; for fillers,
+whether the adjective fits the verb), and for main trials `pronoun_referent` and the rest.
 
 **Training.** The main task opens with a training block (block 0, pause code 210):
 20 trials, one more set of 16 main trials (one per condition cell, with a random half of

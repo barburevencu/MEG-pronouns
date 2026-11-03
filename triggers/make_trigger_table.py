@@ -78,7 +78,7 @@ for role, (name, sentence, pos_can, pos_non) in ROLES.items():
             pronoun_gender="f" if pron_f else "m", agent_gender="f" if agent_f else "m")
 
 # Fillers (trial_type "filler"): the pronoun refers to the person; the
-# adjective fits ("natural") or clashes with the verb ("odd").
+# adjective fits (congruent 1) or clashes with the verb (congruent 0).
 for role, (name, sentence, pos_can, pos_non) in ROLES.items():
     for canonical in (0, 1):
         for natural in (0, 1):
@@ -87,7 +87,7 @@ for role, (name, sentence, pos_can, pos_non) in ROLES.items():
                 f"'{EXAMPLE[name][0 if canonical else 1]}' (on the fixation cross)",
                 word_onset(sentence, pos), WORD_ON,
                 role=name, sentence=sentence, position=pos, canonical_order=canonical,
-                judgment="natural" if natural else "odd")
+                congruent=natural)
 
 add(None, "inter_sentence_break", "fixation cross (light grey)", FIX + 6 * WORD_SOA,
     FIX)
@@ -138,7 +138,7 @@ add(211, "localizer feedback: hit (training block only)",
 
 rows.sort(key=lambda r: (r["task"] != "main", r["code"] is None, r["code"] or 0))
 fields = ["task", "code", "event", "on_screen", "onset_ms", "duration_ms", "role", "sentence",
-          "position", "cell", "congruent", "judgment", "canonical_order", "pronoun_gender", "agent_gender",
+          "position", "cell", "congruent", "canonical_order", "pronoun_gender", "agent_gender",
           "modality", "concept", "item"]
 with open(HERE / "triggers.csv", "w", encoding="utf-8", newline="") as f:
     w = csv.DictWriter(f, fieldnames=fields)

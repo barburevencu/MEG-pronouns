@@ -211,14 +211,13 @@ def filler_row(subject_id, item, block, agent_g, canonical, subj, place):
         "subject_id": subject_id,
         "block_number": block,
         "trial_type": "filler",
-        "judgment": item["judgment"],
         "cb_set": "NA",
         "agent_gender": agent_g,
         "place_gender": place_g,
         "pronoun_gender": agent_g,
         "pronoun_referent": "agent",
         "canonical_order": int(canonical),
-        "congruent": "NA",
+        "congruent": int(item["judgment"] == "natural"),  # the adjective fits the verb
         "adjective_type": "people",
         "subject": subj,
         "verb": verb,
@@ -277,7 +276,6 @@ def make_set(rng, subject_id, cb_set, ppl, plc, a_ppl, a_plc, avoid=frozenset())
         out.append({
             "subject_id": subject_id,
             "trial_type": "main",
-            "judgment": "natural" if congruent else "odd",
             "cb_set": cb_set,
             "agent_gender": agent_g,
             "place_gender": place_g,
@@ -386,7 +384,7 @@ def make_subject(subject_id):
         out += merged
     for t in out:
         t["congruent_key"] = congruent_key
-        t["correct_key"] = congruent_key if t["judgment"] == "natural" else incongruent_key
+        t["correct_key"] = congruent_key if t["congruent"] else incongruent_key
     return out
 
 
