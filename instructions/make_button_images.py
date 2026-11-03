@@ -4,8 +4,8 @@ the top): every button is faded except the green ones the task uses, which
 are highlighted and labelled.
 
     pad_localizer.png         right green: "Animal"
-    pad_congruent_left.png    left green "Raisonnable", right green "Absurde"
-    pad_congruent_right.png   left green "Absurde", right green "Raisonnable"
+    pad_congruent_left.png    left green "Plausible", right green "Absurde"
+    pad_congruent_right.png   left green "Absurde", right green "Plausible"
 
 The canvas is widened by MARGIN on each side, so that long labels fit.
 
@@ -77,8 +77,8 @@ def draw(labels):
 def main():
     out = {
         "pad_localizer.png": {"right": "Animal"},
-        "pad_congruent_left.png": {"left": "Raisonnable", "right": "Absurde"},
-        "pad_congruent_right.png": {"left": "Absurde", "right": "Raisonnable"},
+        "pad_congruent_left.png": {"left": "Plausible", "right": "Absurde"},
+        "pad_congruent_right.png": {"left": "Absurde", "right": "Plausible"},
     }
     for name, labels in out.items():
         draw(labels).save(HERE / name, optimize=True)
