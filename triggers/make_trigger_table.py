@@ -92,13 +92,13 @@ for role, (name, sentence, pos_can, pos_non) in ROLES.items():
 add(None, "inter_sentence_break", "fixation cross (light grey)", FIX + 6 * WORD_SOA,
     FIX)
 add(None, "response_window_opens", "the adjective (presses count from its onset; RT from there)", RESP_OPEN,
-    f"until response, at most until {ADJ_OFF + RESPONSE_WINDOW}")
+    f"until response, at most until {RESP_OPEN + RESPONSE_WINDOW}")
 # Button presses are recorded by the MEG on their own STI lines; the PC marks
 # only the feedback onset (first frame after the press, or the timeout).
 add(211, "feedback: correct", "fixation cross turns green", f"{RESP_OPEN} + RT, at the earliest {ADJ_OFF}", FEEDBACK)
 add(212, "feedback: incorrect", "fixation cross turns red", f"{RESP_OPEN} + RT, at the earliest {ADJ_OFF}", FEEDBACK)
 add(213, "feedback: timeout (no response)", "fixation cross turns dark grey",
-    ADJ_OFF + RESPONSE_WINDOW, FEEDBACK)
+    RESP_OPEN + RESPONSE_WINDOW, FEEDBACK)
 add(None, "countdown (no code)", "3, 2, 1, one second each, after the operator's SPACE",
     "before trial 1 of every block (main and localizer)", 3000)
 add(None, "inter_trial_interval", "fixation cross (light grey)", f"feedback onset + {FEEDBACK}", ITI)

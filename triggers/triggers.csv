@@ -192,7 +192,7 @@ main,206,pause/instruction screen before block 6,pause text; the operator's SPAC
 main,210,"instruction screens before the training block (block 0, 20 trials)",instructions; the operator's SPACE starts the block,,until SPACE,,,,,,,,,,,,
 main,211,feedback: correct,fixation cross turns green,"4400 + RT, at the earliest 4700",500,,,,,,,,,,,,
 main,212,feedback: incorrect,fixation cross turns red,"4400 + RT, at the earliest 4700",500,,,,,,,,,,,,
-main,213,feedback: timeout (no response),fixation cross turns dark grey,7700,500,,,,,,,,,,,,
+main,213,feedback: timeout (no response),fixation cross turns dark grey,7400,500,,,,,,,,,,,,
 main,214,filler word: det_subj,'le' (on the fixation cross),1900,300,det_subj,1,4,,,odd,0,,,,,
 main,215,filler word: det_subj,'le' (on the fixation cross),1900,300,det_subj,1,4,,,natural,0,,,,,
 main,216,filler word: det_subj,'Le' (on the fixation cross),1000,300,det_subj,1,1,,,odd,1,,,,,
@@ -231,7 +231,7 @@ main,248,filler word: adjective,'<adjective>' (on the fixation cross),4400,300,a
 main,249,filler word: adjective,'<adjective>' (on the fixation cross),4400,300,adjective,2,3,,,natural,1,,,,,
 main,255,end of experiment,end screen,,5000,,,,,,,,,,,,
 main,,inter_sentence_break,fixation cross (light grey),2800,1000,,,,,,,,,,,,
-main,,response_window_opens,the adjective (presses count from its onset; RT from there),4400,"until response, at most until 7700",,,,,,,,,,,,
+main,,response_window_opens,the adjective (presses count from its onset; RT from there),4400,"until response, at most until 7400",,,,,,,,,,,,
 main,,countdown (no code),"3, 2, 1, one second each, after the operator's SPACE",before trial 1 of every block (main and localizer),3000,,,,,,,,,,,,
 main,,inter_trial_interval,fixation cross (light grey),feedback onset + 500,2000,,,,,,,,,,,,
 localizer,1,localizer word: marin,'marin' on the small fixation cross,0,"600, then 200 of fixation",,,,,,,,,,word,1,marin

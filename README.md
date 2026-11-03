@@ -170,7 +170,7 @@ on ESC or a program error, everything presented is saved.
 `countdown`, `fixation`, `word`, `response_window`, `response`, `feedback_*`, `iti`, `end`), with
 the code sent, the time on the SDL clock (ms from the start of the run), the
 time within the trial and its intended value, word on-durations, the answer,
-its correctness and RT (from the adjective's onset: presses count as soon as it appears, until 3 s after it goes off), and the trial's
+its correctness and RT (from the adjective's onset: presses count as soon as it appears, until 3 s after that onset), and the trial's
 condition columns: `trial_type` (`main` or `filler`), `judgment` (`natural` or `odd`, the correct answer), and for main trials
 `congruent`, `pronoun_referent` and the rest.
 

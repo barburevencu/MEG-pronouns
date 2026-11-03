@@ -8,7 +8,7 @@
 // Each trial: fixation (1000 ms), sentence 1 word by word (6 words, each
 // 300 ms on, no blank in between), a 1000 ms break, sentence 2 (3 words, same
 // timing), then a felicity judgment (two green buttons) that can be given as
-// soon as the last word appears, until 3000 ms after it goes off (RT from its
+// soon as the last word appears, until 3000 ms after its onset (RT from its
 // onset), 500 ms of feedback on the fixation cross, shown once the word is
 // gone (green correct, red incorrect, dark grey timeout), and a 2000 ms
 // inter-trial interval on the plain cross. The cross stays on for the whole
@@ -1060,7 +1060,7 @@ func main() {
 			}
 
 			// Without a press during the adjective, the cross comes back and
-			// the window stays open until responseWindowMs after its offset.
+			// the window stays open until responseWindowMs after its onset.
 			// offNS is the flip that takes the adjective down.
 			var offNS uint64
 			if btn == "" {
@@ -1068,7 +1068,7 @@ func main() {
 					debug.SetGCPercent(gc)
 					return err
 				}
-				if btn, pressNS, err = waitResponse(resp, offNS+responseWindowMs*1_000_000); err != nil {
+				if btn, pressNS, err = waitResponse(resp, adjNS+responseWindowMs*1_000_000); err != nil {
 					debug.SetGCPercent(gc)
 					return err
 				}
