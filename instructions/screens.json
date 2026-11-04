@@ -51,7 +51,7 @@
     {"text": "Vous verrez d'abord une série de mots, puis une série d'images, puis de nouveau des mots, et ainsi de suite."},
     {"text": "Entre deux séries, une pause de 5 secondes vous annonce la suivante, et vous indique combien d'animaux vous avez repérés dans la précédente."},
     {"text": "Votre tâche : repérer les animaux.\n\nDès que vous voyez un animal, en mot ou en image, appuyez le plus vite possible sur le bouton vert de droite.", "image": "pad_localizer"},
-    {"text": "Tous les animaux comptent : mammifères, oiseaux, poissons et autres animaux marins, reptiles, insectes, araignées…"},
+    {"text": "Tous les animaux comptent : mammifères, oiseaux, poissons et autres animaux marins, reptiles, insectes, araignées…\n\nLes personnes ne comptent pas."},
     {"text": "Par exemple, appuyez si vous voyez le mot « papillon », ou si vous voyez l'image d'un papillon."},
     {"text": "Il en va de même pour tous les animaux, et seulement pour eux.\n\nPour tout ce qui n'est pas un animal, n'appuyez pas."},
     {"text": "La croix ne change pas de couleur après vos réponses : vous saurez seulement à la fin de chaque série combien d'animaux vous avez repérés."},
