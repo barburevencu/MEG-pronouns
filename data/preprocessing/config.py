@@ -88,6 +88,10 @@ contrasts = {
     "localizer": [],
 }
 
+# Sensor-level analyses only: no covariance (its step concatenates the epochs of both tasks,
+# whose event ids clash) and no source estimation.
+run_source_estimation = False
+
 reject = dict(grad=4000e-13, mag=4e-12)
 # 6e-12, 4e-10
 n_jobs = 8
