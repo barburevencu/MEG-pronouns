@@ -1,7 +1,9 @@
 # compiled experiment
 /pronouns
 # session data (never commit participant data)
-/data/
+/data/*
+!/data/preprocessing/
+/data/preprocessing/__pycache__/
 # design slides
 Design.key
 # study approval slides (CODIR)
