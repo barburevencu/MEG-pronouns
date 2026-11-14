@@ -18,4 +18,7 @@ Design.key
 __pycache__/
 # analysis outputs (figures and scores computed from participant data)
 /analysis/*.png
-/analysis/decoding/
+/analysis/decoding/*
+# except the group results (averages over subjects)
+!/analysis/decoding/group_decoding.npz
+!/analysis/decoding/group_decoding.png
