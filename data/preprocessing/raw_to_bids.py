@@ -42,6 +42,11 @@ TASKS = {
 
 TRIGGER_MASK = 0xFF00  # bits 8-15 (response pad) are ignored
 
+# The tasks reuse the same trigger codes, but the pipeline concatenates epochs of all tasks
+# (noise covariance), which needs each event value to mean one thing. The BIDS event values
+# are therefore the trigger code plus this offset for each task.
+EVENT_OFFSET = {"pronouns": 0, "localizer": 1000}
+
 ROLES = ["det_subj", "noun_subj", "verb", "dans", "det_place", "noun_place",
          "pronoun", "etait", "adjective"]  # role r = 1..9 (code // 16)
 
@@ -112,7 +117,10 @@ def extract_events(raw, task):
         print(f"    dropping {(~known).sum()} events with unknown codes {np.unique(events[~known, 2])}")
     events = events[known]
     present = set(np.unique(events[:, 2]))
-    return events, {k: v for k, v in event_id.items() if v in present}
+    offset = EVENT_OFFSET[task]
+    events = events.copy()
+    events[:, 2] += offset
+    return events, {k: v + offset for k, v in event_id.items() if v in present}
 
 
 def raw_to_bids(subject, tasks):
