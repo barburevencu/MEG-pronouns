@@ -15,3 +15,7 @@ Design.key
 /lexique/
 # full-size generated pictures (the localizer embeds shrunk copies in localizer/images)
 /pictures/*.png
+__pycache__/
+# analysis outputs (figures and scores computed from participant data)
+/analysis/*.png
+/analysis/decoding/
