@@ -42,6 +42,14 @@ Steps, per subject:
     on item identity (which the pronoun test cannot); and after +0.3 s the person is
     always followed by the verb, the place by a determiner or the end of the sentence
     (the pronoun is always followed by "était", so this adds noise, not bias, there).
+ 7. At the pronoun alone: person- vs place-referent decoded from the pronoun epochs
+    themselves (temporal generalization, cross-validated: 5 x 5-fold, folds
+    stratified by referent x pronoun gender, so every training and test set has
+    il and elle in equal shares for both referents). Pronoun gender is independent
+    of the referent across trials, so it cannot drive this; the same cross-validation
+    on pronoun gender is the positive control (it is on screen). After +0.6 s the
+    adjective is on screen: its type and the trial's answer are also independent of
+    the referent.
 Saved to analysis/decoding/sub-XXX_decoding.npz (+ the pooled decoder's per-trial
 decision values and the trial table), figure sub-XXX_decoding.png.
 
@@ -63,7 +71,7 @@ import pandas as pd
 from mne.decoding import GeneralizingEstimator, SlidingEstimator, cross_val_multiscore
 from scipy.stats import rankdata
 from sklearn.linear_model import LogisticRegression
-from sklearn.model_selection import StratifiedGroupKFold
+from sklearn.model_selection import RepeatedStratifiedKFold, StratifiedGroupKFold
 from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import StandardScaler
 
@@ -75,6 +83,7 @@ STIMULI = PROJECT / "counterbalancing" / "stimuli.csv"
 SFREQ = 125                 # decoding sampling rate (Hz)
 LOC_TMIN, LOC_TMAX = 0.0, 0.8
 N_FOLDS = 5
+N_REPEATS = 5             # repeats of the cross-validation at the pronoun (7)
 C = 1.0                     # inverse L2 penalty of the logistic regression
 SEED = 42
 MIN_SUBJECTS_STATS = 6
@@ -228,6 +237,18 @@ def within_task(X_noun, noun, X_pron, pron, n_jobs):
     return dv
 
 
+def stratified_splits(strata):
+    """Repeated stratified k-fold splits, stratified on the given labels."""
+    cv = RepeatedStratifiedKFold(n_splits=N_FOLDS, n_repeats=N_REPEATS, random_state=SEED)
+    return list(cv.split(np.zeros(len(strata)), strata))
+
+
+def cv_generalization(X, y, splits, n_jobs):
+    """Cross-validated temporal generalization AUC (train time x test time)."""
+    est = GeneralizingEstimator(classifier(), scoring="roc_auc", n_jobs=n_jobs, verbose=False)
+    return cross_val_multiscore(est, X, y, cv=splits, verbose=False).mean(axis=0)
+
+
 def auc(dv, y):
     """AUC of decision values dv (trials x ...) for binary labels y, vectorized
     (Mann-Whitney U / (n1 n0)); ties get mid-ranks."""
@@ -324,6 +345,14 @@ def run_subject(subject, deriv_root, n_jobs):
     r["within_pron_beta_referent"], r["within_pron_beta_pron_gender"] = regress(
         dv_within, [referent, pron.pron_feminine.to_numpy()])
 
+    # 7. At the pronoun alone: referent decoded from the pronoun epochs, cross-validated
+    pron_f = pron.pron_feminine.to_numpy()
+    splits = stratified_splits(2 * referent + pron_f)  # referent x pronoun gender in every fold
+    r["pron_cv_referent_tg"] = cv_generalization(X_pron, referent, splits, n_jobs)
+    r["pron_cv_gender_tg"] = cv_generalization(X_pron, pron_f, splits, n_jobs)
+    r["pron_cv_referent"] = np.diagonal(r["pron_cv_referent_tg"]).copy()
+    r["pron_cv_gender"] = np.diagonal(r["pron_cv_gender_tg"]).copy()
+
     OUT.mkdir(parents=True, exist_ok=True)
     np.savez_compressed(OUT / f"sub-{subject}_decoding.npz", **r)
     np.save(OUT / f"sub-{subject}_pronoun_dv_pooled.npy", dv_pooled.astype(np.float32))
@@ -382,7 +411,7 @@ def run_group():
 def plot(r, title, fname, masks=None):
     masks = masks or {}
     lt, pt, at, nt = r["loc_times"], r["pron_times"], r["adj_times"], r["noun_times"]
-    fig, axes = plt.subplots(5, 4, figsize=(20, 22))
+    fig, axes = plt.subplots(6, 4, figsize=(20, 26.5))
     next_words = {f"+{i}": 0.3 * i for i in range(4)}
 
     def curves(ax, keys, labels, heading, times=lt, xlabel="localizer time (s)", onsets=None):
@@ -454,6 +483,16 @@ def plot(r, title, fname, masks=None):
            train_times=nt, ylabel=noun_y)
     matrix(axes[4, 3], "within_pron_auc_noncanonical", "nouns → referent, non-canonical order", pt,
            WORD_ONSETS, train_times=nt, ylabel=noun_y)
+
+    # Row 6: at the pronoun alone, cross-validated
+    curves(axes[5, 0], ["pron_cv_referent", "pron_cv_gender"], ["referent: person vs place", "pronoun: il vs elle"],
+           "pronoun epochs: cross-validated (diagonal)", times=pt, xlabel="pronoun time (s)", onsets=WORD_ONSETS)
+    pron_y = "pronoun train time (s)"
+    matrix(axes[5, 1], "pron_cv_referent_tg", "pronoun → pronoun: referent (cross-validated)", pt, WORD_ONSETS,
+           train_times=pt, ylabel=pron_y)
+    matrix(axes[5, 2], "pron_cv_gender_tg", "pronoun → pronoun: il vs elle (cross-validated)", pt, WORD_ONSETS,
+           train_times=pt, ylabel=pron_y)
+    axes[5, 3].axis("off")
 
     fig.suptitle(f"{title}: person vs place decoding (dotted: word onsets; pronoun rows: pronoun, était, adjective)")
     fig.tight_layout(rect=(0, 0, 1, 0.98))
